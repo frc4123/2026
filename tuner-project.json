@@ -1,0 +1,232 @@
+{
+  "Version": "1.0.0.0",
+  "LastState": 11,
+  "Modules": [
+    {
+      "ModuleName": "Front Left",
+      "ModuleId": 0,
+      "Encoder": {
+        "Id": 11,
+        "Name": "FL CANCoder (Device ID 11)",
+        "Model": "CANCoder",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": null
+      },
+      "SteerMotor": {
+        "Id": 6,
+        "Name": "FL Turn Talon FX vers. F (Device ID 6)",
+        "Model": "Talon FX vers. F",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x44",
+          "FreeSpeedRps": 125.5,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "DriveMotor": {
+        "Id": 2,
+        "Name": "FL Drive Talon FX vers. C (Device ID 2)",
+        "Model": "Talon FX vers. C",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x60",
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "IsEncoderInverted": false,
+      "IsSteerInverted": false,
+      "SelectedEncoderType": "CANcoder",
+      "EncoderOffset": -0.212646484375,
+      "DriveMotorSelectionState": 1,
+      "SteerMotorSelectionState": 1,
+      "SteerEncoderSelectionState": 1,
+      "IsModuleValidationComplete": true,
+      "ValidatedSteerId": 6,
+      "ValidatedDriveId": 2,
+      "ValidatedEncoderId": 11
+    },
+    {
+      "ModuleName": "Front Right",
+      "ModuleId": 1,
+      "Encoder": {
+        "Id": 12,
+        "Name": "FR CANCoder (Device ID 12)",
+        "Model": "CANCoder",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": null
+      },
+      "SteerMotor": {
+        "Id": 7,
+        "Name": "FR Turn Talon FX vers. F (Device ID 7)",
+        "Model": "Talon FX vers. F",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x44",
+          "FreeSpeedRps": 125.5,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "DriveMotor": {
+        "Id": 3,
+        "Name": "FR Drive Talon FX vers. C (Device ID 3)",
+        "Model": "Talon FX vers. C",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x60",
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "IsEncoderInverted": false,
+      "IsSteerInverted": false,
+      "SelectedEncoderType": "CANcoder",
+      "EncoderOffset": 0.078369140625,
+      "DriveMotorSelectionState": 1,
+      "SteerMotorSelectionState": 1,
+      "SteerEncoderSelectionState": 1,
+      "IsModuleValidationComplete": true,
+      "ValidatedSteerId": 7,
+      "ValidatedDriveId": 3,
+      "ValidatedEncoderId": 12
+    },
+    {
+      "ModuleName": "Back Left",
+      "ModuleId": 2,
+      "Encoder": {
+        "Id": 13,
+        "Name": "BL CANCoder (Device ID 13)",
+        "Model": "CANCoder",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": null
+      },
+      "SteerMotor": {
+        "Id": 8,
+        "Name": "BL Turn Talon FX vers. F (Device ID 8)",
+        "Model": "Talon FX vers. F",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x44",
+          "FreeSpeedRps": 125.5,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "DriveMotor": {
+        "Id": 4,
+        "Name": "BL Drive Talon FX vers. C (Device ID 4)",
+        "Model": "Talon FX vers. C",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x60",
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "IsEncoderInverted": false,
+      "IsSteerInverted": false,
+      "SelectedEncoderType": "CANcoder",
+      "EncoderOffset": -0.067138671875,
+      "DriveMotorSelectionState": 1,
+      "SteerMotorSelectionState": 1,
+      "SteerEncoderSelectionState": 1,
+      "IsModuleValidationComplete": true,
+      "ValidatedSteerId": 8,
+      "ValidatedDriveId": 4,
+      "ValidatedEncoderId": 13
+    },
+    {
+      "ModuleName": "Back Right",
+      "ModuleId": 3,
+      "Encoder": {
+        "Id": 14,
+        "Name": " BR CANCoder (Device ID 14)",
+        "Model": "CANCoder",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": null
+      },
+      "SteerMotor": {
+        "Id": 9,
+        "Name": "BR Turn Talon FX vers. F (Device ID 9)",
+        "Model": "Talon FX vers. F",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x44",
+          "FreeSpeedRps": 125.5,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "DriveMotor": {
+        "Id": 5,
+        "Name": "BR Drive Talon FX vers. C (Device ID 5)",
+        "Model": "Talon FX vers. C",
+        "CANbus": "7E3CCA614A314E5320202047412F15FF",
+        "CANbusFriendly": "Good Boy CANivore 10",
+        "SelectedMotorType": {
+          "Name": "WCP Kraken x60",
+          "FreeSpeedRps": 96.7,
+          "SlipCurrentLimit": 120,
+          "StatorCurrentLimit": 60
+        }
+      },
+      "IsEncoderInverted": false,
+      "IsSteerInverted": false,
+      "SelectedEncoderType": "CANcoder",
+      "EncoderOffset": 0.476806640625,
+      "DriveMotorSelectionState": 1,
+      "SteerMotorSelectionState": 1,
+      "SteerEncoderSelectionState": 1,
+      "IsModuleValidationComplete": true,
+      "ValidatedSteerId": 9,
+      "ValidatedDriveId": 5,
+      "ValidatedEncoderId": 14
+    }
+  ],
+  "SwerveOptions": {
+    "Gyro": {
+      "Id": 10,
+      "Name": "Pigeon 2S 10",
+      "Model": "Pigeon 2 vers. S",
+      "CANbus": "7E3CCA614A314E5320202047412F15FF",
+      "CANbusFriendly": "Good Boy CANivore 10",
+      "SelectedMotorType": null
+    },
+    "IsValidGyroCANbus": true,
+    "VerticalTrackSizeInches": 20.5,
+    "HorizontalTrackSizeInches": 21.0,
+    "WheelRadiusInches": 2.0,
+    "IsLeftSideInverted": false,
+    "IsRightSideInverted": true,
+    "SwerveModuleType": 7,
+    "SwerveModuleConfiguration": {
+      "ModuleBrand": 7,
+      "DriveRatio": 5.2734375,
+      "SteerRatio": 26.09090909090909,
+      "CouplingRatio": 3.375,
+      "CustomName": "R3"
+    },
+    "HasVerifiedSteer": true,
+    "SelectedModuleManufacturer": "Swerve Drive Specialties (SDS)",
+    "HasVerifiedDrive": true,
+    "IsValidConfiguration": true
+  },
+  "TeamNumber": 4123,
+  "schema_version": "1"
+}
