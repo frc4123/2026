@@ -2,10 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
 
@@ -53,7 +53,14 @@ public class Constants {
         // Trust down to 2 degrees rotational);
     }   
 
-    public static final class Vision {
+    public static final class VisionConstants {
+        //Front Forward Camera Translation and Angle
+        public static final double frontX = Units.inchesToMeters(9.911500); // 7.495 7.176364 -7.176364
+        public static final double frontY = Units.inchesToMeters(13.492853); // -7.176364 7.495000 -7.495000
+        public static final double frontZ = Units.inchesToMeters(8.186116); // 7.02
 
+        public static final double frontRoll = Math.toRadians(0);
+        public static final double frontPitch = Math.toRadians(-20); // 25
+        public static final double frontYaw = Math.toRadians(20);
     }
 }

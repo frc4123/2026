@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -33,6 +32,13 @@ public class Oculus extends SubsystemBase{
         return null;
     }
 
+    /* 
+    
+    TODO: need to be resetting oculus quest location when we have photon readings,
+    after photon reading we immediately reset quest pose
+    
+    */
+
     public Pose3d getQuestPose() {
          // Get the latest pose data frames from the Quest
         PoseFrame[] poseFrames = quest.getAllUnreadPoseFrames();
@@ -47,21 +53,26 @@ public class Oculus extends SubsystemBase{
         return null;
     }
 
-    public void setRobotPose(){
-        // Assume this is the requested reset pose
-        Pose3d robotPose = new Pose3d( /* Some pose data */ );
-
+    public void setRobotPose(Pose3d pose){
         // Transform by the offset to get the Quest pose
-        Pose3d questPose = robotPose.transformBy(Constants.Quest.ROBOT_TO_QUEST);
+        Pose3d questPose = pose.transformBy(Constants.Quest.ROBOT_TO_QUEST);
 
         // Send the reset operation
         quest.setPose(questPose);
     }
 
-     @Override
-    public void periodic() {
+    public boolean isQuestNavConnected() {
+        // You might need to check NetworkTables or add a timeout mechanism
+        PoseFrame[] frames = quest.getAllUnreadPoseFrames();
+        return frames != null && frames.length > 0;
+    }
+
+    public void updateSwerve(){
         // Get the latest pose data frames from the Quest
         PoseFrame[] questFrames = quest.getAllUnreadPoseFrames();
+
+        if(questFrames == null) {return;}
+        //if there are no questFrames then dont crash the robot code
 
         // Loop over the pose data frames and send them to the pose estimator
         for (PoseFrame questFrame : questFrames) {
@@ -81,5 +92,11 @@ public class Oculus extends SubsystemBase{
                 drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, Constants.Quest.QUESTNAV_STD_DEVS);
             }
         }
+    }
+    
+
+    @Override
+    public void periodic() {
+        updateSwerve();
     }
 }
