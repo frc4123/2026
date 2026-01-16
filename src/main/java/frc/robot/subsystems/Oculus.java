@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import gg.questnav.questnav.PoseFrame;
@@ -9,11 +12,25 @@ import gg.questnav.questnav.QuestNav;
 public class Oculus extends SubsystemBase{
 
     private final CommandSwerveDrivetrain drivetrain;
+    private final Transform3d robotToQuest;
+
+    
 
     QuestNav quest = new QuestNav();
 
     public Oculus(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
+
+        robotToQuest = new Transform3d(
+            new Translation3d(
+                Constants.Quest.frontX,
+                Constants.Quest.frontY,
+                Constants.Quest.frontZ),
+            new Rotation3d(
+               Constants.Quest.frontRoll,
+                Constants.Quest.frontPitch,
+                Constants.Quest.frontYaw)
+        );
     }
 
     public Pose3d getRobotPose() {
@@ -25,19 +42,12 @@ public class Oculus extends SubsystemBase{
             Pose3d questPose = poseFrames[poseFrames.length - 1].questPose3d();
 
             // Transform by the mount pose to get your robot pose
-            Pose3d robotPose = questPose.transformBy(Constants.Quest.ROBOT_TO_QUEST.inverse());
+            Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
             return robotPose;
         }
 
         return null;
     }
-
-    /* 
-    
-    TODO: need to be resetting oculus quest location when we have photon readings,
-    after photon reading we immediately reset quest pose
-    
-    */
 
     public Pose3d getQuestPose() {
          // Get the latest pose data frames from the Quest
@@ -55,7 +65,7 @@ public class Oculus extends SubsystemBase{
 
     public void setRobotPose(Pose3d pose){
         // Transform by the offset to get the Quest pose
-        Pose3d questPose = pose.transformBy(Constants.Quest.ROBOT_TO_QUEST);
+        Pose3d questPose = pose.transformBy(robotToQuest);
 
         // Send the reset operation
         quest.setPose(questPose);
@@ -84,7 +94,7 @@ public class Oculus extends SubsystemBase{
                 double timestamp = questFrame.dataTimestamp();
 
                 // Transform by the mount pose to get your robot pose
-                Pose3d robotPose = questPose.transformBy(Constants.Quest.ROBOT_TO_QUEST.inverse());
+                Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
 
                 // You can put some sort of filtering here if you would like!
 
