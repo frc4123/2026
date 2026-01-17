@@ -12,9 +12,7 @@ import gg.questnav.questnav.QuestNav;
 public class Oculus extends SubsystemBase{
 
     private final CommandSwerveDrivetrain drivetrain;
-    private final Transform3d robotToQuest;
-
-    
+    private final Transform3d robotToQuest;    
 
     QuestNav quest = new QuestNav();
 
@@ -27,7 +25,7 @@ public class Oculus extends SubsystemBase{
                 Constants.Quest.frontY,
                 Constants.Quest.frontZ),
             new Rotation3d(
-               Constants.Quest.frontRoll,
+                Constants.Quest.frontRoll,
                 Constants.Quest.frontPitch,
                 Constants.Quest.frontYaw)
         );
