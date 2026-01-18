@@ -13,14 +13,17 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -34,11 +37,14 @@ public class Vision extends SubsystemBase{
     private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(3, 3, 3);
     private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    private final StructPublisher<Pose3d> CamPosePublisher;
-    private final StructPublisher<Transform3d> CamTargetTransformPublisher;
+    // private final StructPublisher<Pose3d> CamPosePublisher;
+    // private final StructPublisher<Transform3d> CamTargetTransformPublisher;
 
     private final PhotonPoseEstimator frontEstimator;
     private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right"); //TODO: ADD CAMERA NAME;
+
+    private static boolean isBlue;
+    private static boolean isRed;
 
     private final CommandSwerveDrivetrain drivetrain;
     private Oculus oculus;
@@ -63,16 +69,24 @@ public class Vision extends SubsystemBase{
                 Constants.VisionConstants.frontYaw)
         );
 
-        // Right camera estimator (new 2025 syntax)
+        // front camera estimator (new 2026 syntax)
         frontEstimator = new PhotonPoseEstimator(
             aprilTagFieldLayout,
             robotToCam
         );
 
+        if(DriverStation.isDSAttached()){
+            isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? true : false;
+            isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? true : true;
+        } else {
+            isBlue = false;
+            isRed = false;
+        }
+
         // Initialize NetworkTables publishers
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        CamPosePublisher = inst.getStructTopic("/Vision/LeftCameraPose", Pose3d.struct).publish();
-        CamTargetTransformPublisher = inst.getStructTopic("/Vision/LeftCamTargetTransform", Transform3d.struct).publish();
+        // NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        // CamPosePublisher = inst.getStructTopic("/Vision/LeftCameraPose", Pose3d.struct).publish();
+        // CamTargetTransformPublisher = inst.getStructTopic("/Vision/LeftCamTargetTransform", Transform3d.struct).publish();
         
     }
 
@@ -138,15 +152,14 @@ public class Vision extends SubsystemBase{
         return false;
     }
 
+    // private void publishTargetTransform(PhotonTrackedTarget target, boolean isRightCamera) {
+    //     Optional<Pose3d> tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
+    //     if (tagPose.isEmpty()) return;
 
-    private void publishTargetTransform(PhotonTrackedTarget target, boolean isRightCamera) {
-        Optional<Pose3d> tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
-        if (tagPose.isEmpty()) return;
-
-        Transform3d cameraToTarget = target.getBestCameraToTarget();
-        Transform3d robotToTarget = robotToCam.plus(cameraToTarget);
-        CamTargetTransformPublisher.set(robotToTarget);
-    }
+    //     Transform3d cameraToTarget = target.getBestCameraToTarget();
+    //     Transform3d robotToTarget = robotToCam.plus(cameraToTarget);
+    //     CamTargetTransformPublisher.set(robotToTarget);
+    // }
 
     private Matrix<N3, N1> calculateStdDevs(EstimatedRobotPose est, List<PhotonTrackedTarget> targets) {
         int numTags = 0;
@@ -166,6 +179,40 @@ public class Vision extends SubsystemBase{
         double avgDistance = totalDistance / numTags;
         Matrix<N3, N1> baseDevs = numTags >= 2 ? multiTagStdDevs : singleTagStdDevs;
         return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
+    }
+
+    public Rotation2d angleToFacePoint(Pose2d robotPose) {
+        Translation2d target = null;
+        Pose3d blueHub = Constants.VisionConstants.blueHub;
+        Pose3d redHub = Constants.VisionConstants.redHub;
+
+        if(DriverStation.isDSAttached()){
+            if(isBlue && robotPose.getX() < blueHub.getX()){
+
+                target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+                Translation2d robotPos = robotPose.getTranslation();
+                Translation2d delta = target.minus(robotPos);
+                return delta.getAngle();
+            } else if (isRed && robotPose.getX() > redHub.getX()){
+
+                target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+                Translation2d robotPos = robotPose.getTranslation();
+                Translation2d delta = target.minus(robotPos);
+                return delta.getAngle();
+            }
+        }
+        /*this should allow the robot to face the hub from whatever position it is
+        we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret
+        */
+
+        return new Rotation2d(0);
+        /*
+        if it does this then this function didnt work :(, this line only exists so that we dont crash code 
+        we have to return something since the functino isnt void
+        */
+
+        /* we can also reuse ts for turret because this function is just telling us what angle to face our scoring point
+        based on position */
     }
 
     @Override
