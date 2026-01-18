@@ -181,7 +181,7 @@ public class Vision extends SubsystemBase{
         return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
     }
 
-    public Rotation2d angleToFacePoint(Pose2d robotPose) {
+    public Rotation2d angleToFace(Pose2d robotPose) {
         Translation2d target = null;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;

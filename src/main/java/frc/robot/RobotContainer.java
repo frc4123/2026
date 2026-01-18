@@ -95,7 +95,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> faceAngle
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed) 
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) 
-                .withTargetDirection(vision.angleToFacePoint(drivetrain.getState().Pose))
+                .withTargetDirection(vision.angleToFace(drivetrain.getState().Pose))
             )
         );
         //face desired angle of robot towards the Hub when B is held
