@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Oculus;
@@ -96,7 +95,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> faceAngle
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed) 
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) 
-                //.withTargetDirection(vision.getLastGamePieceAngle())
+                .withTargetDirection(vision.angleToFacePoint(drivetrain.getState().Pose))
             )
         );
         //face desired angle of robot towards the Hub when B is held
