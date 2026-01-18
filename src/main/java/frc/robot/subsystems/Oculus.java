@@ -1,9 +1,16 @@
 package frc.robot.subsystems;
 
+import java.util.OptionalInt;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import gg.questnav.questnav.PoseFrame;
@@ -12,7 +19,7 @@ import gg.questnav.questnav.QuestNav;
 public class Oculus extends SubsystemBase{
 
     private final CommandSwerveDrivetrain drivetrain;
-    private final Transform3d robotToQuest;    
+    private final Transform3d robotToQuest;
 
     QuestNav quest = new QuestNav();
 
@@ -102,9 +109,29 @@ public class Oculus extends SubsystemBase{
         }
     }
     
+    public void publishQuestBattery(){
+        OptionalInt questBattery = quest.getBatteryPercent();
+        int questBatteryInt;
+
+        if (questBattery != null) {
+            questBatteryInt = questBattery.getAsInt();
+            SmartDashboard.putString("Oculus Quest Battery", questBatteryInt + "%");
+        } else { 
+            SmartDashboard.putString("Oculus Quest Battery", "unable to be retrieved");
+        }
+    }
+
+    public void publishQuestState(){
+        Pose2d questPose = getQuestPose().toPose2d();
+        NetworkTable questTable = NetworkTableInstance.getDefault().getTable("State").getSubTable("QuestNav");
+        StructPublisher<Pose2d> posePub = questTable.getStructTopic("Pose", Pose2d.struct).publish();
+        posePub.set(questPose);
+    }
 
     @Override
     public void periodic() {
         updateSwerve();
+        publishQuestBattery();
+        publishQuestState();
     }
 }
