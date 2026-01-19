@@ -61,10 +61,8 @@ public class Oculus extends SubsystemBase{
         if (poseFrames.length > 0) {
             // Get the most recent Quest pose
             Pose3d questPose = poseFrames[poseFrames.length - 1].questPose3d();
-
             return questPose;
         }
-
         return null;
     }
 

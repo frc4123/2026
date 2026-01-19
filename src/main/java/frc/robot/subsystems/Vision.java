@@ -177,7 +177,7 @@ public class Vision extends SubsystemBase{
         if(isBlue == false && isRed == false){
             if(DriverStation.isDSAttached()){
                 isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? true : true;
+                isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? true : false;
             } else {
                 isBlue = false;
                 isRed = false;
