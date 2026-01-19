@@ -103,33 +103,33 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        joystick.leftTrigger().whileTrue(Commands.runOnce(SignalLogger::start));
-        joystick.rightTrigger().whileTrue(Commands.runOnce(SignalLogger::stop));
-        joystick.povUp().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.povRight().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        joystick.povDown().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.povLeft().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // joystick.leftTrigger().whileTrue(Commands.runOnce(SignalLogger::start));
+        // joystick.rightTrigger().whileTrue(Commands.runOnce(SignalLogger::stop));
+        // joystick.povUp().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // joystick.povRight().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // joystick.povDown().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // joystick.povLeft().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on button Y press.
         joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        // joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
-        //     .withVelocityY(0.1 * MaxSpeed)
-        //     .withVelocityX(0)));
+        joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
+            .withVelocityY(0.1 * MaxSpeed)
+            .withVelocityX(0)));
 
-        // joystick.povRight().whileTrue(drivetrain.applyRequest(() -> robotStrafe
-        //     .withVelocityY(-0.1 * MaxSpeed)
-        //     .withVelocityX(0)));
+        joystick.povRight().whileTrue(drivetrain.applyRequest(() -> robotStrafe
+            .withVelocityY(-0.1 * MaxSpeed)
+            .withVelocityX(0)));
         
-        // joystick.povUp().whileTrue(drivetrain.applyRequest(() -> robotStrafe
-        //     .withVelocityX(0.1 * MaxSpeed)
-        //     .withVelocityY(0)));
+        joystick.povUp().whileTrue(drivetrain.applyRequest(() -> robotStrafe
+            .withVelocityX(0.1 * MaxSpeed)
+            .withVelocityY(0)));
 
-        // joystick.povDown().whileTrue(drivetrain.applyRequest(() -> robotStrafe
-        //     .withVelocityX(-0.1 * MaxSpeed)
-        //     .withVelocityY(0)));
+        joystick.povDown().whileTrue(drivetrain.applyRequest(() -> robotStrafe
+            .withVelocityX(-0.1 * MaxSpeed)
+            .withVelocityY(0)));
 
-        // drivetrain.registerTelemetry(logger::telemeterize);
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
