@@ -43,8 +43,8 @@ public class Vision extends SubsystemBase{
     private final PhotonPoseEstimator frontEstimator;
     private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right"); //TODO: ADD CAMERA NAME;
 
-    private static boolean isBlue;
-    private static boolean isRed;
+    private static boolean isBlue = false;
+    private static boolean isRed = false;
 
     private final CommandSwerveDrivetrain drivetrain;
     private Oculus oculus;
@@ -74,14 +74,6 @@ public class Vision extends SubsystemBase{
             aprilTagFieldLayout,
             robotToCam
         );
-
-        if(DriverStation.isDSAttached()){
-            isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? true : false;
-            isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? true : true;
-        } else {
-            isBlue = false;
-            isRed = false;
-        }
 
         // Initialize NetworkTables publishers
         // NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -182,24 +174,30 @@ public class Vision extends SubsystemBase{
     }
 
     public Rotation2d angleToFace(Pose2d robotPose) {
+        if(isBlue == false && isRed == false){
+            if(DriverStation.isDSAttached()){
+                isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? true : true;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
+        }
+
         Translation2d target = null;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
 
-        if(DriverStation.isDSAttached()){
-            if(isBlue && robotPose.getX() < blueHub.getX()){
-
-                target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
-                Translation2d robotPos = robotPose.getTranslation();
-                Translation2d delta = target.minus(robotPos);
-                return delta.getAngle();
-            } else if (isRed && robotPose.getX() > redHub.getX()){
-
-                target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
-                Translation2d robotPos = robotPose.getTranslation();
-                Translation2d delta = target.minus(robotPos);
-                return delta.getAngle();
-            }
+        if(isBlue && robotPose.getX() < blueHub.getX()){
+            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+        } else if (isRed && robotPose.getX() > redHub.getX()){
+            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
         }
         /*this should allow the robot to face the hub from whatever position it is
         we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret
