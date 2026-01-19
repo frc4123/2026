@@ -41,7 +41,7 @@ public class Vision extends SubsystemBase{
     // private final StructPublisher<Transform3d> CamTargetTransformPublisher;
 
     private final PhotonPoseEstimator frontEstimator;
-    private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera_Right"); //TODO: ADD CAMERA NAME;
+    private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera"); //TODO: ADD CAMERA NAME;
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -117,11 +117,13 @@ public class Vision extends SubsystemBase{
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
             
             // Add vision measurement to pose estimator
-            drivetrain.addVisionMeasurement(
-                est.estimatedPose.toPose2d(),
-                est.timestampSeconds,
-                stdDevs
-            );
+            if(result.getBestTarget().getPoseAmbiguity() < 0.1){
+                drivetrain.addVisionMeasurement(
+                    est.estimatedPose.toPose2d(),
+                    est.timestampSeconds,
+                    stdDevs
+                );
+            }
             
             // Reset QuestNav when we have confident AprilTag measurement
             if (shouldResetQuestNav(result)) {
