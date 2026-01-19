@@ -122,10 +122,13 @@ public class Oculus extends SubsystemBase{
     }
 
     public void publishQuestState(){
-        Pose2d questPose = getQuestPose().toPose2d();
-        NetworkTable questTable = NetworkTableInstance.getDefault().getTable("State").getSubTable("QuestNav");
-        StructPublisher<Pose2d> posePub = questTable.getStructTopic("Pose", Pose2d.struct).publish();
-        posePub.set(questPose);
+        Pose3d questPose = getQuestPose();
+        if(questPose != null) {
+            Pose2d questPose2d = questPose.toPose2d();
+            NetworkTable questTable = NetworkTableInstance.getDefault().getTable("State").getSubTable("QuestNav");
+            StructPublisher<Pose2d> posePub = questTable.getStructTopic("Pose", Pose2d.struct).publish();
+            posePub.set(questPose2d);
+        }
     }
 
     @Override
