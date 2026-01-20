@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +13,8 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -52,8 +59,7 @@ public class Vision extends SubsystemBase{
     public Vision(CommandSwerveDrivetrain drivetrain, Oculus oculus) {
         this.drivetrain = drivetrain;
         this.oculus = oculus;
-        this.aprilTagFieldLayout = AprilTagFieldLayout
-            .loadField(AprilTagFields.k2025ReefscapeWelded);
+        this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/Reefscape2025.json");
 
         //TODO: UPDATE THE FIELD TO 266666 ^^^^^
 
@@ -154,6 +160,15 @@ public class Vision extends SubsystemBase{
     //     Transform3d robotToTarget = robotToCam.plus(cameraToTarget);
     //     CamTargetTransformPublisher.set(robotToTarget);
     // }
+
+    public static AprilTagFieldLayout loadAprilTagFieldLayout(String resourceFile) {
+        try (InputStream is = Vision.class.getResourceAsStream(resourceFile);
+             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            return new ObjectMapper().readValue(isr, AprilTagFieldLayout.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 
     private Matrix<N3, N1> calculateStdDevs(EstimatedRobotPose est, List<PhotonTrackedTarget> targets) {
         int numTags = 0;
