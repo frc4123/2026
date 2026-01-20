@@ -17,7 +17,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -144,7 +143,7 @@ public class Vision extends SubsystemBase{
         
         if (result.getBestTarget() != null) {
             // Single tag with low ambiguity and close distance
-            return result.getBestTarget().getPoseAmbiguity() < 0.15;
+            return result.getBestTarget().getPoseAmbiguity() < 0.1;
         }
         
         return false;
