@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase{
     // private final StructPublisher<Transform3d> CamTargetTransformPublisher;
 
     private final PhotonPoseEstimator frontEstimator;
-    private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera"); //TODO: ADD CAMERA NAME;
+    private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -60,8 +60,6 @@ public class Vision extends SubsystemBase{
         this.drivetrain = drivetrain;
         this.oculus = oculus;
         this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/Reefscape2025.json");
-
-        //TODO: UPDATE THE FIELD TO 266666 ^^^^^
 
         // Camera transforms
         robotToCam = new Transform3d(
@@ -146,7 +144,7 @@ public class Vision extends SubsystemBase{
         
         if (result.getBestTarget() != null) {
             // Single tag with low ambiguity and close distance
-            return result.getBestTarget().getPoseAmbiguity() < 0.2;
+            return result.getBestTarget().getPoseAmbiguity() < 0.15;
         }
         
         return false;

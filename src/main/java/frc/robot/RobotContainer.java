@@ -142,9 +142,9 @@ public class RobotContainer {
 
     public void initializeAutoChooser() {
         autoChooser.setDefaultOption("5 Meter Test", new ParallelCommandGroup(
-        new WaitCommand(0.01),
-          new SequentialCommandGroup(new mtest().metertest())
-        ));
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new mtest().metertest()))
+        );
     }
 
     public Command getAutonomousCommand() {
