@@ -58,7 +58,7 @@ public class Vision extends SubsystemBase{
     public Vision(CommandSwerveDrivetrain drivetrain, Oculus oculus) {
         this.drivetrain = drivetrain;
         this.oculus = oculus;
-        this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/Reefscape2025.json");
+        this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/2026Welded.json");
 
         // Camera transforms
         robotToCam = new Transform3d(
