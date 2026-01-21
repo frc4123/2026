@@ -56,7 +56,6 @@ public class RobotContainer {
 
     private final Oculus oculus = new Oculus(drivetrain);
     private final Vision vision = new Vision(drivetrain, oculus);
-    
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -146,11 +145,6 @@ public class RobotContainer {
             new WaitCommand(0.01),
             new SequentialCommandGroup(new mtest().metertest()))
         );
-
-        autoChooser.addOption("5 meter test", new ParallelCommandGroup(
-        new WaitCommand(0.01),
-          new SequentialCommandGroup(new mtest().metertest())
-        ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
     }
