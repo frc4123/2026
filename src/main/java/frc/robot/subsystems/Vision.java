@@ -191,8 +191,8 @@ public class Vision extends SubsystemBase{
     public Rotation2d angleToFace(Pose2d robotPose) {
         if(isBlue == false && isRed == false){
             if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? true : false;
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
             } else {
                 isBlue = false;
                 isRed = false;
