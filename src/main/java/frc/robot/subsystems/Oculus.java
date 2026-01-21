@@ -107,13 +107,15 @@ public class Oculus extends SubsystemBase{
         }
     }
     
-    public void publishQuestBattery(){
+    public void publishQuestStatus(){
         OptionalInt questBattery = quest.getBatteryPercent();
+        boolean questTrackingStatus = quest.isTracking();
         int questBatteryInt;
 
         if (questBattery != null) {
             questBatteryInt = questBattery.getAsInt();
             SmartDashboard.putString("Oculus Quest Battery", questBatteryInt + "%");
+            SmartDashboard.putBoolean("Is Quest Conntected", questTrackingStatus);
         } else { 
             SmartDashboard.putString("Oculus Quest Battery", "unable to be retrieved");
         }
@@ -132,7 +134,7 @@ public class Oculus extends SubsystemBase{
     @Override
     public void periodic() {
         updateSwerve();
-        publishQuestBattery();
+        publishQuestStatus();
         publishQuestState();
     }
 }
