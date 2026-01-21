@@ -35,13 +35,14 @@ import frc.robot.Constants;
 
 public class Vision extends SubsystemBase{
 
-    
     private final Transform3d robotToCam;
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     // Standard deviations (tune these based on camera characteristics)
-    private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(3, 3, 3);
-    private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.2, 0.2, 0.4);
+    // the higher the number the less you trust your camera additions
+    // third parameter should be double the first 2
 
     // private final StructPublisher<Pose3d> CamPosePublisher;
     // private final StructPublisher<Transform3d> CamTargetTransformPublisher;
