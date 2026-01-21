@@ -67,6 +67,8 @@ public class RobotContainer {
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0);  // 0.4123
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+
+        initializeAutoChooser();
     }
 
     private void configureBindings() {
@@ -144,6 +146,11 @@ public class RobotContainer {
             new WaitCommand(0.01),
             new SequentialCommandGroup(new mtest().metertest()))
         );
+
+        autoChooser.addOption("5 meter test", new ParallelCommandGroup(
+        new WaitCommand(0.01),
+          new SequentialCommandGroup(new mtest().metertest())
+        ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
     }
