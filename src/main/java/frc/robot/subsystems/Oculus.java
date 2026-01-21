@@ -20,6 +20,8 @@ public class Oculus extends SubsystemBase{
 
     private final CommandSwerveDrivetrain drivetrain;
     private final Transform3d robotToQuest;
+    private int loopLimiter = 0;
+    private PoseFrame[] unreadFrames;
     StructPublisher<Pose2d> posePub;
 
     QuestNav quest = new QuestNav();
@@ -45,12 +47,9 @@ public class Oculus extends SubsystemBase{
     }
 
     public Pose3d getRobotPose() {
-        // Get the latest pose data frames from the Quest
-        PoseFrame[] poseFrames = quest.getAllUnreadPoseFrames();
-
-        if (poseFrames.length > 0) {
+        if (unreadFrames.length > 0) {
             // Get the most recent Quest pose
-            Pose3d questPose = poseFrames[poseFrames.length - 1].questPose3d();
+            Pose3d questPose = unreadFrames[unreadFrames.length - 1].questPose3d();
 
             // Transform by the mount pose to get your robot pose
             Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
@@ -61,12 +60,9 @@ public class Oculus extends SubsystemBase{
     }
 
     public Pose3d getQuestPose() {
-         // Get the latest pose data frames from the Quest
-        PoseFrame[] poseFrames = quest.getAllUnreadPoseFrames();
-
-        if (poseFrames.length > 0) {
+        if (unreadFrames.length > 0) {
             // Get the most recent Quest pose
-            Pose3d questPose = poseFrames[poseFrames.length - 1].questPose3d();
+            Pose3d questPose = unreadFrames[unreadFrames.length - 1].questPose3d();
             return questPose;
         }
         return null;
@@ -75,26 +71,22 @@ public class Oculus extends SubsystemBase{
     public void setRobotPose(Pose3d pose){
         // Transform by the offset to get the Quest pose
         Pose3d questPose = pose.transformBy(robotToQuest);
-
         // Send the reset operation
         quest.setPose(questPose);
     }
 
     public boolean isQuestNavConnected() {
         // You might need to check NetworkTables or add a timeout mechanism
-        PoseFrame[] frames = quest.getAllUnreadPoseFrames();
+        PoseFrame[] frames = unreadFrames;
         return frames != null && frames.length > 0;
     }
 
     public void updateSwerve(){
-        // Get the latest pose data frames from the Quest
-        PoseFrame[] questFrames = quest.getAllUnreadPoseFrames();
-
-        if(questFrames == null) {return;}
         //if there are no questFrames then dont crash the robot code
-
+        if(unreadFrames.length > 0) {return;}
+        // Get the latest pose data frames from the Quest
         // Loop over the pose data frames and send them to the pose estimator
-        for (PoseFrame questFrame : questFrames) {
+        for (PoseFrame questFrame : unreadFrames) {
             // Make sure the Quest was tracking the pose for this frame
             if (questFrame.isTracking()) {
                 // Get the pose of the Quest
@@ -118,11 +110,11 @@ public class Oculus extends SubsystemBase{
         boolean questTrackingStatus = quest.isTracking();
         int questBatteryInt;
 
-        if (quest.isConnected()) {
+        if (quest.isConnected() && loopLimiter % 10 == 0) {
             questBatteryInt = questBattery.getAsInt();
             SmartDashboard.putString("Oculus Quest Battery", questBatteryInt + "%");
             SmartDashboard.putBoolean("Is Quest Tracking", questTrackingStatus);
-        } else { 
+        } else if (quest.isConnected() != true) { 
             SmartDashboard.putString("Oculus Quest Battery", "unable to be retrieved");
         }
     }
@@ -137,8 +129,10 @@ public class Oculus extends SubsystemBase{
 
     @Override
     public void periodic() {
+        unreadFrames = quest.getAllUnreadPoseFrames();
         updateSwerve();
         publishQuestStatus();
+        loopLimiter++;
         //publishQuestState();
     }
 }
