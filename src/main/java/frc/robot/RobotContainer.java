@@ -25,6 +25,7 @@ import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.Vision;
 
 import frc.robot.commands.autos.mtest;
+import frc.robot.commands.autos.twoCycle;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -145,6 +146,11 @@ public class RobotContainer {
             new WaitCommand(0.01),
             new SequentialCommandGroup(new mtest().metertest()))
         );
+
+        autoChooser.addOption("2 Cycle Climb", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new twoCycle().twoCycleClimb())
+        ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
     }
