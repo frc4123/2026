@@ -20,6 +20,7 @@ public class Oculus extends SubsystemBase{
 
     private final CommandSwerveDrivetrain drivetrain;
     private final Transform3d robotToQuest;
+    StructPublisher<Pose2d> posePub;
 
     QuestNav quest = new QuestNav();
 
@@ -36,6 +37,11 @@ public class Oculus extends SubsystemBase{
                 Constants.Quest.frontPitch,
                 Constants.Quest.frontYaw)
         );
+
+        NetworkTable questTable = NetworkTableInstance.getDefault()
+            .getTable("State")
+            .getSubTable("QuestNav");
+        posePub = questTable.getStructTopic("Pose", Pose2d.struct).publish();
     }
 
     public Pose3d getRobotPose() {
@@ -112,10 +118,10 @@ public class Oculus extends SubsystemBase{
         boolean questTrackingStatus = quest.isTracking();
         int questBatteryInt;
 
-        if (questBattery != null) {
+        if (quest.isConnected()) {
             questBatteryInt = questBattery.getAsInt();
             SmartDashboard.putString("Oculus Quest Battery", questBatteryInt + "%");
-            SmartDashboard.putBoolean("Is Quest Conntected", questTrackingStatus);
+            SmartDashboard.putBoolean("Is Quest Tracking", questTrackingStatus);
         } else { 
             SmartDashboard.putString("Oculus Quest Battery", "unable to be retrieved");
         }
@@ -125,8 +131,6 @@ public class Oculus extends SubsystemBase{
         Pose3d questPose = getQuestPose();
         if(questPose != null) {
             Pose2d questPose2d = questPose.toPose2d();
-            NetworkTable questTable = NetworkTableInstance.getDefault().getTable("State").getSubTable("QuestNav");
-            StructPublisher<Pose2d> posePub = questTable.getStructTopic("Pose", Pose2d.struct).publish();
             posePub.set(questPose2d);
         }
     }
@@ -135,6 +139,6 @@ public class Oculus extends SubsystemBase{
     public void periodic() {
         updateSwerve();
         publishQuestStatus();
-        publishQuestState();
+        //publishQuestState();
     }
 }

@@ -130,7 +130,7 @@ public class Vision extends SubsystemBase{
             }
             
             // Reset QuestNav when we have confident AprilTag measurement
-            if (shouldResetQuestNav(result)) {
+            if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
                 oculus.setRobotPose(est.estimatedPose);
             }
         }
