@@ -7,6 +7,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class twoCycle extends SubsystemBase{
     public Command twoCycleClimb(){
-        return AutoBuilder.buildAuto("2Cycle");
+        return AutoBuilder.buildAuto("2CycleRight");
     }
 }
