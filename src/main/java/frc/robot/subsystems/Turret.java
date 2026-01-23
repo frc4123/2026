@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 
 /**
@@ -117,6 +118,18 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
+        double delta = abs - prevAbsolute;
+
+        // Handle wraparound
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+
+        cumulativeAngle += delta;
+        prevAbsolute = abs;
+    }
+
+    private void updateCumulativeAngleSim() {
+        double abs = simulatedAngle;
         double delta = abs - prevAbsolute;
 
         // Handle wraparound
@@ -270,6 +283,7 @@ public class Turret extends SubsystemBase {
         double targetRotations = degreesToMotorRotations(target);
         turretMotor.setControl(motionMagic.withPosition(targetRotations));
     }
+    
 
     public double getCumulativeAngle() {
         return cumulativeAngle;
@@ -298,7 +312,7 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         checkDS();
-        updateCumulativeAngle();
+        if (!RobotBase.isSimulation()) {updateCumulativeAngle();}
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
     }
@@ -306,6 +320,8 @@ public class Turret extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         // This already calls setFieldAngle with targetAngle - good!
+        updateCumulativeAngleSim();
+
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
         // Now simulate the motor reaching the commanded position
