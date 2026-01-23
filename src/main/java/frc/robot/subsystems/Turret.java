@@ -251,31 +251,36 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-                // Compute target like real setFieldAngle
-        Rotation2d targetFieldAngle = angleToFace(drivetrain.getState().Pose);
-        double cameraOffset = vision.getTurretCamOffset();
-        double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
-
-        // Robot-relative target angle
-        double targetTurretAngle = targetFieldAngle.getDegrees() - robotHeading;
-
-        // Add camera offset
-        double targetCumulative = targetTurretAngle + cameraOffset;
-
-        // Clamp to physical turret limits
-        targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
-
-        // Step sim angle toward target
-        double step = 5.0; // degrees per sim loop
-        double diff = targetCumulative - simulatedAngle;
+        // This already calls setFieldAngle with angleToFace - good!
+        setFieldAngle(angleToFace(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        
+        // Now simulate the motor reaching the commanded position
+        // The target was set by setFieldAngle above through motionMagic.withPosition()
+        
+        // We need to extract what position was commanded
+        // The motionMagic object holds the last commanded position
+        double commandedRotations = motionMagic.Position;
+        double commandedDegrees = commandedRotations / gearRatio * 360.0;
+        
+        // Simulate motor moving toward commanded position
+        double step = 5.0; // degrees per 20ms loop
+        double diff = commandedDegrees - simulatedAngle;
+        
         if (Math.abs(diff) > step) {
             simulatedAngle += Math.copySign(step, diff);
         } else {
-            simulatedAngle = targetCumulative;
+            simulatedAngle = commandedDegrees;
         }
-
-        // Update SmartDashboard
+        
+        // Update cumulativeAngle to match simulation
+        // This is what getCumulativeAngle() returns
+        cumulativeAngle = simulatedAngle;
+        
+        // Also update prevAbsolute so updateCumulativeAngle doesn't mess things up
+        prevAbsolute = normalizeAngle(simulatedAngle);
+        
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
+        SmartDashboard.putNumber("Turret Commanded (Sim)", commandedDegrees);
     }
 
 
