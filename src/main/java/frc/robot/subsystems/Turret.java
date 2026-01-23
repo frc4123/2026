@@ -263,7 +263,7 @@ public class Turret extends SubsystemBase {
         double commandedDegrees = commandedRotations / gearRatio * 360.0;
         
         // Simulate motor moving toward commanded position
-        double step = 5.0; // degrees per 20ms loop
+        double step = 20.0; // degrees per 20ms loop
         double diff = commandedDegrees - simulatedAngle;
         
         if (Math.abs(diff) > step) {
