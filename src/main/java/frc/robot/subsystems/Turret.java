@@ -241,7 +241,7 @@ public class Turret extends SubsystemBase {
         double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
 
         // Compute shortest delta to target
-        double current = normalizeAngle(cumulativeAngle);
+        double current = cumulativeAngle;
         double delta = normalizeAngle(targetTurretAngle - current);
 
         // Compute new cumulative setpoint
@@ -319,21 +319,26 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        // This already calls setFieldAngle with targetAngle - good!
-        updateCumulativeAngleSim();
-
+        // Simulate encoder reading (0-360°)
+        double absDegrees = simulatedAngle % 360.0;
+        if (absDegrees < 0) absDegrees += 360.0;
+        
+        // Update cumulative tracking (same as real code)
+        double delta = absDegrees - prevAbsolute;
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+        
+        cumulativeAngle += delta;
+        prevAbsolute = absDegrees;
+        
+        // Command the turret
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
-        // Now simulate the motor reaching the commanded position
-        // The target was set by setFieldAngle above through motionMagic.withPosition()
-        
-        // We need to extract what position was commanded
-        // The motionMagic object holds the last commanded position
+        // Simulate motor response
         double commandedRotations = motionMagic.Position;
         double commandedDegrees = commandedRotations / gearRatio * 360.0;
         
-        // Simulate motor moving toward commanded position
-        double step = 20.0; // degrees per 20ms loop
+        double step = 20.0;
         double diff = commandedDegrees - simulatedAngle;
         
         if (Math.abs(diff) > step) {
@@ -342,17 +347,7 @@ public class Turret extends SubsystemBase {
             simulatedAngle = commandedDegrees;
         }
         
-        // Update cumulativeAngle to match simulation
-        // This is what getCumulativeAngle() returns
-        cumulativeAngle = simulatedAngle;
-        
-        // Also update prevAbsolute so updateCumulativeAngle doesn't mess things up
-        prevAbsolute = normalizeAngle(simulatedAngle);
-        
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
         SmartDashboard.putNumber("Turret Commanded (Sim)", commandedDegrees);
     }
-
-
-
 }
