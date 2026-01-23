@@ -165,6 +165,53 @@ public class Turret extends SubsystemBase {
         based on position */
     }
 
+        /**
+     * Calculate feedforward for robot translation causing angle to target to change.
+     * Mimics the same target calculation logic as angleToFace.
+     */
+    private double calculateTranslationFeedforward() {
+        Pose2d robotPose = drivetrain.getState().Pose;
+        
+        // Same target selection logic as angleToFace
+        Translation2d target;
+        Pose3d blueHub = Constants.VisionConstants.blueHub;
+        Pose3d redHub = Constants.VisionConstants.redHub;
+
+        if(isBlue && robotPose.getX() < blueHub.getX()){
+            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+        } else if (isRed && robotPose.getX() > redHub.getX()){
+            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+        } else {
+            // No valid target, return 0 feedforward
+            return 0.0;
+        }
+        
+        // Account for turret offset from robot center (same as angleToFace)
+        Translation2d robotPos = robotPose.getTranslation();
+        Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
+        
+        // Vector from turret to target
+        Translation2d toTarget = target.minus(turretPos);
+        
+        double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
+        
+        if (distanceSquared < 0.0001) {
+            return 0.0; // Avoid division by zero when very close
+        }
+        
+        // Get robot velocity in field frame
+        var robotSpeeds = drivetrain.getState().Speeds;
+        
+        // Cross product gives angular velocity (rad/s)
+        double crossProduct = robotSpeeds.vxMetersPerSecond * toTarget.getY() - 
+                            robotSpeeds.vyMetersPerSecond * toTarget.getX();
+        
+        double angularVelocity_radPerSec = crossProduct / distanceSquared;
+        
+        // Convert to degrees per second (to match your rotation FF units)
+        return angularVelocity_radPerSec * 180.0 / Math.PI;
+    }
+
     /**
      * Field-relative turret control with yaw velocity feedforward.
      */
@@ -190,21 +237,28 @@ public class Turret extends SubsystemBase {
         // Clamp to physical limits
         targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
 
-        // Convert turret yaw rate feedforward to motor rotations per second
-        // Turret must spin opposite robot yaw to stay field locked
-        double turretFF_degPerSec = -robotYawRateDegPerSec;
-        double turretFF_rotPerSec = turretFF_degPerSec / 360.0 * gearRatio;
+        // ========== FEEDFORWARD CALCULATION ==========
+    
+        // 1. Robot rotation feedforward (compensates for robot spinning)
+        double rotationFF_degPerSec = -robotYawRateDegPerSec;
+        
+        // 2. Robot translation feedforward (compensates for robot driving) - NEW!
+        double translationFF_degPerSec = calculateTranslationFeedforward();
+        
+        // 3. Total feedforward
+        double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
+        double totalFF_rotPerSec = totalFF_degPerSec / 360.0 * gearRatio;
 
         // Convert position target to motor rotations
         double targetRotations = degreesToMotorRotations(targetCumulative);
 
-        // Command Motion Magic with velocity feedforward
+        // Command Motion Magic with combined velocity feedforward
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
-                        .withFeedForward(turretFF_rotPerSec)
-        );
-    }
+                        .withFeedForward(totalFF_rotPerSec)
+            );
+        }
 
     /**
      * Relative manual rotation command.
