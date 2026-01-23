@@ -54,6 +54,8 @@ public class Turret extends SubsystemBase {
 
     // Cumulative turret angle tracking
     private double cumulativeAngle;
+    private double simulatedAngle = 0.0; // sim version of cumulativeAngle
+
     private double prevAbsolute;
 
     // Swerve reference for heading and yaw rate
@@ -249,26 +251,31 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        // Get what the turret *should* face
+        // Compute target angle like setFieldAngle would
         Rotation2d targetFieldAngle = angleToFace(drivetrain.getState().Pose);
+        double cameraOffset = vision.getTurretCamOffset();
 
-        // Feed the real setFieldAngle method with zero camera offset for sim
-        setFieldAngle(targetFieldAngle, 0.0);
+        double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
+        double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(Rotation2d.fromDegrees(robotHeading)).getDegrees());
 
-        // Simulate cumulativeAngle moving toward the commanded target
-        // Include robot heading so the turret stays field-relative
-        double robotHeadingDeg = drivetrain.getState().Pose.getRotation().getDegrees();
-        double commandedFieldRelative = normalizeAngle(targetFieldAngle.getDegrees() - robotHeadingDeg);
-        double delta = normalizeAngle(commandedFieldRelative - cumulativeAngle);
+        // Apply the same limits as in real setFieldAngle
+        double delta = normalizeAngle(targetTurretAngle - simulatedAngle);
+        double targetCumulative = simulatedAngle + delta + cameraOffset;
+        targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
 
-        // simple first-order update (adjust factor to simulate speed)
-        cumulativeAngle += delta * 0.2; // 0.2 = fraction of delta per sim loop
+        // Simulate motion: simple proportional step towards target
+        double step = 5.0; // degrees per sim loop (tune this for smooth movement)
+        double diff = targetCumulative - simulatedAngle;
+        if (Math.abs(diff) > step) {
+            simulatedAngle += Math.copySign(step, diff);
+        } else {
+            simulatedAngle = targetCumulative;
+        }
 
-        // clamp to physical limits
-        cumulativeAngle = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, cumulativeAngle));
-
-        SmartDashboard.putNumber("Turret Angle", cumulativeAngle);
+        // Update SmartDashboard
+        SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
     }
+
 
 
 }
