@@ -246,4 +246,22 @@ public class Turret extends SubsystemBase {
         setFieldAngle(angleToFace(drivetrain.getState().Pose), vision.getTurretCamOffset());
         SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
     }
+
+    @Override
+    public void simulationPeriodic() {
+        Rotation2d target = angleToFace(drivetrain.getState().Pose);
+        double cameraOffset = 0.0;
+
+        // Call your full setFieldAngle method (runs all clamping, feedforward, shortest path)
+        setFieldAngle(target, cameraOffset);
+
+        // Simulate the turret moving toward the commanded angle (simple first-order model)
+        double commandedAngle = cumulativeAngle + normalizeAngle(target.getDegrees() - cumulativeAngle + cameraOffset);
+
+        // Update cumulativeAngle so SmartDashboard and plots reflect the movement
+        cumulativeAngle = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, commandedAngle));
+
+        SmartDashboard.putNumber("Turret Angle", cumulativeAngle);
+    }
+
 }
