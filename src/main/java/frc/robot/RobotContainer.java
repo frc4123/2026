@@ -9,7 +9,9 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import java.lang.Math;
 
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -107,6 +109,7 @@ public class RobotContainer {
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed) 
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) 
                 .withTargetDirection(vision.angleToFace(drivetrain.getState().Pose))
+                .withMaxAbsRotationalRate( 4* Math.PI)
             )
         );
         //face desired angle of robot towards the Hub when B is held
