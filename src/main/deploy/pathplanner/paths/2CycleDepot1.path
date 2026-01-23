@@ -1,0 +1,63 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.446339440047307,
+        "y": 7.465119575600437
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.446339440047307,
+        "y": 7.465119575600437
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.858656920942503,
+        "y": 5.2745144764374094
+      },
+      "prevControl": {
+        "x": 8.033037663755458,
+        "y": 7.984671465611348
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "2Depot1-2"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3385587993421056,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.6587599369517543,
+      "rotationDegrees": 113.27605220251458
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 95.15046470536029
+  },
+  "reversed": false,
+  "folder": "2CycleDepot",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
