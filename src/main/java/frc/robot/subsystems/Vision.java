@@ -14,7 +14,6 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -175,7 +174,6 @@ public class Vision extends SubsystemBase{
             // XY distance from camera to tag
             double dx = target.getBestCameraToTarget().getX(); // forward
             double dy = target.getBestCameraToTarget().getY(); // sideways
-
 
             double[] offsets = getHubOffsetForTag(target.getFiducialId()); // returns {offsetX, offsetY}
             dx -= offsets[0]; // forward adjustment

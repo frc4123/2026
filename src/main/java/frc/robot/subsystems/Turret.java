@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -60,7 +60,7 @@ public class Turret extends SubsystemBase {
     private final Vision vision;
 
     // Timing for accel estimation if needed later
-    private double lastLoopTime = 0.0;
+    //private double lastLoopTime = 0.0;
 
     public Turret(CommandSwerveDrivetrain drivetrain, Vision vision) {
         this.drivetrain = drivetrain;
@@ -74,7 +74,7 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = initial;
         prevAbsolute = initial;
 
-        lastLoopTime = Timer.getFPGATimestamp();
+        //lastLoopTime = Timer.getFPGATimestamp();
     }
 
     private void configureMotor() {
@@ -168,7 +168,7 @@ public class Turret extends SubsystemBase {
     public void setFieldAngle(Rotation2d targetFieldAngle, double cameraOffset) {
 
         // Clamp vision offset
-        cameraOffset = Math.max(-2.0, Math.min(2.0, cameraOffset));
+        cameraOffset = Math.max(-1.0, Math.min(1.0, cameraOffset));
 
         // Robot heading and yaw rate
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();

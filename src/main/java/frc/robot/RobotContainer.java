@@ -161,7 +161,7 @@ public class RobotContainer {
 
         autoChooser.addOption("2 Cycle Depot Climb Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
-            new SequentialCommandGroup(new twoCycleDepot().twoCycleDepot())
+            new SequentialCommandGroup(new twoCycleDepot().twoCycleDepotLeft())
         ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
