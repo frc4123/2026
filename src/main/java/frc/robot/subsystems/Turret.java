@@ -251,20 +251,22 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        // Compute target angle like setFieldAngle would
+                // Compute target like real setFieldAngle
         Rotation2d targetFieldAngle = angleToFace(drivetrain.getState().Pose);
         double cameraOffset = vision.getTurretCamOffset();
-
         double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
-        double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(Rotation2d.fromDegrees(robotHeading)).getDegrees());
 
-        // Apply the same limits as in real setFieldAngle
-        double delta = normalizeAngle(targetTurretAngle - simulatedAngle);
-        double targetCumulative = simulatedAngle + delta + cameraOffset;
+        // Robot-relative target angle
+        double targetTurretAngle = targetFieldAngle.getDegrees() - robotHeading;
+
+        // Add camera offset
+        double targetCumulative = targetTurretAngle + cameraOffset;
+
+        // Clamp to physical turret limits
         targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
 
-        // Simulate motion: simple proportional step towards target
-        double step = 5.0; // degrees per sim loop (tune this for smooth movement)
+        // Step sim angle toward target
+        double step = 5.0; // degrees per sim loop
         double diff = targetCumulative - simulatedAngle;
         if (Math.abs(diff) > step) {
             simulatedAngle += Math.copySign(step, diff);
