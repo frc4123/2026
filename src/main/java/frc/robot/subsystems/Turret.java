@@ -116,7 +116,7 @@ public class Turret extends SubsystemBase {
      * Call exactly once per loop.
      */
     private void updateCumulativeAngle() {
-        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble();
+        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
         double delta = abs - prevAbsolute;
 
         // Handle wraparound
@@ -127,7 +127,7 @@ public class Turret extends SubsystemBase {
         prevAbsolute = abs;
     }
 
-    public Rotation2d angleToFace(Pose2d robotPose) {
+    public Rotation2d targetAngle(Pose2d robotPose) {
 
         Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
@@ -167,12 +167,12 @@ public class Turret extends SubsystemBase {
 
         /**
      * Calculate feedforward for robot translation causing angle to target to change.
-     * Mimics the same target calculation logic as angleToFace.
+     * Mimics the same target calculation logic as targetAngle.
      */
     private double calculateTranslationFeedforward() {
         Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Same target selection logic as angleToFace
+        // Same target selection logic as targetAngle
         Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
@@ -186,7 +186,7 @@ public class Turret extends SubsystemBase {
             return 0.0;
         }
         
-        // Account for turret offset from robot center (same as angleToFace)
+        // Account for turret offset from robot center (same as targetAngle)
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
         
@@ -242,7 +242,7 @@ public class Turret extends SubsystemBase {
         // 1. Robot rotation feedforward (compensates for robot spinning)
         double rotationFF_degPerSec = -robotYawRateDegPerSec;
         
-        // 2. Robot translation feedforward (compensates for robot driving) - NEW!
+        // 2. Robot translation feedforward (compensates for robot driving)
         double translationFF_degPerSec = calculateTranslationFeedforward();
         
         // 3. Total feedforward
@@ -299,14 +299,14 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         checkDS();
         updateCumulativeAngle();
-        setFieldAngle(angleToFace(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
     }
 
     @Override
     public void simulationPeriodic() {
-        // This already calls setFieldAngle with angleToFace - good!
-        setFieldAngle(angleToFace(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        // This already calls setFieldAngle with targetAngle - good!
+        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
         // Now simulate the motor reaching the commanded position
         // The target was set by setFieldAngle above through motionMagic.withPosition()

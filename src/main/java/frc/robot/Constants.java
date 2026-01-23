@@ -77,7 +77,7 @@ public class Constants {
         //Front Forward Camera Translation and Angle
         public static final double frontX = Units.inchesToMeters(8); // 7.495 7.176364 -7.176364
         public static final double frontY = Units.inchesToMeters(-4.5);
-        public static final double frontZ = Units.inchesToMeters(12); // 7.02
+        public static final double frontZ = Units.inchesToMeters(6.75); // 7.02
 
         public static final double frontRoll = Math.toRadians(0);
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
