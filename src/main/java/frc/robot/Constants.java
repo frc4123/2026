@@ -4,6 +4,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -69,7 +70,11 @@ public class Constants {
         public static final double frontZ = Units.inchesToMeters(8.186116); // 7.02
 
         public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.829, new Rotation3d());
+        public static final Translation2d blueHubTranslation2d = blueHub.getTranslation().toTranslation2d();
+
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.829, new Rotation3d());
+        public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
+
         //TODO: DOUBLE CHECK THE HEIGHT OF HUB AND THE CORDINATE POSITIONS ARE GUESSES
 
         public static final double frontRoll = Math.toRadians(0);

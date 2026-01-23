@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -188,6 +189,26 @@ public class Vision extends SubsystemBase{
         return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
     }
 
+    public Translation2d getHub() {
+        if(isBlue == false && isRed == false){
+            if(DriverStation.isDSAttached()){
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
+        }
+
+        Translation2d blueHub = Constants.VisionConstants.blueHubTranslation2d;
+        Translation2d redHub = Constants.VisionConstants.redHubTranslation2d;
+
+        if(isRed){
+            return redHub;
+
+        } else {return blueHub;}
+    }
+
     public Rotation2d angleToFace(Pose2d robotPose) {
         if(isBlue == false && isRed == false){
             if(DriverStation.isDSAttached()){
@@ -199,18 +220,21 @@ public class Vision extends SubsystemBase{
             }
         }
 
-        Translation2d target = null;
+        Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
 
         if(isBlue && robotPose.getX() < blueHub.getX()){
             target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
+        
             Translation2d delta = target.minus(robotPos);
             return delta.getAngle();
+
         } else if (isRed && robotPose.getX() > redHub.getX()){
             target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
+
             Translation2d delta = target.minus(robotPos);
             return delta.getAngle();
         }
@@ -226,6 +250,25 @@ public class Vision extends SubsystemBase{
 
         /* we can also reuse ts for turret because this function is just telling us what angle to face our scoring point
         based on position */
+    }
+
+    public double targetFF(Pose2d robotPose, Translation2d targetPosition, ChassisSpeeds robotVelocity) {
+        // Vector from robot to target
+        Translation2d toTarget = targetPosition.minus(robotPose.getTranslation());
+    
+        // Distance squared to target
+        double distanceSquared = toTarget.getX() * toTarget.getX() + toTarget.getY() * toTarget.getY();
+    
+        // Avoid division by zero when very close to target
+        if (distanceSquared < 0.0001) {
+            return 0.0;
+        }
+    
+        // Cross product of velocity and position vector
+        // ω = (v × r) / |r|²
+        double crossProduct = robotVelocity.vxMetersPerSecond * toTarget.getY() - robotVelocity.vyMetersPerSecond * toTarget.getX();
+    
+        return crossProduct / distanceSquared;
     }
 
     @Override

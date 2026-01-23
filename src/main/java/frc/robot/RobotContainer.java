@@ -11,7 +11,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import java.lang.Math;
 
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,13 +50,14 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+    
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     private final CommandXboxController joystick = new CommandXboxController(Constants.InputConstants.kDriverControllerPort0);
     //private final CommandGenericHID m_buttonBoard = new CommandGenericHID(Constants.InputConstants.kDriverControllerPort1);
 
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus(drivetrain);
     private final Vision vision = new Vision(drivetrain, oculus);
 
@@ -109,7 +109,10 @@ public class RobotContainer {
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed) 
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed) 
                 .withTargetDirection(vision.angleToFace(drivetrain.getState().Pose))
-                .withMaxAbsRotationalRate( 4* Math.PI)
+                .withTargetRateFeedforward(
+                    vision.targetFF(drivetrain.getState().Pose, 
+                    vision.getHub(),
+                    drivetrain.getState().Speeds))
             )
         );
         //face desired angle of robot towards the Hub when B is held
