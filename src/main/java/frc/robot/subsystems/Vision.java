@@ -14,6 +14,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -50,6 +51,7 @@ public class Vision extends SubsystemBase{
 
     private final PhotonPoseEstimator frontEstimator;
     private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
+    private final PhotonCamera turretCam = new PhotonCamera("Arducam_OV9281_USB_Camera_Turret");
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -136,6 +138,76 @@ public class Vision extends SubsystemBase{
             }
         }
     }
+
+    public double getTurretCamOffset() {
+        PhotonPipelineResult result = getLatestResults(turretCam);
+
+        if (result == null || result.getTargets().isEmpty()) {
+            return 0.0; // no targets
+        }
+
+        for (var target : result.getTargets()) {
+            int id = target.getFiducialId();
+
+            boolean validTag = false;
+
+            if (isBlue) {
+                for (double validId : Constants.Turret.validTurretTagsBlue) {
+                    if (id == (int) validId) {
+                        validTag = true;
+                        break;
+                    }
+                }
+            } else if (isRed) {
+                for (double validId : Constants.Turret.validTurretTagsRed) {
+                    if (id == (int) validId) {
+                        validTag = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!validTag) continue;
+
+            // Get camera yaw (degrees) to this tag
+            double photonYaw = target.getYaw();
+
+            // XY distance from camera to tag
+            double dx = target.getBestCameraToTarget().getX(); // forward
+            double dy = target.getBestCameraToTarget().getY(); // sideways
+
+
+            double[] offsets = getHubOffsetForTag(target.getFiducialId()); // returns {offsetX, offsetY}
+            dx -= offsets[0]; // forward adjustment
+            dy -= offsets[1]; // sideways adjustment
+
+            // Compute turret angle to hub center without X/Y offset yet
+            // Hub offset will be applied in a separate method
+            double angleToHubCenterRad = Math.atan2(dy, dx); // relative to camera forward
+            double angleToHubCenterDeg = Math.toDegrees(angleToHubCenterRad);
+
+            // Combine camera yaw with raw geometry
+            double turretAngle = photonYaw + angleToHubCenterDeg;
+
+            return turretAngle;
+        }
+
+        return 0.0; // no valid target found
+    }
+
+    public double[] getHubOffsetForTag(int id){
+        switch(id){
+            case 21: return new double[]{0.0, Constants.Turret.tagOffset};
+            case 26: return new double[]{-Constants.Turret.tagOffset, 0.0};
+            case 18: return new double[]{0.0, -Constants.Turret.tagOffset};
+
+            case 2: return new double[]{0.0, Constants.Turret.tagOffset};
+            case 10: return new double[]{Constants.Turret.tagOffset, 0.0};
+            case 5: return new double[]{0.0, -Constants.Turret.tagOffset};
+        }
+        return new double[] {0.0,0.0};
+    }
+
         
     private boolean shouldResetQuestNav(PhotonPipelineResult result) {
         // Only reset QuestNav with high-confidence measurements

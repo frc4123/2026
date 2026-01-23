@@ -4,7 +4,9 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -32,9 +34,9 @@ public class Constants {
         public static final int Back_Left_CANcoder = 13;
         public static final int Back_Right_CANcoder = 14;
 
-        public static final int Elevator = 15;
+        public static final int Turret = 15;
+        public static final int Turret_Encoder = 15;
 
-        public static final int Algae_Arm = 17;
     }
 
     public static final class InputConstants {
@@ -43,6 +45,31 @@ public class Constants {
         public static final int kDriverControllerPort2 = 2;
         public static final boolean fieldOrientation = true;
         public static final double kDeadband = 0.028;
+    }
+
+    public static final class Turret {
+        public static final double stowPosition = 0;
+        public static final double velocity = 0;
+        public static final double acceleration = 0;
+
+        public static final double gearRatio = 1;
+
+        public static final double offsetX = Units.inchesToMeters(8);
+        public static final double offsetY = Units.inchesToMeters(-8);
+
+        public static final double tagOffset = Units.inchesToMeters(47/2);
+        public static final double[] validTurretTagsBlue = {21, 26, 18};
+        public static final double[] validTurretTagsRed = {2, 10, 5};
+
+        public static final Translation2d turretOffset = new Translation2d(offsetX, offsetY);
+
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
+
     }
 
     public static final class Quest {
@@ -64,6 +91,7 @@ public class Constants {
     }   
 
     public static final class VisionConstants {
+
         //Front Forward Camera Translation and Angle
         public static final double frontX = Units.inchesToMeters(-11.5); // 7.495 7.176364 -7.176364
         public static final double frontY = Units.inchesToMeters(0);
@@ -74,6 +102,18 @@ public class Constants {
 
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.829, new Rotation3d());
         public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
+
+        // Camera transforms
+        public static final Transform3d robotToCam = new Transform3d(
+            new Translation3d(
+                Constants.VisionConstants.frontX,
+                Constants.VisionConstants.frontY,
+                Constants.VisionConstants.frontZ),
+            new Rotation3d(
+                Constants.VisionConstants.frontRoll,
+                Constants.VisionConstants.frontPitch,
+                Constants.VisionConstants.frontYaw)
+        );
 
         //TODO: DOUBLE CHECK THE HEIGHT OF HUB AND THE CORDINATE POSITIONS ARE GUESSES
 
