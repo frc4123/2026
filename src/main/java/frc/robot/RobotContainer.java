@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Oculus;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
 
 import frc.robot.commands.autos.mtest;
@@ -60,6 +61,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus(drivetrain);
     private final Vision vision = new Vision(drivetrain, oculus);
+    private final Turret turret = new Turret(drivetrain, vision);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
