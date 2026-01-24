@@ -12,6 +12,8 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import java.lang.Math;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,8 +58,6 @@ public class RobotContainer {
     // Field-centric strafing request using controller's d-pad
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
-
-    
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
