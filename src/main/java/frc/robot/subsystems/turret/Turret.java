@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
-import frc.robot.utils.FuelSim;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -43,7 +42,6 @@ public class Turret extends SubsystemBase {
     // Absolute turret encoder
     private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder);
 
-    private int fuelStored = 0;
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -129,18 +127,6 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
-        double delta = abs - prevAbsolute;
-
-        // Handle wraparound
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-
-        cumulativeAngle += delta;
-        prevAbsolute = abs;
-    }
-
-    private void updateCumulativeAngleSim() {
-        double abs = simulatedAngle;
         double delta = abs - prevAbsolute;
 
         // Handle wraparound
@@ -396,7 +382,7 @@ public class Turret extends SubsystemBase {
         double commandedRotations = motionMagic.Position;
         double commandedDegrees = commandedRotations / gearRatio * 360.0;
         
-        double step = 20.0;
+        double step = 60.0;
         double diff = commandedDegrees - simulatedAngle;
         
         if (Math.abs(diff) > step) {
@@ -407,6 +393,7 @@ public class Turret extends SubsystemBase {
 
         
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
-        SmartDashboard.putNumber("Turret Commanded (Sim)", commandedDegrees);
+        SmartDashboard.putNumber("Turret Commanded", commandedDegrees);
     }
 }
+
