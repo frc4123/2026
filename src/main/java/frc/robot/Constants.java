@@ -121,4 +121,10 @@ public class Constants {
         public static final double frontPitch = Math.toRadians(-60); // negative pitch is up according to 25 code
         public static final double frontYaw = Math.toRadians(20);
     }
+
+    public static final class Sim{
+        public static final double fullWidth = Units.inchesToMeters(27);
+        public static final double fullLength = Units.inchesToMeters(27);
+        public static final double fullHeight = Units.inchesToMeters(22);
+    }
 }
