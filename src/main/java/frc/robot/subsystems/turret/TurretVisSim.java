@@ -43,19 +43,34 @@ public class TurretVisSim extends SubsystemBase{
     }
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
+        Pose3d robot = poseSupplier.get();
         ChassisSpeeds fieldSpeeds = fieldSpeedsSupplier.get();
-
-        double horizontalVel = Math.cos(angle.in(Radians)) * vel.in(MetersPerSecond);
-        double verticalVel = Math.sin(angle.in(Radians)) * vel.in(MetersPerSecond);
-        double xVel =
-                horizontalVel * Math.cos(turret.getCumulativeAngle() / 180 * Math.PI);
-        double yVel =
-                horizontalVel * Math.sin(turret.getCumulativeAngle() / 180 * Math.PI);
-
-        xVel += fieldSpeeds.vxMetersPerSecond;
-        yVel += fieldSpeeds.vyMetersPerSecond;
-
-        return new Translation3d(xVel, yVel, verticalVel);
+        
+        // angle is already robot-relative (turret angle relative to robot)
+        double angleRad = angle.in(Radians); // Robot-relative launch angle
+        
+        double horizontalVel = Math.cos(angleRad) * vel.in(MetersPerSecond);
+        double verticalVel = Math.sin(angleRad) * vel.in(MetersPerSecond);
+        
+        // WRONG: This uses field coordinates
+        // double xVel = horizontalVel * Math.cos(robot.getRotation().toRotation2d().getRadians());
+        // double yVel = horizontalVel * Math.sin(robot.getRotation().toRotation2d().getRadians());
+        
+        // RIGHT: Launch in robot-relative X direction (forward)
+        // Turret angle = 0 means shoot forward from robot
+        double xVel = horizontalVel; // Robot-forward
+        double yVel = 0;             // Robot-right would be if turret was at 90°
+        
+        // Now rotate by robot heading to convert to field coordinates
+        double robotHeadingRad = robot.getRotation().toRotation2d().getRadians();
+        double fieldXVel = xVel * Math.cos(robotHeadingRad) - yVel * Math.sin(robotHeadingRad);
+        double fieldYVel = xVel * Math.sin(robotHeadingRad) + yVel * Math.cos(robotHeadingRad);
+        
+        // Add robot velocity
+        fieldXVel += fieldSpeeds.vxMetersPerSecond;
+        fieldYVel += fieldSpeeds.vyMetersPerSecond;
+        
+        return new Translation3d(fieldXVel, fieldYVel, verticalVel);
     }
 
     public LinearVelocity getSimShooterVelo(){
