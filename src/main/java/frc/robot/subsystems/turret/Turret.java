@@ -361,24 +361,9 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
     }
 
-    @Override
+   @Override
     public void simulationPeriodic() {
-        // Simulate encoder reading (0-360°)
-        double absDegrees = simulatedAngle % 360.0;
-        if (absDegrees < 0) absDegrees += 360.0;
-        
-        // Update cumulative tracking (same as real code)
-        double delta = absDegrees - prevAbsolute;
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-        
-        cumulativeAngle += delta;
-        prevAbsolute = absDegrees;
-        
-        // Command the turret
-        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
-        
-        // Simulate motor response
+        // FIRST: Simulate motor response
         double commandedRotations = motionMagic.Position;
         double commandedDegrees = commandedRotations / gearRatio * 360.0;
         
@@ -390,9 +375,20 @@ public class Turret extends SubsystemBase {
         } else {
             simulatedAngle = commandedDegrees;
         }
-
-        simulatedAngle = commandedDegrees;
-
+        
+        // THEN: Update cumulative tracking
+        double absDegrees = simulatedAngle % 360.0;
+        if (absDegrees < 0) absDegrees += 360.0;
+        
+        double delta = absDegrees - prevAbsolute;
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+        
+        cumulativeAngle += delta;
+        prevAbsolute = absDegrees;
+        
+        // FINALLY: Command the turret for NEXT loop
+        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
         SmartDashboard.putNumber("Turret Commanded", commandedDegrees);
