@@ -63,8 +63,8 @@ public class TurretVisSim extends SubsystemBase{
         
         // ONLY add robot TRANSLATION velocity (not rotation effects)
         // The turret already compensates for rotation by tracking the target
-        fieldXVel += fieldSpeeds.vxMetersPerSecond;
-        fieldYVel += fieldSpeeds.vyMetersPerSecond;
+        //fieldXVel += fieldSpeeds.vxMetersPerSecond;
+        //fieldYVel += fieldSpeeds.vyMetersPerSecond;
         
         return new Translation3d(fieldXVel, fieldYVel, robotZVel);
     }
