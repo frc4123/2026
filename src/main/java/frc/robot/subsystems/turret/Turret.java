@@ -182,47 +182,46 @@ public class Turret extends SubsystemBase {
     private double calculateTranslationFeedforward() {
         Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Target selection
+        // Same target selection logic as targetAngle
         Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
 
         if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = blueHub.getTranslation().toTranslation2d();
+            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
         } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = redHub.getTranslation().toTranslation2d();
+            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
         } else {
+            // No valid target, return 0 feedforward
             return 0.0;
         }
         
+        // Account for turret offset from robot center (same as targetAngle)
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
         
-        // Vector from turret to target in FIELD frame
-        Translation2d r_field = target.minus(turretPos);
+        // Vector from turret to target
+        Translation2d toTarget = target.minus(turretPos);
         
-        // Convert to ROBOT frame
-        double robotHeadingRad = robotPose.getRotation().getRadians();
-        double r_x = r_field.getX() * Math.cos(-robotHeadingRad) - r_field.getY() * Math.sin(-robotHeadingRad);
-        double r_y = r_field.getX() * Math.sin(-robotHeadingRad) + r_field.getY() * Math.cos(-robotHeadingRad);
+        double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
         
-        double distanceSquared = r_x * r_x + r_y * r_y;
-        if (distanceSquared < 0.0001) return 0.0;
+        if (distanceSquared < 0.0001) {
+            return 0.0; // Avoid division by zero when very close
+        }
         
-        // Convert field velocity to ROBOT frame
-        var fieldSpeeds = drivetrain.getState().Speeds;
-        double v_x = fieldSpeeds.vxMetersPerSecond * Math.cos(-robotHeadingRad) - 
-                    fieldSpeeds.vyMetersPerSecond * Math.sin(-robotHeadingRad);
-        double v_y = fieldSpeeds.vxMetersPerSecond * Math.sin(-robotHeadingRad) + 
-                    fieldSpeeds.vyMetersPerSecond * Math.cos(-robotHeadingRad);
+        // Get robot velocity in field frame
+        var robotSpeeds = drivetrain.getState().Speeds;
         
-        // Cross product in ROBOT frame: ω = (v × r) / |r|²
-        double cross = v_x * r_y - v_y * r_x;
-        double omega_rad_per_sec = cross / distanceSquared;
+        // Cross product gives angular velocity (rad/s)
+        double crossProduct = robotSpeeds.vxMetersPerSecond * toTarget.getY() - 
+                            robotSpeeds.vyMetersPerSecond * toTarget.getX();
         
-        return omega_rad_per_sec * 180.0 / Math.PI;
+        double angularVelocity_radPerSec = crossProduct / distanceSquared;
+        
+        // Convert to degrees per second (to match your rotation FF units)
+        return 0;
+        //return angularVelocity_radPerSec * 180.0 / Math.PI;
     }
-
     /**
      * Field-relative turret control with yaw velocity feedforward.
      */
