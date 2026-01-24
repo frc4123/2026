@@ -10,10 +10,15 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import java.lang.Math;
+import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -23,9 +28,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Oculus;
-import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Vision;
-
+import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.TurretVisSim;
+import frc.robot.utils.FuelSim;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
@@ -61,6 +67,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus(drivetrain);
     private final Vision vision = new Vision(drivetrain, oculus);
+    private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision);
     private final Turret turret = new Turret(drivetrain, vision);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
@@ -74,6 +81,7 @@ public class RobotContainer {
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
         initializeAutoChooser();
+        configureFuelSim();
     }
 
     private void configureBindings() {
@@ -148,6 +156,45 @@ public class RobotContainer {
             .withVelocityY(0)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+    }
+
+    private void configureFuelSim() {
+        FuelSim instance = FuelSim.getInstance();
+        instance.spawnStartingFuel();
+        instance.registerRobot(
+                Constants.Sim.fullWidth,
+                Constants.Sim.fullLength,
+                Constants.Sim.fullHeight,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+        instance.registerIntake(
+                -Constants.Sim.fullLength,
+                Constants.Sim.fullLength / 2,
+                ((-Constants.Sim.fullWidth + 0.5) / 2)+ Units.inchesToMeters(7),
+                (-Constants.Sim.fullWidth + 0.5) / 2 ,
+                () -> true,
+                () -> {});
+        instance.registerIntake(
+                -Constants.Sim.fullLength / 2,
+                Constants.Sim.fullLength / 2,
+                Constants.Sim.fullWidth / 2,
+                (Constants.Sim.fullWidth / 2)+ Units.inchesToMeters(7),
+                () -> true,
+                () -> {});
+
+        instance.start();
+
+        Command fireContinuously = turretVisSim.repeatedlyLaunchFuel(() -> turretVisSim.getSimShooterVelo(), () -> turretVisSim.getSimShooterTheta(), turret);
+
+        // Schedule it (runs repeatedly until interrupted)
+         CommandScheduler.getInstance().schedule(fireContinuously);
+        
+        SmartDashboard.putData(Commands.runOnce(() -> {
+                    FuelSim.getInstance().clearFuel();
+                    FuelSim.getInstance().spawnStartingFuel();
+                })
+                .withName("Reset Fuel")
+                .ignoringDisable(true));
     }
 
     public void initializeAutoChooser() {
