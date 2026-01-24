@@ -219,7 +219,7 @@ public class Turret extends SubsystemBase {
         double angularVelocity_radPerSec = crossProduct / distanceSquared;
         
         // Convert to degrees per second (to match your rotation FF units)
-        return angularVelocity_radPerSec * 180.0 / Math.PI;
+        return -angularVelocity_radPerSec * 180.0 / Math.PI;
     }
 
     /**
@@ -382,7 +382,7 @@ public class Turret extends SubsystemBase {
         double commandedRotations = motionMagic.Position;
         double commandedDegrees = commandedRotations / gearRatio * 360.0;
         
-        double step = 60.0;
+        double step = 25.0;
         double diff = commandedDegrees - simulatedAngle;
         
         if (Math.abs(diff) > step) {
