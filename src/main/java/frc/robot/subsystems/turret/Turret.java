@@ -147,7 +147,9 @@ public class Turret extends SubsystemBase {
             target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
         
-            Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
+           Translation2d turretPos = robotPos.plus(
+                Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+            );
 
             Translation2d delta = target.minus(turretPos);
             return delta.getAngle();
@@ -156,7 +158,9 @@ public class Turret extends SubsystemBase {
             target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
 
-            Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
+            Translation2d turretPos = robotPos.plus(
+                Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+            );
 
             Translation2d delta = target.minus(turretPos);
             return delta.getAngle();
@@ -198,8 +202,10 @@ public class Turret extends SubsystemBase {
         
         // Account for turret offset from robot center (same as targetAngle)
         Translation2d robotPos = robotPose.getTranslation();
-        Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
-        
+        Translation2d turretPos = robotPos.plus(
+            Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+        );
+                
         // Vector from turret to target
         Translation2d toTarget = target.minus(turretPos);
         
@@ -219,8 +225,7 @@ public class Turret extends SubsystemBase {
         double angularVelocity_radPerSec = crossProduct / distanceSquared;
         
         // Convert to degrees per second (to match your rotation FF units)
-        return 0;
-        //return angularVelocity_radPerSec * 180.0 / Math.PI;
+        return angularVelocity_radPerSec * 180.0 / Math.PI;
     }
     /**
      * Field-relative turret control with yaw velocity feedforward.
