@@ -198,20 +198,26 @@ public class Turret extends SubsystemBase {
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
         
-        // Vector from turret to target (FIELD frame)
-        Translation2d r = target.minus(turretPos);
+        // Vector from turret to target in FIELD frame
+        Translation2d r_field = target.minus(turretPos);
         
-        double distanceSquared = r.getNorm() * r.getNorm();
+        // Convert to ROBOT frame
+        double robotHeadingRad = robotPose.getRotation().getRadians();
+        double r_x = r_field.getX() * Math.cos(-robotHeadingRad) - r_field.getY() * Math.sin(-robotHeadingRad);
+        double r_y = r_field.getX() * Math.sin(-robotHeadingRad) + r_field.getY() * Math.cos(-robotHeadingRad);
+        
+        double distanceSquared = r_x * r_x + r_y * r_y;
         if (distanceSquared < 0.0001) return 0.0;
         
-        // Get FIELD-relative velocity (what you already have)
+        // Convert field velocity to ROBOT frame
         var fieldSpeeds = drivetrain.getState().Speeds;
+        double v_x = fieldSpeeds.vxMetersPerSecond * Math.cos(-robotHeadingRad) - 
+                    fieldSpeeds.vyMetersPerSecond * Math.sin(-robotHeadingRad);
+        double v_y = fieldSpeeds.vxMetersPerSecond * Math.sin(-robotHeadingRad) + 
+                    fieldSpeeds.vyMetersPerSecond * Math.cos(-robotHeadingRad);
         
-        // Cross product in FIELD frame (both r and v are field-relative)
-        // ω = (v_field × r_field) / |r|²
-        double cross = fieldSpeeds.vxMetersPerSecond * r.getY() - 
-                    fieldSpeeds.vyMetersPerSecond * r.getX();
-        
+        // Cross product in ROBOT frame: ω = (v × r) / |r|²
+        double cross = v_x * r_y - v_y * r_x;
         double omega_rad_per_sec = cross / distanceSquared;
         
         return omega_rad_per_sec * 180.0 / Math.PI;
