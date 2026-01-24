@@ -182,7 +182,7 @@ public class Turret extends SubsystemBase {
     private double calculateTranslationFeedforward() {
         Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Same target selection logic as targetAngle
+        // Same target selection logic
         Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
@@ -192,34 +192,31 @@ public class Turret extends SubsystemBase {
         } else if (isRed && robotPose.getX() > redHub.getX()){
             target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
         } else {
-            // No valid target, return 0 feedforward
             return 0.0;
         }
         
-        // Account for turret offset from robot center (same as targetAngle)
+        // Account for turret offset
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
         
-        // Vector from turret to target
-        Translation2d toTarget = target.minus(turretPos);
+        // Vector from turret TO target
+        Translation2d r = target.minus(turretPos);
         
-        double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
+        double distanceSquared = r.getX() * r.getX() + r.getY() * r.getY();
+        if (distanceSquared < 0.0001) return 0.0;
         
-        if (distanceSquared < 0.0001) {
-            return 0.0; // Avoid division by zero when very close
-        }
-        
-        // Get robot velocity in field frame
+        // Get robot velocity
         var robotSpeeds = drivetrain.getState().Speeds;
         
-        // Cross product gives angular velocity (rad/s)
-        double crossProduct = robotSpeeds.vxMetersPerSecond * toTarget.getY() - 
-                            robotSpeeds.vyMetersPerSecond * toTarget.getX();
+        // Cross product: v_robot × r
+        double cross = robotSpeeds.vxMetersPerSecond * r.getY() - 
+                    robotSpeeds.vyMetersPerSecond * r.getX();
         
-        double angularVelocity_radPerSec = crossProduct / distanceSquared;
+        // Turret angular velocity to cancel apparent motion: ω = - (v × r) / |r|²
+        double omega_rad_per_sec = -cross / distanceSquared;
         
-        // Convert to degrees per second (to match your rotation FF units)
-        return -angularVelocity_radPerSec * 180.0 / Math.PI;
+        // Convert to degrees/sec
+        return omega_rad_per_sec * 180.0 / Math.PI;
     }
 
     /**
