@@ -48,9 +48,9 @@ public class TurretVisSim extends SubsystemBase{
         double horizontalVel = Math.cos(angle.in(Radians)) * vel.in(MetersPerSecond);
         double verticalVel = Math.sin(angle.in(Radians)) * vel.in(MetersPerSecond);
         double xVel =
-                horizontalVel * Math.cos(turret.getCumulativeAngle());
+                horizontalVel * Math.cos(turret.getCumulativeAngle() / 180 * Math.PI);
         double yVel =
-                horizontalVel * Math.sin(turret.getCumulativeAngle());
+                horizontalVel * Math.sin(turret.getCumulativeAngle() / 180 * Math.PI);
 
         xVel += fieldSpeeds.vxMetersPerSecond;
         yVel += fieldSpeeds.vyMetersPerSecond;
