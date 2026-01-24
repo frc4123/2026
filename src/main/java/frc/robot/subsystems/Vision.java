@@ -279,6 +279,26 @@ public class Vision extends SubsystemBase{
         } else {return blueHub;}
     }
 
+    public Pose3d getHub3D() {
+        if(isBlue == false && isRed == false){
+            if(DriverStation.isDSAttached()){
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
+        }
+
+        Pose3d blueHub = Constants.VisionConstants.blueHub;
+        Pose3d redHub = Constants.VisionConstants.redHub;
+
+        if(isRed){
+            return redHub;
+
+        } else {return blueHub;}
+    }
+
     public Rotation2d angleToFace(Pose2d robotPose) {
         if(isBlue == false && isRed == false){
             if(DriverStation.isDSAttached()){

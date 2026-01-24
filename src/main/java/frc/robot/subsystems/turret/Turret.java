@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -10,7 +10,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +24,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Vision;
+import frc.robot.utils.FuelSim;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -33,6 +42,8 @@ public class Turret extends SubsystemBase {
 
     // Absolute turret encoder
     private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder);
+
+    private int fuelStored = 0;
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -317,6 +328,47 @@ public class Turret extends SubsystemBase {
         }
     }
 
+    private Transform3d launchVel(
+        Pose2d robotPose,
+        ChassisSpeeds speeds,
+        Translation3d target,
+        double shooterHeight,
+        double shotAngleRad
+    ) {
+        Translation2d shooterPos = robotPose.getTranslation();
+
+        double dx = target.getX() - shooterPos.getX();
+        double dy = target.getY() - shooterPos.getY();
+        double d = Math.hypot(dx, dy);
+        double dz = target.getZ() - shooterHeight;
+
+        double cos = Math.cos(shotAngleRad);
+        double tan = Math.tan(shotAngleRad);
+
+        double denom = 2 * cos * cos * (d * tan - dz);
+        if (denom <= 0) {
+            return new Transform3d(); // impossible shot, zero transform
+        }
+
+        double v = Math.sqrt(9.81 * d * d / denom);
+
+        // Unit direction in field frame
+        double ux = dx / d;
+        double uy = dy / d;
+
+        double vx =
+            v * cos * ux + speeds.vxMetersPerSecond;
+        double vy =
+            v * cos * uy + speeds.vyMetersPerSecond;
+        double vz =
+            v * Math.sin(shotAngleRad);
+
+        return new Transform3d(
+            new Translation3d(vx, vy, vz),
+            new Rotation3d()
+        );
+    }
+
     @Override
     public void periodic() {
         checkDS();
@@ -354,6 +406,7 @@ public class Turret extends SubsystemBase {
         } else {
             simulatedAngle = commandedDegrees;
         }
+
         
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
         SmartDashboard.putNumber("Turret Commanded (Sim)", commandedDegrees);
