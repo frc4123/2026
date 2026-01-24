@@ -81,6 +81,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void simulationPeriodic() {
+        m_timeAndJoystickReplay.update();
+        CommandScheduler.getInstance().run();
         FuelSim.getInstance().updateSim();
     }
 }
