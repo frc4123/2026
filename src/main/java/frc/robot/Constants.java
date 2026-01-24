@@ -121,7 +121,7 @@ public class Constants {
         //TODO: DOUBLE CHECK THE HEIGHT OF HUB AND THE CORDINATE POSITIONS ARE GUESSES
 
         public static final double frontRoll = Math.toRadians(0);
-        public static final double frontPitch = Math.toRadians(60); // negative pitch is up according to 25 code
+        public static final double frontPitch = Math.toRadians(-60); // negative pitch is up according to 25 code
         public static final double frontYaw = Math.toRadians(180);
     }
 
