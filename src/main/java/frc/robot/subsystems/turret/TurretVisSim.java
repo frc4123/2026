@@ -44,49 +44,40 @@ public class TurretVisSim extends SubsystemBase{
         this.turret = turret;
     }
 
-    private Translation3d launchVel(LinearVelocity vel, Angle angle) {
+    private Translation3d launchVel(LinearVelocity vel, Angle elevation) {
         Pose3d robot = poseSupplier.get();
-        ChassisSpeeds fieldSpeeds = fieldSpeedsSupplier.get();
-        
-        // Get turret position relative to robot
+        ChassisSpeeds speeds = fieldSpeedsSupplier.get();
+
         Translation3d turretOffset = new Translation3d(
             Constants.Turret.offsetX,
-            Constants.Turret.offsetY, 
+            Constants.Turret.offsetY,
             Constants.Turret.offsetZ
         );
-        
-        // Calculate tangential velocity due to robot rotation
-        double robotAngularVelRad = fieldSpeeds.omegaRadiansPerSecond;
-        
-        // Cross product: ω × r gives tangential velocity
-        // For 2D rotation about Z-axis, this becomes:
-        // V_tangential_x = -ω * r_y
-        // V_tangential_y = ω * r_x
-        double tangentialVelX = -robotAngularVelRad * turretOffset.getY();
-        double tangentialVelY = robotAngularVelRad * turretOffset.getX();
-        
-        double elevationRad = angle.in(Radians);
+
+        double omega = speeds.omegaRadiansPerSecond;
+
+        double tangentialX = -omega * turretOffset.getY();
+        double tangentialY =  omega * turretOffset.getX();
+
+        double elevRad = elevation.in(Radians);
+
+        // IMPORTANT: turret.getCumulativeAngle() must be FIELD RELATIVE
         double turretYawRad = Math.toRadians(turret.getCumulativeAngle());
-        
-        // 3D launch vector in ROBOT coordinates
-        double robotXVel = Math.cos(elevationRad) * Math.cos(turretYawRad) * vel.in(MetersPerSecond);
-        double robotYVel = Math.cos(elevationRad) * Math.sin(turretYawRad) * vel.in(MetersPerSecond);
-        double robotZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
-        
-        // Rotate by robot heading
-        double robotHeadingRad = robot.getRotation().toRotation2d().getRadians();
-        double fieldXVel = robotXVel * Math.cos(robotHeadingRad) - robotYVel * Math.sin(robotHeadingRad);
-        double fieldYVel = robotXVel * Math.sin(robotHeadingRad) + robotYVel * Math.cos(robotHeadingRad);
-        
-        // Add ALL velocity components:
-        // 1. Robot translation velocity
-        // 2. Tangential velocity from robot rotation (turret offset)
-        // 3. Projectile velocity relative to turret
-        fieldXVel += fieldSpeeds.vxMetersPerSecond + tangentialVelX;
-        fieldYVel += fieldSpeeds.vyMetersPerSecond + tangentialVelY;
-        
-        return new Translation3d(fieldXVel, fieldYVel, robotZVel);
+
+        double shotSpeed = vel.in(MetersPerSecond);
+
+        // FIELD FRAME SHOT VECTOR
+        double vx = Math.cos(elevRad) * Math.cos(turretYawRad) * shotSpeed;
+        double vy = Math.cos(elevRad) * Math.sin(turretYawRad) * shotSpeed;
+        double vz = Math.sin(elevRad) * shotSpeed;
+
+        // Add robot translation and rotational tangential velocity ONCE
+        vx += speeds.vxMetersPerSecond + tangentialX;
+        vy += speeds.vyMetersPerSecond + tangentialY;
+
+        return new Translation3d(vx, vy, vz);
     }
+
 
     public LinearVelocity getSimShooterVelo(){
         // FIXED: Calculate distance from TURRET to target, not robot center
