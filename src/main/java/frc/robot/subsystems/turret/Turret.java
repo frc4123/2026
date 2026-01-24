@@ -208,11 +208,8 @@ public class Turret extends SubsystemBase {
         // Get robot velocity
         var robotSpeeds = drivetrain.getState().Speeds;
         
-        // Cross product: v_robot × r
-        double cross = robotSpeeds.vxMetersPerSecond * r.getY() - 
-                    robotSpeeds.vyMetersPerSecond * r.getX();
-        
-        // Turret angular velocity to cancel apparent motion: ω = - (v × r) / |r|²
+        double cross = robotSpeeds.vyMetersPerSecond * r.getX() - 
+               robotSpeeds.vxMetersPerSecond * r.getY();
         double omega_rad_per_sec = -cross / distanceSquared;
         
         // Convert to degrees/sec
