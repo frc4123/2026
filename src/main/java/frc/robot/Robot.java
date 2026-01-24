@@ -26,6 +26,7 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {Logger.addDataReceiver(new NT4Publisher());}
     }
 
     @Override
@@ -60,7 +61,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {Logger.addDataReceiver(new NT4Publisher());}
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
