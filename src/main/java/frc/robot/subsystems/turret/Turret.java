@@ -182,37 +182,38 @@ public class Turret extends SubsystemBase {
     private double calculateTranslationFeedforward() {
         Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Same target selection logic
+        // Target selection
         Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
 
         if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+            target = blueHub.getTranslation().toTranslation2d();
         } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+            target = redHub.getTranslation().toTranslation2d();
         } else {
             return 0.0;
         }
         
-        // Account for turret offset
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(Constants.Turret.turretOffset);
         
-        // Vector from turret TO target
+        // Vector from turret to target (FIELD frame)
         Translation2d r = target.minus(turretPos);
         
-        double distanceSquared = r.getX() * r.getX() + r.getY() * r.getY();
+        double distanceSquared = r.getNorm() * r.getNorm();
         if (distanceSquared < 0.0001) return 0.0;
         
-        // Get robot velocity
-        var robotSpeeds = drivetrain.getState().Speeds;
+        // Get FIELD-relative velocity (what you already have)
+        var fieldSpeeds = drivetrain.getState().Speeds;
         
-        double cross = robotSpeeds.vyMetersPerSecond * r.getX() - 
-               robotSpeeds.vxMetersPerSecond * r.getY();
-        double omega_rad_per_sec = -cross / distanceSquared;
+        // Cross product in FIELD frame (both r and v are field-relative)
+        // ω = (v_field × r_field) / |r|²
+        double cross = fieldSpeeds.vxMetersPerSecond * r.getY() - 
+                    fieldSpeeds.vyMetersPerSecond * r.getX();
         
-        // Convert to degrees/sec
+        double omega_rad_per_sec = cross / distanceSquared;
+        
         return omega_rad_per_sec * 180.0 / Math.PI;
     }
 
