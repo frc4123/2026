@@ -391,6 +391,8 @@ public class Turret extends SubsystemBase {
             simulatedAngle = commandedDegrees;
         }
 
+        simulatedAngle = commandedDegrees;
+
         
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
         SmartDashboard.putNumber("Turret Commanded", commandedDegrees);
