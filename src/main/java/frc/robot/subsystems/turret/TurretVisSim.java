@@ -42,7 +42,7 @@ public class TurretVisSim extends SubsystemBase{
         this.fieldSpeedsSupplier = fieldSpeedsSupplier;
         this.vision = vision;
         this.turret = turret;
-    }
+    } 
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
         Pose3d robot = poseSupplier.get();
