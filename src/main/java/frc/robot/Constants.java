@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Counter.Mode;
+import edu.wpi.first.wpilibj.RobotBase;
 
 public class Constants {
 
@@ -123,6 +125,10 @@ public class Constants {
     }
 
     public static final class Sim{
+
+        public static enum Mode {Real, Sim, Replay};
+        public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.Real : Mode.Sim;
+
         public static final double fullWidth = Units.inchesToMeters(27);
         public static final double fullLength = Units.inchesToMeters(27);
         public static final double fullHeight = Units.inchesToMeters(22);

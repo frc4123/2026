@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+
 import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -57,6 +60,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {Logger.addDataReceiver(new NT4Publisher());}
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
@@ -81,8 +85,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void simulationPeriodic() {
-        m_timeAndJoystickReplay.update();
-        CommandScheduler.getInstance().run();
         FuelSim.getInstance().updateSim();
     }
 }
