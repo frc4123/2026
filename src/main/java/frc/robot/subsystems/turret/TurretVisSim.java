@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Vision;
 import frc.robot.utils.FuelSim;
 import java.util.function.Supplier;
@@ -46,26 +47,42 @@ public class TurretVisSim extends SubsystemBase{
         Pose3d robot = poseSupplier.get();
         ChassisSpeeds fieldSpeeds = fieldSpeedsSupplier.get();
         
-        // `angle` should be the hood elevation (pitch)
-        double elevationRad = angle.in(Radians);
+        // Get turret position relative to robot
+        Translation3d turretOffset = new Translation3d(
+            Constants.Turret.offsetX,
+            Constants.Turret.offsetY, 
+            Constants.Turret.offsetZ
+        );
         
-        // Get turret horizontal angle (yaw) - robot-relative
+        // Calculate tangential velocity due to robot rotation
+        double robotAngularVelRad = fieldSpeeds.omegaRadiansPerSecond;
+        
+        // Cross product: ω × r gives tangential velocity
+        // For 2D rotation about Z-axis, this becomes:
+        // V_tangential_x = -ω * r_y
+        // V_tangential_y = ω * r_x
+        double tangentialVelX = -robotAngularVelRad * turretOffset.getY();
+        double tangentialVelY = robotAngularVelRad * turretOffset.getX();
+        
+        double elevationRad = angle.in(Radians);
         double turretYawRad = Math.toRadians(turret.getCumulativeAngle());
         
-        // 3D launch vector in ROBOT coordinates:
-        // X = forward from robot, Y = left from robot, Z = up
+        // 3D launch vector in ROBOT coordinates
         double robotXVel = Math.cos(elevationRad) * Math.cos(turretYawRad) * vel.in(MetersPerSecond);
         double robotYVel = Math.cos(elevationRad) * Math.sin(turretYawRad) * vel.in(MetersPerSecond);
         double robotZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
         
-        // Rotate horizontal components by robot heading to get field coordinates
+        // Rotate by robot heading
         double robotHeadingRad = robot.getRotation().toRotation2d().getRadians();
         double fieldXVel = robotXVel * Math.cos(robotHeadingRad) - robotYVel * Math.sin(robotHeadingRad);
         double fieldYVel = robotXVel * Math.sin(robotHeadingRad) + robotYVel * Math.cos(robotHeadingRad);
         
-        // Add robot velocity (only affects horizontal)
-        fieldXVel += fieldSpeeds.vxMetersPerSecond;
-        fieldYVel += fieldSpeeds.vyMetersPerSecond;
+        // Add ALL velocity components:
+        // 1. Robot translation velocity
+        // 2. Tangential velocity from robot rotation (turret offset)
+        // 3. Projectile velocity relative to turret
+        fieldXVel += fieldSpeeds.vxMetersPerSecond + tangentialVelX;
+        fieldYVel += fieldSpeeds.vyMetersPerSecond + tangentialVelY;
         
         return new Translation3d(fieldXVel, fieldYVel, robotZVel);
     }
@@ -103,6 +120,24 @@ public class TurretVisSim extends SubsystemBase{
 
         Translation3d initialPosition = robot.getTranslation();
         FuelSim.getInstance().spawnFuel(initialPosition, launchVel(vel, angle));
+    }
+
+    private Translation3d getTurretPosition() {
+        Pose3d robot = poseSupplier.get();
+        Rotation3d robotRotation = robot.getRotation();
+        
+        // Turret offset from robot center (in robot coordinates)
+        Translation3d turretOffset = new Translation3d(
+            Constants.Turret.offsetX,  // Add these to your Constants
+            Constants.Turret.offsetY,
+            Constants.Turret.offsetZ
+        );
+        
+        // Rotate offset by robot rotation
+        Translation3d fieldOffset = turretOffset.rotateBy(robotRotation);
+        
+        // Add to robot position
+        return robot.getTranslation().plus(fieldOffset);
     }
 
     public Command repeatedlyLaunchFuel(
