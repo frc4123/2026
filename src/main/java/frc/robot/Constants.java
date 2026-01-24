@@ -58,6 +58,7 @@ public class Constants {
 
         public static final double offsetX = Units.inchesToMeters(8);
         public static final double offsetY = Units.inchesToMeters(-8);
+        public static final double offsetZ = Units.inchesToMeters(8);
 
         public static final double tagOffset = Units.inchesToMeters(47/2);
         public static final double[] validTurretTagsBlue = {21, 26, 18};

@@ -67,8 +67,9 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus(drivetrain);
     private final Vision vision = new Vision(drivetrain, oculus);
-    private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision);
+
     private final Turret turret = new Turret(drivetrain, vision);
+    private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 

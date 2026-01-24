@@ -26,18 +26,20 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
-public class TurretVisSim{
+public class TurretVisSim extends SubsystemBase{
     private Translation3d[] trajectory = new Translation3d[50];
     private Supplier<Pose3d> poseSupplier;
     private Supplier<ChassisSpeeds> fieldSpeedsSupplier;
     private final int CAPACITY = 30;
     private int fuelStored = 8;
     private Vision vision;
+    private Turret turret;
 
-    public TurretVisSim(Supplier<Pose3d> poseSupplier, Supplier<ChassisSpeeds> fieldSpeedsSupplier, Vision vision) {
+    public TurretVisSim(Supplier<Pose3d> poseSupplier, Supplier<ChassisSpeeds> fieldSpeedsSupplier, Vision vision, Turret turret) {
         this.poseSupplier = poseSupplier;
         this.fieldSpeedsSupplier = fieldSpeedsSupplier;
         this.vision = vision;
+        this.turret = turret;
     }
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
@@ -118,4 +120,11 @@ public class TurretVisSim{
     public void update3dPose(Angle azimuthAngle) {
         Logger.recordOutput("Turret/TurretPose", new Pose3d(0, 0, 0, new Rotation3d(0, 0, azimuthAngle.in(Radians))));
     }
+
+    @Override
+    public void simulationPeriodic() {
+        updateFuel(getSimShooterVelo(), getSimShooterTheta());
+        update3dPose(Degrees.of(turret.getCumulativeAngle()));
+    }
+    
 }
