@@ -78,7 +78,7 @@ public class Constants {
     public static final class Quest {
 
         //Front Forward Camera Translation and Angle
-        public static final double frontX = Units.inchesToMeters(8); // 7.495 7.176364 -7.176364
+        public static final double frontX = Units.inchesToMeters(11.5); // 7.495 7.176364 -7.176364
         public static final double frontY = Units.inchesToMeters(-4.5);
         public static final double frontZ = Units.inchesToMeters(6.75); // 7.02
 
@@ -121,8 +121,8 @@ public class Constants {
         //TODO: DOUBLE CHECK THE HEIGHT OF HUB AND THE CORDINATE POSITIONS ARE GUESSES
 
         public static final double frontRoll = Math.toRadians(0);
-        public static final double frontPitch = Math.toRadians(-60); // negative pitch is up according to 25 code
-        public static final double frontYaw = Math.toRadians(20);
+        public static final double frontPitch = Math.toRadians(60); // negative pitch is up according to 25 code
+        public static final double frontYaw = Math.toRadians(180);
     }
 
     public static final class Sim{
