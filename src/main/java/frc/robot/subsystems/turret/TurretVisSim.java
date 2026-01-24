@@ -43,15 +43,14 @@ public class TurretVisSim extends SubsystemBase{
     }
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
-        Pose3d robot = poseSupplier.get();
         ChassisSpeeds fieldSpeeds = fieldSpeedsSupplier.get();
 
         double horizontalVel = Math.cos(angle.in(Radians)) * vel.in(MetersPerSecond);
         double verticalVel = Math.sin(angle.in(Radians)) * vel.in(MetersPerSecond);
         double xVel =
-                horizontalVel * Math.cos(robot.getRotation().toRotation2d().getRadians());
+                horizontalVel * Math.cos(turret.getCumulativeAngle());
         double yVel =
-                horizontalVel * Math.sin(robot.getRotation().toRotation2d().getRadians());
+                horizontalVel * Math.sin(turret.getCumulativeAngle());
 
         xVel += fieldSpeeds.vxMetersPerSecond;
         yVel += fieldSpeeds.vyMetersPerSecond;
