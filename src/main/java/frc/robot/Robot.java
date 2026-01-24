@@ -26,7 +26,10 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
-        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {Logger.addDataReceiver(new NT4Publisher());}
+        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {
+            Logger.addDataReceiver(new NT4Publisher());
+            Logger.start();
+        }
     }
 
     @Override
