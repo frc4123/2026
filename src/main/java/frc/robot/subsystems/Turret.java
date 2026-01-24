@@ -248,7 +248,15 @@ public class Turret extends SubsystemBase {
         double targetCumulative = cumulativeAngle + delta + cameraOffset;
 
         // Clamp to physical limits
+        if (targetCumulative > maxCumulativeAngle) {
+            targetCumulative -= 360.0;  // Wrap from 361° to -359°
+        } else if (targetCumulative < minCumulativeAngle) {
+            targetCumulative += 360.0;  // Wrap from -361° to 359°
+        }
         targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
+
+        targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
+        //clamp in case
 
         // ========== FEEDFORWARD CALCULATION ==========
     
