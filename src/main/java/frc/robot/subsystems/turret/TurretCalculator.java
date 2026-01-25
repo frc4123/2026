@@ -18,6 +18,7 @@ import static frc.robot.Constants.IntakeConstants.VEL_MULTIPLIER;
 import static frc.robot.Constants.IntakeConstants.VEL_POWER;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
@@ -31,7 +32,12 @@ import frc.robot.Constants.FieldConstants;
 /** Add your docs here. */
 public class TurretCalculator {
     public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
-        return Meters.of(robot.getTranslation().getDistance(target.toTranslation2d()));
+        Translation2d turretPos =
+        robot.getTranslation().plus(
+            Constants.Turret.turretOffset.rotateBy(robot.getRotation())
+        );
+
+    return Meters.of(turretPos.getDistance(target.toTranslation2d()));
     }
 
     // see https://www.desmos.com/geometry/l4edywkmha
