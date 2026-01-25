@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -86,7 +87,6 @@ public class Turret extends SubsystemBase {
         double initial = turretEncoder.getAbsolutePosition().getValueAsDouble();
         cumulativeAngle = initial;
         prevAbsolute = initial;
-
         //lastLoopTime = Timer.getFPGATimestamp();
     }
 

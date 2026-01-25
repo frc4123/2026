@@ -15,7 +15,9 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +34,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.TurretCalculator;
+import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
 import frc.robot.commands.autos.mtest;
@@ -185,10 +189,29 @@ public class RobotContainer {
 
         instance.start();
 
-        Command fireContinuously = turretVisSim.repeatedlyLaunchFuel(() -> turretVisSim.getSimShooterVelo(), () -> turretVisSim.getSimShooterTheta(), turret);
-
-        // Schedule it (runs repeatedly until interrupted)
-        CommandScheduler.getInstance().schedule(fireContinuously);
+        if (RobotBase.isSimulation()) {
+            turret.setDefaultCommand(turretVisSim.repeatedlyLaunchFuel(
+                () -> {
+                    ShotData shot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                        drivetrain.getState().Pose,
+                        new ChassisSpeeds(),
+                        turretVisSim.getTurretTarget(),
+                        3
+                    );
+                    return shot.getExitVelocity();
+                },
+                () -> {
+                    ShotData shot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                        drivetrain.getState().Pose,
+                        new ChassisSpeeds(),
+                        turretVisSim.getTurretTarget(),
+                        3
+                    );
+                    return shot.getHoodAngle();
+                },
+                turret
+            ));
+        }
         
         SmartDashboard.putData(Commands.runOnce(() -> {
                     FuelSim.getInstance().clearFuel();
