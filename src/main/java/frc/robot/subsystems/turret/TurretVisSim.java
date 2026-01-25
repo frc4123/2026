@@ -167,7 +167,7 @@ public class TurretVisSim extends SubsystemBase{
         else if(vision.isRed() && poseSupplier.get().getX() > Constants.FieldConstants.HUB_RED.getX()) {
             return Constants.FieldConstants.HUB_RED;
         }
-        return new Translation3d();
+        return Constants.FieldConstants.HUB_BLUE;
 
     }
 
@@ -175,7 +175,7 @@ public class TurretVisSim extends SubsystemBase{
     public void simulationPeriodic() {
         ShotData calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
             poseSupplier.get().toPose2d(), 
-            fieldSpeedsSupplier.get(), 
+            new ChassisSpeeds(), 
             getTurretTarget(), 
             3 // or whatever LOOKAHEAD_ITERATIONS you use
         );
