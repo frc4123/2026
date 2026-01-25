@@ -184,7 +184,7 @@ public class TurretVisSim extends SubsystemBase{
         // Use the same calculation method as the other Turret.java
         
         
-        // Log the shot data
+        // Log the shot data 
         Logger.recordOutput("Turret/Shot", calculatedShot);
     }
     
