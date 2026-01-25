@@ -173,15 +173,16 @@ public class TurretVisSim extends SubsystemBase{
 
     @Override
     public void simulationPeriodic() {
-        updateFuel(getSimShooterVelo(), getSimShooterTheta());
-        update3dPose(Degrees.of(turret.getCumulativeAngle()));
-        // Use the same calculation method as the other Turret.java
         ShotData calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
             poseSupplier.get().toPose2d(), 
             fieldSpeedsSupplier.get(), 
             getTurretTarget(), 
             3 // or whatever LOOKAHEAD_ITERATIONS you use
         );
+        updateFuel(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle());
+        update3dPose(Degrees.of(turret.getCumulativeAngle()));
+        // Use the same calculation method as the other Turret.java
+        
         
         // Log the shot data
         Logger.recordOutput("Turret/Shot", calculatedShot);
