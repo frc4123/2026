@@ -40,7 +40,7 @@ public class TurretCalculator {
     return Meters.of(turretPos.getDistance(target.toTranslation2d()));
     }
 
-    // see https://www.desmos.com/geometry/l4edywkmha
+    // see https://www.desmos.com/geometry/l4edywkmha 
     public static Angle calculateAngleFromVelocity(Pose2d robot, LinearVelocity velocity, Translation3d target) {
         double g = MetersPerSecondPerSecond.of(9.81).in(InchesPerSecondPerSecond);
         double vel = velocity.in(InchesPerSecond);
