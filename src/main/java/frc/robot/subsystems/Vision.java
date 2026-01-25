@@ -300,10 +300,28 @@ public class Vision extends SubsystemBase{
     }
 
     public boolean isBlue(){
+        if(isBlue == false && isRed == false){
+            if(DriverStation.isDSAttached()){
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
+        }
         return isBlue;
     }
 
     public boolean isRed(){
+        if(isBlue == false && isRed == false){
+            if(DriverStation.isDSAttached()){
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
+        }
         return isRed;
     }
 

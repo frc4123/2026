@@ -165,9 +165,9 @@ public class TurretVisSim extends SubsystemBase{
             return Constants.VisionConstants.blueHubTranslation3d;
         }
         else if(vision.isRed() && poseSupplier.get().getX() > Constants.FieldConstants.HUB_RED.getX()) {
-            return Constants.FieldConstants.HUB_RED;
+            return Constants.VisionConstants.redHubTranslation3d;
         }
-        return Constants.VisionConstants.redHubTranslation3d;
+        return Constants.VisionConstants.blueHubTranslation3d;
 
     }
 
