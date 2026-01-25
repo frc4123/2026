@@ -1,5 +1,10 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -10,6 +15,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -41,6 +49,24 @@ public class Constants {
 
     }
 
+    public static class IntakeConstants {
+        public static final int LEFT_RACK_ID = 0;
+        public static final int RIGHT_RACK_ID = 0;
+        public static final int LEFT_SPIN_ID = 0;
+        public static final int RIGHT_SPIN_ID = 0;
+
+
+        public static final Distance STOW_POS = Inches.of(0);
+        public static final Distance DEPLOY_POS = Inches.of(10.875);
+        public static final Voltage SPIN_VOLTAGE = Volts.of(3);
+
+        public static final LinearVelocity MIN_SWITCH_ROBOT_VELOCITY = MetersPerSecond.of(0.5);
+
+        public static final double VEL_MULTIPLIER = 70.0; // multiplies goal velocity for targetting
+        public static final double VEL_POWER = 0.3; // raises goal velocity to power
+        public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
+    }
+
     public static final class InputConstants {
         public static final int kDriverControllerPort0 = 0;
         public static final int kDriverControllerPort1 = 1;
@@ -65,6 +91,10 @@ public class Constants {
         public static final double[] validTurretTagsRed = {2, 10, 5};
 
         public static final Translation2d turretOffset = new Translation2d(offsetX, offsetY);
+        public static final Pose3d robotToTurret = new Pose3d(offsetX, offsetY, offsetZ, new Rotation3d());
+        public static final Transform3d transform3D = new Transform3d(robotToTurret, new Pose3d());
+
+        public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
 
         public static final double kP = 0;
         public static final double kI = 0;
@@ -133,5 +163,19 @@ public class Constants {
         public static final double fullWidth = Units.inchesToMeters(27);
         public static final double fullLength = Units.inchesToMeters(27);
         public static final double fullHeight = Units.inchesToMeters(22);
+    }
+
+    public static class FieldConstants {
+        public static final Distance FIELD_LENGTH = Inches.of(650.12);
+        public static final Distance FIELD_WIDTH = Inches.of(316.64);
+
+        public static final Distance ALLIANCE_ZONE = Inches.of(156.06);
+
+        public static final Translation3d HUB_BLUE =
+                new Translation3d(Inches.of(181.56), FIELD_WIDTH.div(2), Inches.of(56.4));
+        public static final Translation3d HUB_RED =
+                new Translation3d(FIELD_LENGTH.minus(Inches.of(181.56)), FIELD_WIDTH.div(2), Inches.of(56.4));
+        public static final Distance FUNNEL_RADIUS = Inches.of(24);
+        public static final Distance FUNNEL_HEIGHT = Inches.of(72 - 56.4);
     }
 }

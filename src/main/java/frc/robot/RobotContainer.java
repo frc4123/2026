@@ -188,7 +188,7 @@ public class RobotContainer {
         Command fireContinuously = turretVisSim.repeatedlyLaunchFuel(() -> turretVisSim.getSimShooterVelo(), () -> turretVisSim.getSimShooterTheta(), turret);
 
         // Schedule it (runs repeatedly until interrupted)
-         CommandScheduler.getInstance().schedule(fireContinuously);
+        CommandScheduler.getInstance().schedule(fireContinuously);
         
         SmartDashboard.putData(Commands.runOnce(() -> {
                     FuelSim.getInstance().clearFuel();
