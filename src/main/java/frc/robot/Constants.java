@@ -132,9 +132,11 @@ public class Constants {
 
         public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.829, new Rotation3d());
         public static final Translation2d blueHubTranslation2d = blueHub.getTranslation().toTranslation2d();
+        public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.829, new Rotation3d());
         public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
+        public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
         // Camera transforms
         public static final Transform3d robotToCam = new Transform3d(
