@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.FuelSim;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -159,10 +160,31 @@ public class TurretVisSim extends SubsystemBase{
             new Pose3d(turretPos, new Rotation3d(0, 0, azimuthAngle.in(Radians))));
     }
 
+    public Translation3d getTurretTarget(){
+        if(vision.isBlue() &&  poseSupplier.get().getX() < Constants.FieldConstants.HUB_BLUE.getX()){
+            return Constants.FieldConstants.HUB_BLUE;
+        }
+        else if(vision.isRed() && poseSupplier.get().getX() > Constants.FieldConstants.HUB_RED.getX()) {
+            return Constants.FieldConstants.HUB_RED;
+        }
+        return new Translation3d();
+
+    }
+
     @Override
     public void simulationPeriodic() {
         updateFuel(getSimShooterVelo(), getSimShooterTheta());
         update3dPose(Degrees.of(turret.getCumulativeAngle()));
+        // Use the same calculation method as the other Turret.java
+        ShotData calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+            poseSupplier.get().toPose2d(), 
+            fieldSpeedsSupplier.get(), 
+            getTurretTarget(), 
+            3 // or whatever LOOKAHEAD_ITERATIONS you use
+        );
+        
+        // Log the shot data
+        Logger.recordOutput("Turret/Shot", calculatedShot);
     }
     
 }

@@ -299,6 +299,14 @@ public class Vision extends SubsystemBase{
         } else {return blueHub;}
     }
 
+    public boolean isBlue(){
+        return isBlue;
+    }
+
+    public boolean isRed(){
+        return isRed;
+    }
+
     public Rotation2d angleToFace(Pose2d robotPose) {
         if(isBlue == false && isRed == false){
             if(DriverStation.isDSAttached()){
