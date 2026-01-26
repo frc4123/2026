@@ -2,9 +2,11 @@ package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -84,7 +86,7 @@ public class Turret extends SubsystemBase {
         configureEncoder();
 
         // Read encoder once at startup
-        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble() * -1;
+        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble();
         cumulativeAngle = initial;
         prevAbsolute = initial;
         //lastLoopTime = Timer.getFPGATimestamp();
@@ -101,6 +103,10 @@ public class Turret extends SubsystemBase {
                 .withKA(Constants.Turret.kA);
 
         turretMotor.getConfigurator().apply(pid);
+        
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive; // or CounterClockwise_Positive
+        turretMotor.getConfigurator().apply(config);
     }
 
     private void configureEncoder() {
@@ -126,7 +132,7 @@ public class Turret extends SubsystemBase {
      * Call exactly once per loop.
      */
     private void updateCumulativeAngle() {
-        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360 * -1;
+        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
         double delta = abs - prevAbsolute;
 
         // Handle wraparound
