@@ -84,7 +84,7 @@ public class Turret extends SubsystemBase {
         configureEncoder();
 
         // Read encoder once at startup
-        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble();
+        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble() * -1;
         cumulativeAngle = initial;
         prevAbsolute = initial;
         //lastLoopTime = Timer.getFPGATimestamp();
@@ -126,7 +126,7 @@ public class Turret extends SubsystemBase {
      * Call exactly once per loop.
      */
     private void updateCumulativeAngle() {
-        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
+        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360 * -1;
         double delta = abs - prevAbsolute;
 
         // Handle wraparound
@@ -296,9 +296,6 @@ public class Turret extends SubsystemBase {
     
 
     public double getCumulativeAngle() {
-        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {
-            return simulatedAngle;
-        }
         return cumulativeAngle;
     }
 
