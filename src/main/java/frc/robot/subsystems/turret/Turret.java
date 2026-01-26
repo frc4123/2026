@@ -105,7 +105,7 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(pid);
         
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive; // or CounterClockwise_Positive
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive; // or CounterClockwise_Positive
         turretMotor.getConfigurator().apply(config);
     }
 
