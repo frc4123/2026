@@ -47,15 +47,24 @@ public class TurretVisSim extends SubsystemBase{
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
     double elevationRad = angle.in(Radians);
-    
-    // Get FIELD-RELATIVE turret angle (already includes robot heading + encoder inversion)
     double turretFieldRad = Math.toRadians(turret.getFieldAngle());
     
-    // Calculate velocity DIRECTLY in FIELD frame
+    // CRITICAL LOGGING - ADD THIS
+    double robotHeading = poseSupplier.get().getRotation().toRotation2d().getDegrees();
+    double cumulativeAngle = turret.getCumulativeAngle();
+    System.out.println("=== LAUNCH FUEL ===");
+    System.out.println("Robot Heading: " + robotHeading);
+    System.out.println("Cumulative Angle: " + cumulativeAngle);
+    System.out.println("Turret Field Angle: " + Math.toDegrees(turretFieldRad));
+    
     double horizontalVel = Math.cos(elevationRad) * vel.in(MetersPerSecond);
     double fieldXVel = horizontalVel * Math.cos(turretFieldRad);
     double fieldYVel = horizontalVel * Math.sin(turretFieldRad);
     double fieldZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
+    
+    double actualDirection = Math.toDegrees(Math.atan2(fieldYVel, fieldXVel));
+    System.out.println("Launch Direction: " + actualDirection);
+    System.out.println("==================");
     
     return new Translation3d(fieldXVel, fieldYVel, fieldZVel);
 }
