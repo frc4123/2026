@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.12952785011574,
+        "y": 3.006817346643519
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.356701388888889,
+        "y": 2.4152727864583334
+      },
+      "isLocked": false,
+      "linkedName": "3BumpRight 3-4"
+    },
+    {
+      "anchor": {
+        "x": 3.3164048032407414,
+        "y": 2.594258318865741
+      },
+      "prevControl": {
+        "x": 3.656136140046297,
+        "y": 2.5802832754629628
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "3BumpRight 4-5"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Start Shooting",
+      "waypointRelativePos": 0.62828332641196,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "3BumpRight",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -151.36384199519358
+  },
+  "useDefaultConstraints": true
+}

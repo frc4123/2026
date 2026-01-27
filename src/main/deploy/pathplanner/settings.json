@@ -4,7 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "2Cycle",
-    "2CycleDepot"
+    "2CycleDepot",
+    "3BumpRight"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
