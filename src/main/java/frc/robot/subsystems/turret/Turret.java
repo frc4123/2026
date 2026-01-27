@@ -397,8 +397,8 @@ public class Turret extends SubsystemBase {
         // FINALLY: Command the turret for NEXT loop
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
-        SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
-        SmartDashboard.putNumber("Turret Commanded", commandedDegrees);
+        SmartDashboard.putNumber("Turret Field Angle", getFieldAngle());
+        SmartDashboard.putNumber("Turret Position", commandedDegrees);
     }
 }
 
