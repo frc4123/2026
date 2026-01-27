@@ -51,7 +51,7 @@ public class TurretVisSim extends SubsystemBase{
         
         double elevationRad = angle.in(Radians);
         //problem child
-        double turretYawRad = Math.toRadians(turret.getCumulativeAngle());
+        double turretYawRad = Math.toRadians(turret.getFieldAngle());
         
         // Projectile velocity in ROBOT frame (before rotation compensation)
         double robotXVel = Math.cos(elevationRad) * Math.cos(turretYawRad) * vel.in(MetersPerSecond);
@@ -181,7 +181,7 @@ public class TurretVisSim extends SubsystemBase{
             3 // or whatever LOOKAHEAD_ITERATIONS you use
         );
         updateFuel(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle());
-        update3dPose(Degrees.of(turret.getCumulativeAngle()));
+        update3dPose(Degrees.of(turret.getFieldAngle()));
         // Use the same calculation method as the other Turret.java
         
         

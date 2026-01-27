@@ -103,10 +103,6 @@ public class Turret extends SubsystemBase {
                 .withKA(Constants.Turret.kA);
 
         turretMotor.getConfigurator().apply(pid);
-        
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive; // or CounterClockwise_Positive
-        turretMotor.getConfigurator().apply(config);
     }
 
     private void configureEncoder() {
@@ -310,7 +306,10 @@ public class Turret extends SubsystemBase {
     }
 
     public double getFieldAngle() {
-        return normalizeAngle(cumulativeAngle);
+        double robotPose = drivetrain.getState().Pose.getRotation().getDegrees();
+        double fieldRelativeAngle = (normalizeAngle(cumulativeAngle) * -1) + robotPose;
+
+        return fieldRelativeAngle;
     }
 
     public void checkDS(){
