@@ -370,35 +370,36 @@ public class Turret extends SubsystemBase {
 
    @Override
     public void simulationPeriodic() {
-        // FIRST: Simulate motor response
-        double commandedRotations = motionMagic.Position;
-        double commandedDegrees = commandedRotations / gearRatio * 360.0;
+        // Get the field-relative target angle
+        Rotation2d targetFieldAngle = targetAngle(drivetrain.getState().Pose);
         
-        double step = 25.0;
-        double diff = commandedDegrees - simulatedAngle;
+        // Simulate turret tracking toward target
+        double currentFieldAngle = getFieldAngle();
+        double targetFieldDeg = targetFieldAngle.getDegrees();
+        
+        double step = 25.0;  // deg/loop max rotation speed
+        double diff = normalizeAngle(targetFieldDeg - currentFieldAngle);
         
         if (Math.abs(diff) > step) {
-            simulatedAngle += Math.copySign(step, diff);
+            currentFieldAngle += Math.copySign(step, diff);
         } else {
-            simulatedAngle = commandedDegrees;
+            currentFieldAngle = targetFieldDeg;
         }
         
-        // THEN: Update cumulative tracking
-        double absDegrees = simulatedAngle % 360.0;
-        if (absDegrees < 0) absDegrees += 360.0;
+        // Convert field angle to what the ENCODER would read (robot-relative)
+        double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
+        double encoderReading = normalizeAngle(currentFieldAngle - robotHeading);
         
-        double delta = absDegrees - prevAbsolute;
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-        
+        // Update cumulative angle from simulated encoder
+        double delta = normalizeAngle(encoderReading - prevAbsolute);
         cumulativeAngle += delta;
-        prevAbsolute = absDegrees;
+        prevAbsolute = encoderReading;
         
-        // FINALLY: Command the turret for NEXT loop
+        // Command turret for next loop
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
         SmartDashboard.putNumber("Turret Field Angle", getFieldAngle());
-        SmartDashboard.putNumber("Turret Position", commandedDegrees);
+        SmartDashboard.putNumber("Turret Encoder (Sim)", encoderReading);
     }
 }
 
