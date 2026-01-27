@@ -166,7 +166,7 @@ public class Turret extends SubsystemBase {
             return delta.getAngle();
         }
         /*this should allow the robot to face the hub from whatever position it is
-        we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret
+        we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret 
         */
 
         return new Rotation2d(0);
