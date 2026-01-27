@@ -368,13 +368,13 @@ public class FuelSim {
     }
 
     private void handleRobotCollisions(ArrayList<Fuel> fuels) {
-        Pose2d robot = robotSupplier.get();
-        ChassisSpeeds speeds = robotSpeedsSupplier.get();
-        Translation2d robotVel = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        // Pose2d robot = robotSupplier.get();
+        // ChassisSpeeds speeds = robotSpeedsSupplier.get();
+        // Translation2d robotVel = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
 
-        for (Fuel fuel : fuels) {
-            handleRobotCollision(fuel, robot, robotVel);
-        }
+        // for (Fuel fuel : fuels) {
+        //     handleRobotCollision(fuel, robot, robotVel);
+        // }
     }
 
     private void handleIntakes(ArrayList<Fuel> fuels) {
