@@ -307,7 +307,7 @@ public class Turret extends SubsystemBase {
 
     public double getFieldAngle() {
         double robotPose = drivetrain.getState().Pose.getRotation().getDegrees();
-        double fieldRelativeAngle = cumulativeAngle + robotPose;
+        double fieldRelativeAngle = -cumulativeAngle + robotPose;
 
         return fieldRelativeAngle;
     }
