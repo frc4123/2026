@@ -46,28 +46,29 @@ public class TurretVisSim extends SubsystemBase{
     } 
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
-    double elevationRad = angle.in(Radians);
-    double turretFieldRad = Math.toRadians(turret.getFieldAngle());
-    
-    // CRITICAL LOGGING - ADD THIS
-    double robotHeading = poseSupplier.get().getRotation().toRotation2d().getDegrees();
-    double cumulativeAngle = turret.getCumulativeAngle();
-    System.out.println("=== LAUNCH FUEL ===");
-    System.out.println("Robot Heading: " + robotHeading);
-    System.out.println("Cumulative Angle: " + cumulativeAngle);
-    System.out.println("Turret Field Angle: " + Math.toDegrees(turretFieldRad));
-    
-    double horizontalVel = Math.cos(elevationRad) * vel.in(MetersPerSecond);
-    double fieldXVel = horizontalVel * Math.cos(turretFieldRad);
-    double fieldYVel = horizontalVel * Math.sin(turretFieldRad);
-    double fieldZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
-    
-    double actualDirection = Math.toDegrees(Math.atan2(fieldYVel, fieldXVel));
-    System.out.println("Launch Direction: " + actualDirection);
-    System.out.println("==================");
-    
-    return new Translation3d(fieldXVel, fieldYVel, fieldZVel);
-}
+        double elevationRad = angle.in(Radians);
+        double turretFieldRad = Math.toRadians(turret.getFieldAngle());
+        
+        // CRITICAL LOGGING - AdvantageKit
+        double robotHeading = poseSupplier.get().getRotation().toRotation2d().getDegrees();
+        double cumulativeAngle = turret.getCumulativeAngle();
+        
+        Logger.recordOutput("LaunchFuel/RobotHeading", robotHeading);
+        Logger.recordOutput("LaunchFuel/CumulativeAngle", cumulativeAngle);
+        Logger.recordOutput("LaunchFuel/TurretFieldAngle", Math.toDegrees(turretFieldRad));
+        
+        double horizontalVel = Math.cos(elevationRad) * vel.in(MetersPerSecond);
+        double fieldXVel = horizontalVel * Math.cos(turretFieldRad);
+        double fieldYVel = horizontalVel * Math.sin(turretFieldRad);
+        double fieldZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
+        
+        double actualDirection = Math.toDegrees(Math.atan2(fieldYVel, fieldXVel));
+        Logger.recordOutput("LaunchFuel/LaunchDirection", actualDirection);
+        Logger.recordOutput("LaunchFuel/FieldXVel", fieldXVel);
+        Logger.recordOutput("LaunchFuel/FieldYVel", fieldYVel);
+        
+        return new Translation3d(fieldXVel, fieldYVel, fieldZVel);
+    }
 
     public LinearVelocity getSimShooterVelo(){
         // FIXED: Calculate distance from TURRET to target, not robot center
