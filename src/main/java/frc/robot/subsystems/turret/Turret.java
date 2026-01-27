@@ -37,8 +37,7 @@ public class Turret extends SubsystemBase {
     private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.Turret, canivore);
 
     // Absolute turret encoder
-    private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder);
-
+    private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder, canivore);
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -77,7 +76,6 @@ public class Turret extends SubsystemBase {
         this.vision = vision;
 
         configureMotor();
-        configureEncoder();
 
         // Read encoder once at startup
         double initial = turretEncoder.getAbsolutePosition().getValueAsDouble();
@@ -97,13 +95,6 @@ public class Turret extends SubsystemBase {
                 .withKA(Constants.Turret.kA);
 
         turretMotor.getConfigurator().apply(pid);
-    }
-
-    private void configureEncoder() {
-        //turretEncoder.configFactoryDefault();
-        /*turretEncoder.configSensorInitializationStrategy(
-                com.ctre.phoenix.sensors.SensorInitializationStrategy.BootToAbsolutePosition
-        );*/
     }
 
     private double degreesToMotorRotations(double deg) {
