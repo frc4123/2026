@@ -46,30 +46,19 @@ public class TurretVisSim extends SubsystemBase{
     } 
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
-        Pose3d robot = poseSupplier.get();
-        ChassisSpeeds fieldSpeeds = fieldSpeedsSupplier.get();
-        
-        double elevationRad = angle.in(Radians);
-        //problem child
-        double turretYawRad = Math.toRadians(turret.getFieldAngle());
-        
-        // Projectile velocity in ROBOT frame (before rotation compensation)
-        double robotXVel = Math.cos(elevationRad) * Math.cos(turretYawRad) * vel.in(MetersPerSecond);
-        double robotYVel = Math.cos(elevationRad) * Math.sin(turretYawRad) * vel.in(MetersPerSecond);
-        double robotZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
-        
-        // Rotate projectile velocity to FIELD frame by robot heading
-        double robotHeadingRad = robot.getRotation().toRotation2d().getRadians();
-        double fieldXVel = robotXVel * Math.cos(robotHeadingRad) - robotYVel * Math.sin(robotHeadingRad);
-        double fieldYVel = robotXVel * Math.sin(robotHeadingRad) + robotYVel * Math.cos(robotHeadingRad);
-        
-        // ONLY add robot TRANSLATION velocity (not rotation effects)
-        // The turret already compensates for rotation by tracking the target
-        //fieldXVel += fieldSpeeds.vxMetersPerSecond;
-        //fieldYVel += fieldSpeeds.vyMetersPerSecond;
-        
-        return new Translation3d(fieldXVel, fieldYVel, robotZVel);
-    }
+    double elevationRad = angle.in(Radians);
+    
+    // Get FIELD-RELATIVE turret angle (already includes robot heading + encoder inversion)
+    double turretFieldRad = Math.toRadians(turret.getFieldAngle());
+    
+    // Calculate velocity DIRECTLY in FIELD frame
+    double horizontalVel = Math.cos(elevationRad) * vel.in(MetersPerSecond);
+    double fieldXVel = horizontalVel * Math.cos(turretFieldRad);
+    double fieldYVel = horizontalVel * Math.sin(turretFieldRad);
+    double fieldZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
+    
+    return new Translation3d(fieldXVel, fieldYVel, fieldZVel);
+}
 
     public LinearVelocity getSimShooterVelo(){
         // FIXED: Calculate distance from TURRET to target, not robot center
