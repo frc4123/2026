@@ -72,7 +72,6 @@ public class Turret extends SubsystemBase {
         this.vision = vision;
 
         configureMotor();
-        configureEncoder();
 
         // Read encoder once at startup
         double initial = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
@@ -93,9 +92,6 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(pid);
     }
 
-    private void configureEncoder() {
-        // Encoder configuration if needed
-    }
 
     private double degreesToMotorRotations(double deg) {
         return deg / 360.0 * gearRatio;
