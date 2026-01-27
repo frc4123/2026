@@ -2,11 +2,9 @@ package frc.robot.subsystems.turret;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,19 +14,14 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -39,20 +32,16 @@ import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 public class Turret extends SubsystemBase {
 
     CANBus canivore = new CANBus("Canivore");
-    // Motor controlling turret rotation
+    
+    // Hardware
     private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.Turret, canivore);
-
-    // Absolute turret encoder
     private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder);
 
-    private double simulatedFieldAngle = 0.0;
-
-
+    // Alliance tracking
     private static boolean isBlue = false;
     private static boolean isRed = false;
-    // get alliance color
 
-    // Motion Magic controller object
+    // Motion Magic controller
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
             new DynamicMotionMagicTorqueCurrentFOC(
                     Constants.Turret.stowPosition,
@@ -67,18 +56,16 @@ public class Turret extends SubsystemBase {
     private final double minCumulativeAngle = -360.0;
     private final double maxCumulativeAngle = 360.0;
 
-    // Cumulative turret angle tracking
+    // Cumulative turret angle tracking (robot-relative)
     private double cumulativeAngle;
-    private double simulatedAngle = 0.0; // sim version of cumulativeAngle
-
     private double prevAbsolute;
+    
+    // Simulation-specific tracking
+    private double simulatedFieldAngle = 0.0;  // Track field-relative angle in sim
 
-    // Swerve reference for heading and yaw rate
+    // Swerve and vision references
     private final CommandSwerveDrivetrain drivetrain;
     private final Vision vision;
-
-    // Timing for accel estimation if needed later
-    //private double lastLoopTime = 0.0;
 
     public Turret(CommandSwerveDrivetrain drivetrain, Vision vision) {
         this.drivetrain = drivetrain;
@@ -88,10 +75,9 @@ public class Turret extends SubsystemBase {
         configureEncoder();
 
         // Read encoder once at startup
-        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble();
+        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
         cumulativeAngle = initial;
         prevAbsolute = initial;
-        //lastLoopTime = Timer.getFPGATimestamp();
     }
 
     private void configureMotor() {
@@ -108,10 +94,7 @@ public class Turret extends SubsystemBase {
     }
 
     private void configureEncoder() {
-        //turretEncoder.configFactoryDefault();
-        /*turretEncoder.configSensorInitializationStrategy(
-                com.ctre.phoenix.sensors.SensorInitializationStrategy.BootToAbsolutePosition
-        );*/
+        // Encoder configuration if needed
     }
 
     private double degreesToMotorRotations(double deg) {
@@ -141,51 +124,73 @@ public class Turret extends SubsystemBase {
         prevAbsolute = abs;
     }
 
-    public Rotation2d targetAngle(Pose2d robotPose) {
+    /**
+     * Simulates the encoder reading for simulation mode.
+     * Updates cumulativeAngle based on simulated turret movement.
+     */
+    private void updateSimulatedEncoder() {
+        // Get target field angle
+        Rotation2d targetFieldAngle = targetAngle(drivetrain.getState().Pose);
+        double targetFieldDeg = targetFieldAngle.getDegrees();
+        
+        // Simulate turret rotation toward target (in field frame)
+        double step = 25.0;  // max degrees per loop
+        double diff = normalizeAngle(targetFieldDeg - simulatedFieldAngle);
+        
+        if (Math.abs(diff) > step) {
+            simulatedFieldAngle += Math.copySign(step, diff);
+        } else {
+            simulatedFieldAngle = targetFieldDeg;
+        }
+        
+        // Convert field angle to what the encoder would read (robot-relative)
+        double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
+        double encoderReading = normalizeAngle(simulatedFieldAngle - robotHeading);
+        
+        // Normalize to [0, 360) like a real absolute encoder
+        if (encoderReading < 0) encoderReading += 360.0;
+        
+        // Update cumulative from encoder delta
+        double delta = encoderReading - prevAbsolute;
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+        
+        cumulativeAngle += delta;
+        prevAbsolute = encoderReading;
+    }
 
+    /**
+     * Calculate the field-relative angle the turret should point to hit the target.
+     * Returns angle to blue or red hub based on alliance and robot position.
+     */
+    public Rotation2d targetAngle(Pose2d robotPose) {
         Translation2d target;
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
 
-        if(isBlue && robotPose.getX() < blueHub.getX()){
+        if (isBlue && robotPose.getX() < blueHub.getX()) {
             target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
-            Translation2d robotPos = robotPose.getTranslation();
-        
-           Translation2d turretPos = robotPos.plus(
-                Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
-            );
-
-            Translation2d delta = target.minus(turretPos);
-            return delta.getAngle();
-
-        } else if (isRed && robotPose.getX() > redHub.getX()){
+        } else if (isRed && robotPose.getX() > redHub.getX()) {
             target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
-            Translation2d robotPos = robotPose.getTranslation();
-
-            Translation2d turretPos = robotPos.plus(
-                Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
-            );
-
-            Translation2d delta = target.minus(turretPos);
-            return delta.getAngle();
+        } else {
+            // No valid target - return 0 to avoid crashes
+            return new Rotation2d(0);
         }
-        /*this should allow the robot to face the hub from whatever position it is
-        we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret
-        */
+        
+        // Calculate turret position accounting for offset from robot center
+        Translation2d robotPos = robotPose.getTranslation();
+        Translation2d turretPos = robotPos.plus(
+            Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+        );
 
-        return new Rotation2d(0);
-        /*
-        if it does this then this function didnt work :(, this line only exists so that we dont crash code 
-        we have to return something since the functino isnt void
-        */
-
-        /* we can also reuse ts for turret because this function is just telling us what angle to face our scoring point
-        based on position */
+        // Calculate angle from turret to target
+        Translation2d delta = target.minus(turretPos);
+        return delta.getAngle();
     }
 
-        /**
+    /**
      * Calculate feedforward for robot translation causing angle to target to change.
-     * Mimics the same target calculation logic as targetAngle.
+     * Compensates for the turret needing to track the target as the robot drives.
      */
     private double calculateTranslationFeedforward() {
         Pose2d robotPose = drivetrain.getState().Pose;
@@ -195,16 +200,15 @@ public class Turret extends SubsystemBase {
         Pose3d blueHub = Constants.VisionConstants.blueHub;
         Pose3d redHub = Constants.VisionConstants.redHub;
 
-        if(isBlue && robotPose.getX() < blueHub.getX()){
+        if (isBlue && robotPose.getX() < blueHub.getX()) {
             target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
-        } else if (isRed && robotPose.getX() > redHub.getX()){
+        } else if (isRed && robotPose.getX() > redHub.getX()) {
             target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
         } else {
-            // No valid target, return 0 feedforward
             return 0.0;
         }
         
-        // Account for turret offset from robot center (same as targetAngle)
+        // Account for turret offset from robot center
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(
             Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
@@ -212,11 +216,10 @@ public class Turret extends SubsystemBase {
                 
         // Vector from turret to target
         Translation2d toTarget = target.minus(turretPos);
-        
         double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
         
         if (distanceSquared < 0.0001) {
-            return 0.0; // Avoid division by zero when very close
+            return 0.0; // Avoid division by zero
         }
         
         // Get robot velocity in field frame
@@ -228,44 +231,41 @@ public class Turret extends SubsystemBase {
         
         double angularVelocity_radPerSec = crossProduct / distanceSquared;
         
-        // Convert to degrees per second (to match your rotation FF units)
+        // Convert to degrees per second
         return angularVelocity_radPerSec * 180.0 / Math.PI;
     }
+
     /**
-     * Field-relative turret control with yaw velocity feedforward.
+     * Field-relative turret control with velocity feedforward.
+     * Compensates for both robot rotation and translation.
      */
     public void setFieldAngle(Rotation2d targetFieldAngle, double cameraOffset) {
-
         // Clamp vision offset
         cameraOffset = Math.max(-1.0, Math.min(1.0, cameraOffset));
 
         // Robot heading and yaw rate
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();
-        double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond / Math.PI * 180;
+        double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond * 180.0 / Math.PI;
 
         // Convert field target into robot-relative turret target
         double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
 
         // Compute shortest delta to target
-        double current = cumulativeAngle;
-        double delta = normalizeAngle(targetTurretAngle - current);
+        double delta = normalizeAngle(targetTurretAngle - cumulativeAngle);
 
         // Compute new cumulative setpoint
         double targetCumulative = cumulativeAngle + delta + cameraOffset;
 
-        // Clamp to physical limits 
+        // Clamp to physical limits with wrapping
         if (targetCumulative > maxCumulativeAngle) {
-            targetCumulative -= 360.0;  // Wrap from 361° to -359°
+            targetCumulative -= 360.0;
         } else if (targetCumulative < minCumulativeAngle) {
-            targetCumulative += 360.0;  // Wrap from -361° to 359°
+            targetCumulative += 360.0;
         }
         targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
 
-        targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
-        //clamp in case
-
         // ========== FEEDFORWARD CALCULATION ==========
-    
+        
         // 1. Robot rotation feedforward (compensates for robot spinning)
         double rotationFF_degPerSec = -robotYawRateDegPerSec;
         
@@ -284,8 +284,8 @@ public class Turret extends SubsystemBase {
                 motionMagic
                         .withPosition(targetRotations)
                         .withFeedForward(totalFF_rotPerSec)
-            );
-        }
+        );
+    }
 
     /**
      * Relative manual rotation command.
@@ -297,48 +297,54 @@ public class Turret extends SubsystemBase {
         double targetRotations = degreesToMotorRotations(target);
         turretMotor.setControl(motionMagic.withPosition(targetRotations));
     }
-    
 
+    /**
+     * Get the cumulative robot-relative turret angle (can exceed ±360°).
+     */
     public double getCumulativeAngle() {
         return cumulativeAngle;
     }
 
+    /**
+     * Get the raw absolute encoder position.
+     */
     public double getAbsoluteAngle() {
         return turretEncoder.getAbsolutePosition().getValueAsDouble();
     }
 
+    /**
+     * Get the field-relative turret angle.
+     * Converts robot-relative cumulative angle to field frame.
+     */
     public double getFieldAngle() {
-        double robotPose = drivetrain.getState().Pose.getRotation().getDegrees();
-        double fieldRelativeAngle = cumulativeAngle + robotPose;
-
+        double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
+        double fieldRelativeAngle = cumulativeAngle + robotHeading;
         return normalizeAngle(fieldRelativeAngle);
     }
 
-    public void checkDS(){
-        if(isBlue == false && isRed == false){
-            if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                isBlue = false;
-                isRed = false;
+    /**
+     * Check and update alliance color from Driver Station.
+     */
+    public void checkDS() {
+        if (!isBlue && !isRed) {
+            if (DriverStation.isDSAttached()) {
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red;
             }
         }
     }
 
     /**
      * Returns the current 3D pose of the turret in field coordinates.
-     * Combines robot position with turret rotation.
      */
     public Pose3d getTurretPose3d() {
-        // Get robot pose
         Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Convert to 3D (robot is on the ground)
+        // Convert robot pose to 3D
         Pose3d robotPose3d = new Pose3d(
             robotPose.getX(),
             robotPose.getY(),
-            0.0, // z position (on field)
+            0.0,
             new Rotation3d(0, 0, robotPose.getRotation().getRadians())
         );
         
@@ -346,64 +352,41 @@ public class Turret extends SubsystemBase {
         Translation3d turretTranslation = new Translation3d(
             Constants.Turret.offsetX,
             Constants.Turret.offsetY,
-            Constants.Turret.offsetZ // You'll need to add this constant
+            Constants.Turret.offsetZ
         );
         
         // Turret rotation (field-relative)
-        Rotation2d fieldAngle = new Rotation2d(Math.toRadians(
-            normalizeAngle(cumulativeAngle) + robotPose.getRotation().getDegrees()
-        ));
-        
+        Rotation2d fieldAngle = new Rotation2d(Math.toRadians(getFieldAngle()));
         Rotation3d turretRotation = new Rotation3d(0, 0, fieldAngle.getRadians());
         
-        // Combine: robot pose + turret offset + turret rotation
+        // Combine robot pose + turret offset + turret rotation
         Transform3d turretTransform = new Transform3d(turretTranslation, turretRotation);
-        
         return robotPose3d.transformBy(turretTransform);
     }
 
     @Override
     public void periodic() {
         checkDS();
-        if (!RobotBase.isSimulation()) {updateCumulativeAngle();}
-        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
-        SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
-    }
-
-   @Override
-    public void simulationPeriodic() {
-        // Get target
-        Rotation2d targetFieldAngle = targetAngle(drivetrain.getState().Pose);
-        double targetFieldDeg = targetFieldAngle.getDegrees();
         
-        // Simulate turret rotation in FIELD frame
-        double step = 25.0;
-        double diff = normalizeAngle(targetFieldDeg - simulatedFieldAngle);
-        
-        if (Math.abs(diff) > step) {
-            simulatedFieldAngle += Math.copySign(step, diff);
+        // CRITICAL: Update cumulative angle BEFORE commands execute
+        if (RobotBase.isSimulation()) {
+            updateSimulatedEncoder();
         } else {
-            simulatedFieldAngle = targetFieldDeg;
+            updateCumulativeAngle();
         }
         
-        // Convert to what encoder would read (robot-relative)
-        double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
-        double encoderReading = normalizeAngle(simulatedFieldAngle - robotHeading);
+        // Command the turret
+        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
-        // Normalize encoder reading to [0, 360)
-        if (encoderReading < 0) encoderReading += 360;
-        
-        // Update cumulative from encoder delta
-        double delta = encoderReading - prevAbsolute;
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-        
-        cumulativeAngle += delta;
-        prevAbsolute = encoderReading;
-        
-        SmartDashboard.putNumber("Turret Field Angle (Sim)", simulatedFieldAngle);
-        SmartDashboard.putNumber("Turret Encoder (Sim)", encoderReading);
-        SmartDashboard.putNumber("Turret Cumulative", cumulativeAngle);
+        // Logging
+        SmartDashboard.putNumber("Turret/CumulativeAngle", getCumulativeAngle());
+        SmartDashboard.putNumber("Turret/FieldAngle", getFieldAngle());
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // Additional simulation logging
+        SmartDashboard.putNumber("Turret/SimFieldAngle", simulatedFieldAngle);
+        SmartDashboard.putNumber("Turret/SimEncoderReading", prevAbsolute);
     }
 }
-
