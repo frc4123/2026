@@ -45,6 +45,8 @@ public class Turret extends SubsystemBase {
     // Absolute turret encoder
     private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder);
 
+    private double simulatedFieldAngle = 0.0;
+
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -370,36 +372,38 @@ public class Turret extends SubsystemBase {
 
    @Override
     public void simulationPeriodic() {
-        // Get the field-relative target angle
+        // Get target
         Rotation2d targetFieldAngle = targetAngle(drivetrain.getState().Pose);
-        
-        // Simulate turret tracking toward target
-        double currentFieldAngle = getFieldAngle();
         double targetFieldDeg = targetFieldAngle.getDegrees();
         
-        double step = 25.0;  // deg/loop max rotation speed
-        double diff = normalizeAngle(targetFieldDeg - currentFieldAngle);
+        // Simulate turret rotation in FIELD frame
+        double step = 25.0;
+        double diff = normalizeAngle(targetFieldDeg - simulatedFieldAngle);
         
         if (Math.abs(diff) > step) {
-            currentFieldAngle += Math.copySign(step, diff);
+            simulatedFieldAngle += Math.copySign(step, diff);
         } else {
-            currentFieldAngle = targetFieldDeg;
+            simulatedFieldAngle = targetFieldDeg;
         }
         
-        // Convert field angle to what the ENCODER would read (robot-relative)
+        // Convert to what encoder would read (robot-relative)
         double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
-        double encoderReading = normalizeAngle(currentFieldAngle - robotHeading);
+        double encoderReading = normalizeAngle(simulatedFieldAngle - robotHeading);
         
-        // Update cumulative angle from simulated encoder
-        double delta = normalizeAngle(encoderReading - prevAbsolute);
+        // Normalize encoder reading to [0, 360)
+        if (encoderReading < 0) encoderReading += 360;
+        
+        // Update cumulative from encoder delta
+        double delta = encoderReading - prevAbsolute;
+        if (delta > 180) delta -= 360;
+        if (delta < -180) delta += 360;
+        
         cumulativeAngle += delta;
         prevAbsolute = encoderReading;
         
-        // Command turret for next loop
-        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
-        
-        SmartDashboard.putNumber("Turret Field Angle", getFieldAngle());
+        SmartDashboard.putNumber("Turret Field Angle (Sim)", simulatedFieldAngle);
         SmartDashboard.putNumber("Turret Encoder (Sim)", encoderReading);
+        SmartDashboard.putNumber("Turret Cumulative", cumulativeAngle);
     }
 }
 
