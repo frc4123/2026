@@ -344,7 +344,7 @@ public class Turret extends SubsystemBase {
         Translation3d turretTranslation = new Translation3d(
             Constants.Turret.offsetX,
             Constants.Turret.offsetY,
-            Constants.Turret.offsetZ // You'll need to add this constant
+            Constants.Turret.offsetZ // You'll need to add this constant 
         );
         
         // Turret rotation (field-relative)
