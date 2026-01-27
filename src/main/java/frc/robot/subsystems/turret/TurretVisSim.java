@@ -16,8 +16,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,7 +30,7 @@ import org.littletonrobotics.junction.Logger;
 public class TurretVisSim extends SubsystemBase{
     private Translation3d[] trajectory = new Translation3d[50];
     private Supplier<Pose3d> poseSupplier;
-    private Supplier<ChassisSpeeds> fieldSpeedsSupplier;
+    // private Supplier<ChassisSpeeds> fieldSpeedsSupplier;
     private final int CAPACITY = 10000;
     private int fuelStored = 10000;
     private Vision vision;
@@ -40,7 +38,7 @@ public class TurretVisSim extends SubsystemBase{
 
     public TurretVisSim(Supplier<Pose3d> poseSupplier, Supplier<ChassisSpeeds> fieldSpeedsSupplier, Vision vision, Turret turret) {
         this.poseSupplier = poseSupplier;
-        this.fieldSpeedsSupplier = fieldSpeedsSupplier;
+        // this.fieldSpeedsSupplier = fieldSpeedsSupplier;
         this.vision = vision;
         this.turret = turret;
     } 

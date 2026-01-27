@@ -17,7 +17,7 @@ public class FuelSim {
     private static final double FIELD_COR = Math.sqrt(22 / 51.5); // coefficient of restitution with the field
     private static final double FUEL_COR = 0.5; // coefficient of restitution with another fuel
     private static final double NET_COR = 0.2; // coefficient of restitution with the net
-    private static final double ROBOT_COR = 0.1; // coefficient of restitution with a robot
+    // private static final double ROBOT_COR = 0.1; // coefficient of restitution with a robot
     private static final double FUEL_RADIUS = 0.075;
     private static final double FIELD_LENGTH = 16.51;
     private static final double FIELD_WIDTH = 8.04;
@@ -180,9 +180,9 @@ public class FuelSim {
     private ArrayList<Fuel> fuels = new ArrayList<Fuel>();
     private boolean running = false;
     private Supplier<Pose2d> robotSupplier = null;
-    private Supplier<ChassisSpeeds> robotSpeedsSupplier = null;
-    private double robotWidth; // size along the robot's y axis
-    private double robotLength; // size along the robot's x axis
+    // private Supplier<ChassisSpeeds> robotSpeedsSupplier = null;
+    // private double robotWidth; // size along the robot's y axis
+    // private double robotLength; // size along the robot's x axis
     private double bumperHeight;
     private ArrayList<SimIntake> intakes = new ArrayList<>();
 
@@ -281,9 +281,9 @@ public class FuelSim {
             Supplier<Pose2d> poseSupplier,
             Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
         this.robotSupplier = poseSupplier;
-        this.robotSpeedsSupplier = fieldSpeedsSupplier;
-        this.robotWidth = width;
-        this.robotLength = length;
+        // this.robotSpeedsSupplier = fieldSpeedsSupplier;
+        // this.robotWidth = width;
+        // this.robotLength = length;
         this.bumperHeight = bumperHeight;
     }
 
@@ -326,46 +326,46 @@ public class FuelSim {
         fuels.add(new Fuel(pos, vel));
     }
 
-    private void handleRobotCollision(Fuel fuel, Pose2d robot, Translation2d robotVel) {
-        Translation2d relativePos = new Pose2d(fuel.pos.toTranslation2d(), Rotation2d.kZero)
-                .relativeTo(robot)
-                .getTranslation();
+    // private void handleRobotCollision(Fuel fuel, Pose2d robot, Translation2d robotVel) {
+    //     Translation2d relativePos = new Pose2d(fuel.pos.toTranslation2d(), Rotation2d.kZero)
+    //             .relativeTo(robot)
+    //             .getTranslation();
 
-        if (fuel.pos.getZ() > bumperHeight) return; // above bumpers
-        double distanceToBottom = -FUEL_RADIUS - robotLength / 2 - relativePos.getX();
-        double distanceToTop = -FUEL_RADIUS - robotLength / 2 + relativePos.getX();
-        double distanceToRight = -FUEL_RADIUS - robotWidth / 2 - relativePos.getY();
-        double distanceToLeft = -FUEL_RADIUS - robotWidth / 2 + relativePos.getY();
+    //     if (fuel.pos.getZ() > bumperHeight) return; // above bumpers
+    //     double distanceToBottom = -FUEL_RADIUS - robotLength / 2 - relativePos.getX();
+    //     double distanceToTop = -FUEL_RADIUS - robotLength / 2 + relativePos.getX();
+    //     double distanceToRight = -FUEL_RADIUS - robotWidth / 2 - relativePos.getY();
+    //     double distanceToLeft = -FUEL_RADIUS - robotWidth / 2 + relativePos.getY();
 
-        // not inside robot
-        if (distanceToBottom > 0 || distanceToTop > 0 || distanceToRight > 0 || distanceToLeft > 0) return;
+    //     // not inside robot
+    //     if (distanceToBottom > 0 || distanceToTop > 0 || distanceToRight > 0 || distanceToLeft > 0) return;
 
-        Translation2d posOffset;
-        // find minimum distance to side and send corresponding collision response
-        if ((distanceToBottom >= distanceToTop
-                        && distanceToBottom >= distanceToRight
-                        && distanceToBottom >= distanceToLeft)) {
-            posOffset = new Translation2d(distanceToBottom, 0);
-        } else if ((distanceToTop >= distanceToBottom
-                        && distanceToTop >= distanceToRight
-                        && distanceToTop >= distanceToLeft)) {
-            posOffset = new Translation2d(-distanceToTop, 0);
-        } else if ((distanceToRight >= distanceToBottom
-                        && distanceToRight >= distanceToTop
-                        && distanceToRight >= distanceToLeft)) {
-            posOffset = new Translation2d(0, distanceToRight);
-        } else {
-            posOffset = new Translation2d(0, -distanceToLeft);
-        }
+    //     Translation2d posOffset;
+    //     // find minimum distance to side and send corresponding collision response
+    //     if ((distanceToBottom >= distanceToTop
+    //                     && distanceToBottom >= distanceToRight
+    //                     && distanceToBottom >= distanceToLeft)) {
+    //         posOffset = new Translation2d(distanceToBottom, 0);
+    //     } else if ((distanceToTop >= distanceToBottom
+    //                     && distanceToTop >= distanceToRight
+    //                     && distanceToTop >= distanceToLeft)) {
+    //         posOffset = new Translation2d(-distanceToTop, 0);
+    //     } else if ((distanceToRight >= distanceToBottom
+    //                     && distanceToRight >= distanceToTop
+    //                     && distanceToRight >= distanceToLeft)) {
+    //         posOffset = new Translation2d(0, distanceToRight);
+    //     } else {
+    //         posOffset = new Translation2d(0, -distanceToLeft);
+    //     }
 
-        posOffset = posOffset.rotateBy(robot.getRotation());
-        fuel.pos = fuel.pos.plus(new Translation3d(posOffset));
-        Translation2d normal = posOffset.div(posOffset.getNorm());
-        if (fuel.vel.toTranslation2d().dot(normal) < 0)
-            fuel.addImpulse(
-                    new Translation3d(normal.times(-fuel.vel.toTranslation2d().dot(normal) * (1 + ROBOT_COR))));
-        if (robotVel.dot(normal) > 0) fuel.addImpulse(new Translation3d(normal.times(robotVel.dot(normal))));
-    }
+    //     posOffset = posOffset.rotateBy(robot.getRotation());
+    //     fuel.pos = fuel.pos.plus(new Translation3d(posOffset));
+    //     Translation2d normal = posOffset.div(posOffset.getNorm());
+    //     if (fuel.vel.toTranslation2d().dot(normal) < 0)
+    //         fuel.addImpulse(
+    //                 new Translation3d(normal.times(-fuel.vel.toTranslation2d().dot(normal) * (1 + ROBOT_COR))));
+    //     if (robotVel.dot(normal) > 0) fuel.addImpulse(new Translation3d(normal.times(robotVel.dot(normal))));
+    // }
 
     private void handleRobotCollisions(ArrayList<Fuel> fuels) {
         // Pose2d robot = robotSupplier.get();
