@@ -137,6 +137,10 @@ public class Constants {
         public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
+        public static final double MAX_ACCEPTABLE_PITCH = 6;
+        public static final double MAX_ACCEPTABLE_ROLL = 6;
+
+
         // Camera transforms
         public static final Transform3d robotToCam = new Transform3d(
             new Translation3d(

@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase{
 
@@ -66,13 +67,13 @@ public class Vision extends SubsystemBase{
         // Camera transforms
         robotToCam = new Transform3d(
             new Translation3d(
-                Constants.VisionConstants.frontX,
-                Constants.VisionConstants.frontY,
-                Constants.VisionConstants.frontZ),
+                VisionConstants.frontX,
+                VisionConstants.frontY,
+                VisionConstants.frontZ),
             new Rotation3d(
-               Constants.VisionConstants.frontRoll,
-                Constants.VisionConstants.frontPitch,
-                Constants.VisionConstants.frontYaw)
+               VisionConstants.frontRoll,
+                VisionConstants.frontPitch,
+                VisionConstants.frontYaw)
         );
 
         // front camera estimator (new 2026 syntax)
@@ -102,6 +103,9 @@ public class Vision extends SubsystemBase{
     }
 
     private void processVision(PhotonCamera camera) {
+        
+        if(!shouldAcceptPhotonUpdate()) {return;}
+
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
         
@@ -136,6 +140,30 @@ public class Vision extends SubsystemBase{
                 oculus.setRobotPose(est.estimatedPose);
             }
         }
+    }
+
+    private boolean shouldAcceptPhotonUpdate() {
+        // Check 1: Robot pitch/roll (are we tilted like going over bump?)
+        Rotation3d rotation = drivetrain.getRotation3d();
+        double pitchDeg = Math.toDegrees(rotation.getY());
+        double rollDeg = Math.toDegrees(rotation.getX());
+        
+        if (Math.abs(pitchDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH || 
+            Math.abs(rollDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH) {
+            return false; // Robot is tilted - probably on bump
+        }
+        
+        // Check 2: Z-axis acceleration (are we bouncing/airborne?)
+        // If you have an IMU with 3-axis accel:
+        // double zAccel = navX.getRawAccelZ(); // or pigeon.getAccelZ()
+        // if (Math.abs(zAccel - 9.81) > MAX_ACCEPTABLE_Z_ACCEL) {
+        //     return false; // Experiencing high vertical acceleration
+        // }
+        
+        // Check 3: Large pose jumps (vision suddenly disagrees with odometry)
+        // Add standard deviation checking here if needed
+        
+        return true; // Accept the update
     }
 
     public double getTurretCamOffset() {
@@ -270,8 +298,8 @@ public class Vision extends SubsystemBase{
             }
         }
 
-        Translation2d blueHub = Constants.VisionConstants.blueHubTranslation2d;
-        Translation2d redHub = Constants.VisionConstants.redHubTranslation2d;
+        Translation2d blueHub = VisionConstants.blueHubTranslation2d;
+        Translation2d redHub = VisionConstants.redHubTranslation2d;
 
         if(isRed){
             return redHub;
@@ -290,8 +318,8 @@ public class Vision extends SubsystemBase{
             }
         }
 
-        Pose3d blueHub = Constants.VisionConstants.blueHub;
-        Pose3d redHub = Constants.VisionConstants.redHub;
+        Pose3d blueHub = VisionConstants.blueHub;
+        Pose3d redHub = VisionConstants.redHub;
 
         if(isRed){
             return redHub;
@@ -337,18 +365,18 @@ public class Vision extends SubsystemBase{
         }
 
         Translation2d target;
-        Pose3d blueHub = Constants.VisionConstants.blueHub;
-        Pose3d redHub = Constants.VisionConstants.redHub;
+        Pose3d blueHub = VisionConstants.blueHub;
+        Pose3d redHub = VisionConstants.redHub;
 
         if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+            target = VisionConstants.blueHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
         
             Translation2d delta = target.minus(robotPos);
             return delta.getAngle();
 
         } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+            target = VisionConstants.redHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
 
             Translation2d delta = target.minus(robotPos);

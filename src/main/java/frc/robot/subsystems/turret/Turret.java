@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
+import frc.robot.Constants.VisionConstants;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -113,25 +114,18 @@ public class Turret extends SubsystemBase {
      * Call exactly once per loop.
      */
     private void updateCumulativeAngle() {
-        double abs = turretEncoder.getAbsolutePosition().getValueAsDouble() * 360;
-        double delta = abs - prevAbsolute;
-
-        // Handle wraparound
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-
-        cumulativeAngle += delta;
-        prevAbsolute = abs;
+        // Get total rotations from encoder
+        cumulativeAngle = turretEncoder.getPosition().getValueAsDouble() * 360;
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
 
         Translation2d target;
-        Pose3d blueHub = Constants.VisionConstants.blueHub;
-        Pose3d redHub = Constants.VisionConstants.redHub;
+        Pose3d blueHub = VisionConstants.blueHub;
+        Pose3d redHub = VisionConstants.redHub;
 
         if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+            target = VisionConstants.blueHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
         
            Translation2d turretPos = robotPos.plus(
@@ -142,7 +136,7 @@ public class Turret extends SubsystemBase {
             return delta.getAngle();
 
         } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+            target = VisionConstants.redHub.getTranslation().toTranslation2d();
             Translation2d robotPos = robotPose.getTranslation();
 
             Translation2d turretPos = robotPos.plus(
@@ -175,13 +169,13 @@ public class Turret extends SubsystemBase {
         
         // Same target selection logic as targetAngle
         Translation2d target;
-        Pose3d blueHub = Constants.VisionConstants.blueHub;
-        Pose3d redHub = Constants.VisionConstants.redHub;
+        Pose3d blueHub = VisionConstants.blueHub;
+        Pose3d redHub = VisionConstants.redHub;
 
         if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = Constants.VisionConstants.blueHub.getTranslation().toTranslation2d();
+            target = VisionConstants.blueHub.getTranslation().toTranslation2d();
         } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = Constants.VisionConstants.redHub.getTranslation().toTranslation2d();
+            target = VisionConstants.redHub.getTranslation().toTranslation2d();
         } else {
             // No valid target, return 0 feedforward
             return 0.0;
