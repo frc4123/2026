@@ -13,6 +13,7 @@ import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -122,6 +123,22 @@ public class Turret extends SubsystemBase {
 
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         config.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1; // ID of CANcoder
+
+        // RotorToSensorRatio: Motor rotations to sensor rotations
+        // If CANcoder is directly on the mechanism, this is your gear ratio
+        // Example: 100:1 gearbox -> 100.0 (100 motor rotations = 1 mechanism rotation)
+        //TODO: wtf does this have to be
+        config.Feedback.RotorToSensorRatio = 100.0;
+        
+        // SensorToMechanismRatio: Sensor rotations to mechanism rotations
+        // If CANcoder is on the mechanism, this is usually 1.0
+        // (1 sensor rotation = 1 mechanism rotation)
+        config.Feedback.SensorToMechanismRatio = 1.0;
+        //TODO: idk bro this too
+        
+        // Configure the rest of your motor settings
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         turretMotor.getConfigurator().apply(config);
 
