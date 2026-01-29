@@ -4,7 +4,9 @@ import static edu.wpi.first.units.Units.Rotations;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -20,12 +22,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
@@ -54,6 +57,9 @@ public class Turret extends SubsystemBase {
     private static boolean isRed = false;
     // get alliance color
 
+    private boolean hasAbsoluteZero = false;
+
+
     private EasyCRT easyCrtSolver = initCRT();
 
     // Motion Magic controller object
@@ -63,6 +69,11 @@ public class Turret extends SubsystemBase {
                     TurretConstants.velocity,
                     TurretConstants.acceleration
             );
+
+    // Make sure these are initialized in your constructor:
+    private final StatusSignal<Angle> positionSignal = turretMotor.getPosition();
+    private final StatusSignal<AngularVelocity> velocitySignal = turretMotor.getVelocity();
+    private final StatusSignal<Voltage> voltageSignal = turretMotor.getMotorVoltage();
 
     // Physical turret limits relative to turret zero
     private final double minCumulativeAngle = -360.0;
@@ -111,6 +122,12 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(pid);
     }
 
+    // Call this once per periodic loop to refresh all signals
+    private void refreshStatusSignals() {
+        BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal);
+    }
+
+
     private double degreesToMotorRotations(double deg) {
         return deg / 360.0 * TurretConstants.commonRatio;
     }
@@ -135,9 +152,9 @@ public class Turret extends SubsystemBase {
                     /* driveGearTeeth */ TurretConstants.driveGearTeeth,
                     /* encoder1Pinion */ TurretConstants.encoder1Pinion,
                     /* encoder2Pinion */ TurretConstants.encoder2Pinion)
-                .withAbsoluteEncoderOffsets(Rotations.of(0.0), Rotations.of(0.0)) // set after mechanical zero
-                .withMechanismRange(Rotations.of(-1.0), Rotations.of(2.0)) // -360 deg to +720 deg
-                .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio
+                .withAbsoluteEncoderOffsets(Rotations.of(TurretConstants.encoder1Offset), Rotations.of(TurretConstants.encoder2Offset)) // set after mechanical zero
+                .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange), Rotations.of(TurretConstants.mechanismMaxRange)) // -360 deg to +720 deg
+                .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
                 .withAbsoluteEncoderInversions(false, false)
                 .withCrtGearRecommendationConstraints(
                     /* coverageMargin */ TurretConstants.coverageMargin,
@@ -157,13 +174,28 @@ public class Turret extends SubsystemBase {
         return easyCrtSolver;
     }
 
+    private void tryResolveAbsolute() {
+        if (hasAbsoluteZero) return;
+
+        var angleOpt = easyCrtSolver.getAngleOptional();
+        if (angleOpt.isEmpty()) return;
+
+        Angle mechAngle = angleOpt.get();
+
+        cumulativeAngle = mechAngle.in(Units.Degrees);
+        prevAbsolute = cumulativeAngle;
+
+        hasAbsoluteZero = true;
+    }
+
+
     /**
      * Unwrap absolute encoder into cumulative turret angle.
      * Call exactly once per loop.
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = turretEncoder1.getPosition().getValueAsDouble() * 360;
+        cumulativeAngle = positionSignal.getValueAsDouble() * 360;
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
@@ -332,10 +364,6 @@ public class Turret extends SubsystemBase {
         return cumulativeAngle;
     }
 
-    public double getAbsoluteAngle() {
-        return turretEncoder1.getAbsolutePosition().getValueAsDouble();
-    }
-
     public double getFieldAngle() {
         double robotHeading = drivetrain.getState().Pose.getRotation().getDegrees();
         double fieldRelativeAngle = cumulativeAngle + robotHeading;
@@ -393,14 +421,20 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         checkDS();
-        if (!RobotBase.isSimulation()) {updateCumulativeAngle();}
+        refreshStatusSignals();
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        if (!hasAbsoluteZero) {
+            turretMotor.stopMotor();
+            return;
+        }
+
         SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
     }
 
    @Override
     public void simulationPeriodic() {
         // FIRST: Simulate motor response
+        updateCumulativeAngle();
         double commandedRotations = motionMagic.Position;
         double commandedDegrees = commandedRotations / TurretConstants.commonRatio * 360.0;
         

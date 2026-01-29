@@ -82,11 +82,19 @@ public class Constants {
         public static final double velocity = 0;
         public static final double acceleration = 0;
 
-        public static final int commonRatio = 1;
+        public static final int mechanismMinRange = -1; // -360 degrees
+        public static final int mechanismMaxRange = 1; // +360 degrees
+        // this makes total of 720 degrees rotation^^^^
 
-        public static final int driveGearTeeth = 1;
-        public static final int encoder1Pinion = 1;
-        public static final int encoder2Pinion = 1;
+        public static final double commonRatio = 1;
+
+        public static final int driveGearTeeth = 9;
+        public static final int encoder1Pinion = 48; // ?
+        public static final int encoder2Pinion = 50; // ?
+
+        public static final int encoder1Offset = 0;
+        public static final int encoder2Offset = 0;
+        //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final int coverageMargin = 1;
         public static final int minTeeth = 1;
