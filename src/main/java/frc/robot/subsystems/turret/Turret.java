@@ -365,18 +365,6 @@ public class Turret extends SubsystemBase {
             );
         }
 
-    /**
-     * Relative manual rotation command.
-     */
-    public void rotateRelative(double deltaDeg) {
-        double target = cumulativeAngle + deltaDeg;
-        target = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, target));
-
-        double targetRotations = degreesToMotorRotations(target);
-        turretMotor.setControl(motionMagic.withPosition(targetRotations));
-    }
-    
-
     public double getCumulativeAngle() {
         if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {
             return simulatedAngle;
@@ -406,37 +394,37 @@ public class Turret extends SubsystemBase {
      * Returns the current 3D pose of the turret in field coordinates.
      * Combines robot position with turret rotation.
      */
-    public Pose3d getTurretPose3d() {
-        // Get robot pose
-        Pose2d robotPose = drivetrain.getState().Pose;
+    // public Pose3d getTurretPose3d() {
+    //     // Get robot pose
+    //     Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Convert to 3D (robot is on the ground)
-        Pose3d robotPose3d = new Pose3d(
-            robotPose.getX(),
-            robotPose.getY(),
-            0.0, // z position (on field)
-            new Rotation3d(0, 0, robotPose.getRotation().getRadians())
-        );
+    //     // Convert to 3D (robot is on the ground)
+    //     Pose3d robotPose3d = new Pose3d(
+    //         robotPose.getX(),
+    //         robotPose.getY(),
+    //         0.0, // z position (on field)
+    //         new Rotation3d(0, 0, robotPose.getRotation().getRadians())
+    //     );
         
-        // Turret offset from robot center
-        Translation3d turretTranslation = new Translation3d(
-            TurretConstants.offsetX,
-            TurretConstants.offsetY,
-            TurretConstants.offsetZ // You'll need to add this constant 
-        );
+    //     // Turret offset from robot center
+    //     Translation3d turretTranslation = new Translation3d(
+    //         TurretConstants.offsetX,
+    //         TurretConstants.offsetY,
+    //         TurretConstants.offsetZ // You'll need to add this constant 
+    //     );
         
-        // Turret rotation (field-relative)
-        Rotation2d fieldAngle = new Rotation2d(Math.toRadians(
-            normalizeAngle(cumulativeAngle) + robotPose.getRotation().getDegrees()
-        ));
+    //     // Turret rotation (field-relative)
+    //     Rotation2d fieldAngle = new Rotation2d(Math.toRadians(
+    //         normalizeAngle(cumulativeAngle) + robotPose.getRotation().getDegrees()
+    //     ));
         
-        Rotation3d turretRotation = new Rotation3d(0, 0, fieldAngle.getRadians());
+    //     Rotation3d turretRotation = new Rotation3d(0, 0, fieldAngle.getRadians());
         
-        // Combine: robot pose + turret offset + turret rotation
-        Transform3d turretTransform = new Transform3d(turretTranslation, turretRotation);
+    //     // Combine: robot pose + turret offset + turret rotation
+    //     Transform3d turretTransform = new Transform3d(turretTranslation, turretRotation);
         
-        return robotPose3d.transformBy(turretTransform);
-    }
+    //     return robotPose3d.transformBy(turretTransform);
+    // }
 
     @Override
     public void periodic() {
