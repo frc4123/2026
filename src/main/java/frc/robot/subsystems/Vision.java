@@ -32,7 +32,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase{
@@ -179,14 +179,14 @@ public class Vision extends SubsystemBase{
             boolean validTag = false;
 
             if (isBlue) {
-                for (double validId : Constants.Turret.validTurretTagsBlue) {
+                for (double validId : TurretConstants.validTurretTagsBlue) {
                     if (id == (int) validId) {
                         validTag = true;
                         break;
                     }
                 }
             } else if (isRed) {
-                for (double validId : Constants.Turret.validTurretTagsRed) {
+                for (double validId : TurretConstants.validTurretTagsRed) {
                     if (id == (int) validId) {
                         validTag = true;
                         break;
@@ -223,13 +223,13 @@ public class Vision extends SubsystemBase{
 
     public double[] getHubOffsetForTag(int id){
         switch(id){
-            case 21: return new double[]{0.0, Constants.Turret.tagOffset};
-            case 26: return new double[]{-Constants.Turret.tagOffset, 0.0};
-            case 18: return new double[]{0.0, -Constants.Turret.tagOffset};
+            case 21: return new double[]{0.0, TurretConstants.tagOffset};
+            case 26: return new double[]{-TurretConstants.tagOffset, 0.0};
+            case 18: return new double[]{0.0, -TurretConstants.tagOffset};
 
-            case 2: return new double[]{0.0, Constants.Turret.tagOffset};
-            case 10: return new double[]{Constants.Turret.tagOffset, 0.0};
-            case 5: return new double[]{0.0, -Constants.Turret.tagOffset};
+            case 2: return new double[]{0.0, TurretConstants.tagOffset};
+            case 10: return new double[]{TurretConstants.tagOffset, 0.0};
+            case 5: return new double[]{0.0, -TurretConstants.tagOffset};
         }
         return new double[] {0.0,0.0};
     }

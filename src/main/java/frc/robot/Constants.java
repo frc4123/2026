@@ -24,6 +24,8 @@ public class Constants {
 
     public static final class CanIdCanivore { 
 
+        public static final String ID = "Good Boy CANivore 10";
+
         public static final int Front_Left_Drive = 2;
         public static final int Front_Right_Drive = 3;
         public static final int Back_Left_Drive = 4;
@@ -44,7 +46,8 @@ public class Constants {
         public static final int Back_Right_CANcoder = 14;
 
         public static final int Turret = 15;
-        public static final int Turret_Encoder = 15;
+        public static final int Turret_Encoder1 = 16;
+        public static final int Turret_Encoder2 = 18;
 
     }
 
@@ -74,12 +77,23 @@ public class Constants {
         public static final double kDeadband = 0.028;
     }
 
-    public static final class Turret {
+    public static final class TurretConstants {
         public static final double stowPosition = 0;
         public static final double velocity = 0;
         public static final double acceleration = 0;
 
-        public static final double gearRatio = 1;
+        public static final int commonRatio = 1;
+
+        public static final int driveGearTeeth = 1;
+        public static final int encoder1Pinion = 1;
+        public static final int encoder2Pinion = 1;
+                
+        public static final int coverageMargin = 1;
+        public static final int minTeeth = 1;
+        public static final int maxTeeth = 1;
+        public static final int maxIterations = 1;
+
+        //TODO: change all tssssss
 
         public static final double offsetX = Units.inchesToMeters(8);
         public static final double offsetY = Units.inchesToMeters(-8);

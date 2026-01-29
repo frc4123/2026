@@ -110,8 +110,8 @@ public class TurretVisSim extends SubsystemBase{
         
         // Turret offset in robot coordinates (2D for horizontal, separate Z)
         Translation2d turretOffset2d = new Translation2d(
-            Constants.Turret.offsetX,
-            Constants.Turret.offsetY
+            Constants.TurretConstants.offsetX,
+            Constants.TurretConstants.offsetY
         );
         
         // Rotate by robot heading
@@ -121,7 +121,7 @@ public class TurretVisSim extends SubsystemBase{
         return new Translation3d(
             robot.getX() + rotatedOffset2d.getX(),
             robot.getY() + rotatedOffset2d.getY(),
-            robot.getZ() + Constants.Turret.offsetZ
+            robot.getZ() + Constants.TurretConstants.offsetZ
         );
     }
 

@@ -1,5 +1,9 @@
 package frc.robot.subsystems.turret;
 
+import static edu.wpi.first.units.Units.Rotations;
+
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
@@ -14,6 +18,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +29,10 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
+import yams.units.EasyCRT;
+import yams.units.EasyCRTConfig;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.TurretConstants;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -33,27 +42,27 @@ import frc.robot.Constants.VisionConstants;
  */
 public class Turret extends SubsystemBase {
 
-    CANBus canivore = new CANBus("Canivore");
+    CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
     // Motor controlling turret rotation
     private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.Turret, canivore);
 
     // Absolute turret encoder
-    private final CANcoder turretEncoder = new CANcoder(Constants.CanIdCanivore.Turret_Encoder, canivore);
+    private final CANcoder turretEncoder1 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder1, canivore);
+    private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder2, canivore);
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
     // get alliance color
 
+    private EasyCRT easyCrtSolver = initCRT();
+
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
             new DynamicMotionMagicTorqueCurrentFOC(
-                    Constants.Turret.stowPosition,
-                    Constants.Turret.velocity,
-                    Constants.Turret.acceleration
+                    TurretConstants.stowPosition,
+                    TurretConstants.velocity,
+                    TurretConstants.acceleration
             );
-
-    // Gear ratio turret motor -> turret shaft
-    private final double gearRatio = Constants.Turret.gearRatio;
 
     // Physical turret limits relative to turret zero
     private final double minCumulativeAngle = -360.0;
@@ -77,29 +86,33 @@ public class Turret extends SubsystemBase {
         this.vision = vision;
 
         configureMotor();
+        initCRT();
 
         // Read encoder once at startup
-        double initial = turretEncoder.getAbsolutePosition().getValueAsDouble();
-        cumulativeAngle = initial;
-        prevAbsolute = initial;
+        // double initial = turretEncoder1.getAbsolutePosition().getValueAsDouble();
+        cumulativeAngle = easyCrtSolver.getAngleOptional().get().in(Units.Degrees);
+;
+        prevAbsolute = cumulativeAngle;
         //lastLoopTime = Timer.getFPGATimestamp();
+
+        
     }
 
     private void configureMotor() {
         turretMotor.setNeutralMode(NeutralModeValue.Brake);
 
         Slot0Configs pid = new Slot0Configs()
-                .withKP(Constants.Turret.kP)
-                .withKI(Constants.Turret.kI)
-                .withKD(Constants.Turret.kD)
-                .withKV(Constants.Turret.kV)
-                .withKA(Constants.Turret.kA);
+                .withKP(TurretConstants.kP)
+                .withKI(TurretConstants.kI)
+                .withKD(TurretConstants.kD)
+                .withKV(TurretConstants.kV)
+                .withKA(TurretConstants.kA);
 
         turretMotor.getConfigurator().apply(pid);
     }
 
     private double degreesToMotorRotations(double deg) {
-        return deg / 360.0 * gearRatio;
+        return deg / 360.0 * TurretConstants.commonRatio;
     }
 
     private double normalizeAngle(double deg) {
@@ -109,13 +122,48 @@ public class Turret extends SubsystemBase {
         return deg;
     }
 
+    public EasyCRT initCRT(){
+        // Suppose: mechanism : drive gear = 12:1, drive gear = 50T, encoders use 19T and 23T pinions.
+
+        Supplier<Angle> enc1Supplier = () -> Rotations.of(turretEncoder1.getPosition().getValueAsDouble());
+        Supplier<Angle> enc2Supplier = () -> Rotations.of(turretEncoder2.getPosition().getValueAsDouble());
+
+        var easyCrt =
+            new EasyCRTConfig(enc1Supplier, enc2Supplier)
+                .withCommonDriveGear(
+                    /* commonRatio (mech:drive) */ TurretConstants.commonRatio,
+                    /* driveGearTeeth */ TurretConstants.driveGearTeeth,
+                    /* encoder1Pinion */ TurretConstants.encoder1Pinion,
+                    /* encoder2Pinion */ TurretConstants.encoder2Pinion)
+                .withAbsoluteEncoderOffsets(Rotations.of(0.0), Rotations.of(0.0)) // set after mechanical zero
+                .withMechanismRange(Rotations.of(-1.0), Rotations.of(2.0)) // -360 deg to +720 deg
+                .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio
+                .withAbsoluteEncoderInversions(false, false)
+                .withCrtGearRecommendationConstraints(
+                    /* coverageMargin */ TurretConstants.coverageMargin,
+                    /* minTeeth */ TurretConstants.minTeeth,
+                    /* maxTeeth */ TurretConstants.maxTeeth,
+                    /* maxIterations */ TurretConstants.maxIterations);
+                
+
+        // you can inspect:
+        easyCrt.getUniqueCoverage();          // Optional<Angle> coverage from prime counts and common scale
+        easyCrt.coverageSatisfiesRange();     // Does coverage exceed maxMechanismAngle?
+        easyCrt.getRecommendedCrtGearPair(); // Suggested pair within constraints
+        easyCrt.getUniqueCoverage();
+
+        // Create the solver:
+        var easyCrtSolver = new EasyCRT(easyCrt);
+        return easyCrtSolver;
+    }
+
     /**
      * Unwrap absolute encoder into cumulative turret angle.
      * Call exactly once per loop.
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = turretEncoder.getPosition().getValueAsDouble() * 360;
+        cumulativeAngle = turretEncoder1.getPosition().getValueAsDouble() * 360;
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
@@ -129,7 +177,7 @@ public class Turret extends SubsystemBase {
             Translation2d robotPos = robotPose.getTranslation();
         
            Translation2d turretPos = robotPos.plus(
-                Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+                TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
             );
 
             Translation2d delta = target.minus(turretPos);
@@ -140,7 +188,7 @@ public class Turret extends SubsystemBase {
             Translation2d robotPos = robotPose.getTranslation();
 
             Translation2d turretPos = robotPos.plus(
-                Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+                TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
             );
 
             Translation2d delta = target.minus(turretPos);
@@ -149,6 +197,7 @@ public class Turret extends SubsystemBase {
         /*this should allow the robot to face the hub from whatever position it is
         we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret 
         */
+       
 
         return new Rotation2d(0);
         /*
@@ -184,7 +233,7 @@ public class Turret extends SubsystemBase {
         // Account for turret offset from robot center (same as targetAngle)
         Translation2d robotPos = robotPose.getTranslation();
         Translation2d turretPos = robotPos.plus(
-            Constants.Turret.turretOffset.rotateBy(robotPose.getRotation())
+            TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
         );
                 
         // Vector from turret to target
@@ -251,7 +300,7 @@ public class Turret extends SubsystemBase {
         
         // 3. Total feedforward
         double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
-        double totalFF_rotPerSec = totalFF_degPerSec / 360.0 * gearRatio;
+        double totalFF_rotPerSec = totalFF_degPerSec / 360.0 * TurretConstants.commonRatio;
 
         // Convert position target to motor rotations
         double targetRotations = degreesToMotorRotations(targetCumulative);
@@ -284,7 +333,7 @@ public class Turret extends SubsystemBase {
     }
 
     public double getAbsoluteAngle() {
-        return turretEncoder.getAbsolutePosition().getValueAsDouble();
+        return turretEncoder1.getAbsolutePosition().getValueAsDouble();
     }
 
     public double getFieldAngle() {
@@ -323,9 +372,9 @@ public class Turret extends SubsystemBase {
         
         // Turret offset from robot center
         Translation3d turretTranslation = new Translation3d(
-            Constants.Turret.offsetX,
-            Constants.Turret.offsetY,
-            Constants.Turret.offsetZ // You'll need to add this constant 
+            TurretConstants.offsetX,
+            TurretConstants.offsetY,
+            TurretConstants.offsetZ // You'll need to add this constant 
         );
         
         // Turret rotation (field-relative)
@@ -353,7 +402,7 @@ public class Turret extends SubsystemBase {
     public void simulationPeriodic() {
         // FIRST: Simulate motor response
         double commandedRotations = motionMagic.Position;
-        double commandedDegrees = commandedRotations / gearRatio * 360.0;
+        double commandedDegrees = commandedRotations / TurretConstants.commonRatio * 360.0;
         
         double step = 25.0;
         double diff = commandedDegrees - simulatedAngle;

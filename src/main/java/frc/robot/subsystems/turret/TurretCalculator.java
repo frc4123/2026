@@ -34,7 +34,7 @@ public class TurretCalculator {
     public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
         Translation2d turretPos =
         robot.getTranslation().plus(
-            Constants.Turret.turretOffset.rotateBy(robot.getRotation())
+            Constants.TurretConstants.turretOffset.rotateBy(robot.getRotation())
         );
 
     return Meters.of(turretPos.getDistance(target.toTranslation2d()));
@@ -46,7 +46,7 @@ public class TurretCalculator {
         double vel = velocity.in(InchesPerSecond);
         double x_dist = getDistanceToTarget(robot, target).in(Inches);
         double y_dist = target.getMeasureZ()
-                .minus(Meters.of(Constants.Turret.offsetZ))
+                .minus(Meters.of(Constants.TurretConstants.offsetZ))
                 .in(Inches);
         double angle = Math.atan(
                 ((vel * vel) + Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 * y_dist * vel * vel)))
@@ -91,13 +91,13 @@ public class TurretCalculator {
         double x_dist = getDistanceToTarget(robot, predictedTarget).in(Inches);
         double y_dist = predictedTarget
                 .getMeasureZ()
-                .minus(Meters.of(Constants.Turret.offsetZ))
+                .minus(Meters.of(Constants.TurretConstants.offsetZ))
                 .in(Inches);
         double g = 386;
         double r = FieldConstants.FUNNEL_RADIUS.in(Inches)
                 * x_dist
                 / getDistanceToTarget(robot, actualTarget).in(Inches);
-        double h = FieldConstants.FUNNEL_HEIGHT.plus(Constants.Turret.DISTANCE_ABOVE_FUNNEL).in(Inches);
+        double h = FieldConstants.FUNNEL_HEIGHT.plus(Constants.TurretConstants.DISTANCE_ABOVE_FUNNEL).in(Inches);
         double A1 = x_dist * x_dist;
         double B1 = x_dist;
         double D1 = y_dist;
