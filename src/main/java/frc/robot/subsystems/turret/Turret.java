@@ -71,9 +71,13 @@ public class Turret extends SubsystemBase {
             );
 
     // Make sure these are initialized in your constructor:
-    private final StatusSignal<Angle> positionSignal = turretMotor.getPosition();
-    private final StatusSignal<AngularVelocity> velocitySignal = turretMotor.getVelocity();
+    private final StatusSignal<Angle> motorPositionSignal = turretMotor.getPosition();
+    private final StatusSignal<AngularVelocity> motorVelocitySignal = turretMotor.getVelocity();
     private final StatusSignal<Voltage> voltageSignal = turretMotor.getMotorVoltage();
+
+    private final StatusSignal<Angle> encoderPositionSignal = turretEncoder1.getPosition();
+    private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
+
 
     // Physical turret limits relative to turret zero
     private final double minCumulativeAngle = -360.0;
@@ -124,7 +128,7 @@ public class Turret extends SubsystemBase {
 
     // Call this once per periodic loop to refresh all signals
     private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(positionSignal, velocitySignal, voltageSignal);
+        BaseStatusSignal.refreshAll(motorPositionSignal, motorVelocitySignal, voltageSignal, encoderPositionSignal, encoderVelocitySignal);
     }
 
 
@@ -195,7 +199,7 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = positionSignal.getValueAsDouble() * 360;
+        cumulativeAngle = encoderPositionSignal.getValueAsDouble() * 360;
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
@@ -424,6 +428,7 @@ public class Turret extends SubsystemBase {
         refreshStatusSignals();
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         if (!hasAbsoluteZero) {
+            tryResolveAbsolute();
             turretMotor.stopMotor();
             return;
         }
