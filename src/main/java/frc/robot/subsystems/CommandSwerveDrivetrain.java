@@ -228,7 +228,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private void configureAutoBuilder() {
         try {
             PPHolonomicDriveController holonomicController = new PPHolonomicDriveController(
-                // PID constants for translation
+                // PID constants for trxanslation
                 new PIDConstants(10, 0, 0.0224123), // 8 0.02
                 // PID constants for rotation
                 new PIDConstants(10, 0, 0.4123) //0.01

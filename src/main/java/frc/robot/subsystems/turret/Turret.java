@@ -8,9 +8,11 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -116,6 +118,13 @@ public class Turret extends SubsystemBase {
     private void configureMotor() {
         turretMotor.setNeutralMode(NeutralModeValue.Brake);
 
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        config.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1; // ID of CANcoder
+
+        turretMotor.getConfigurator().apply(config);
+
         Slot0Configs pid = new Slot0Configs()
                 .withKP(TurretConstants.kP)
                 .withKI(TurretConstants.kI)
@@ -124,6 +133,8 @@ public class Turret extends SubsystemBase {
                 .withKA(TurretConstants.kA);
 
         turretMotor.getConfigurator().apply(pid);
+
+
     }
 
     // Call this once per periodic loop to refresh all signals
