@@ -424,6 +424,7 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
+        updateCumulativeAngle();
         checkDS();
         refreshStatusSignals();
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
