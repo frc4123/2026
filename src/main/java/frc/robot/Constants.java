@@ -88,7 +88,7 @@ public class Constants {
 
         public static final double motorToTurretRatio = (48.0/9.0) * (180.0/24.0); 
 
-        public static final double rotorToEncoder1Ratio = 48 s/ 9;
+        public static final double rotorToEncoder1Ratio = 48 / 9;
         public static final double sensorToMechanismRatio = 180 / 24;
 
         
