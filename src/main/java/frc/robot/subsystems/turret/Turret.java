@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
@@ -15,6 +17,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -104,6 +107,7 @@ public class Turret extends SubsystemBase {
         this.vision = vision;
 
         configureMotor();
+        configureCANcoders();
         initCRT();
 
         // Read encoder once at startup
@@ -145,6 +149,30 @@ public class Turret extends SubsystemBase {
 
     }
 
+    private void configureCANcoders() {
+    // Configure CANcoder 1
+    MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
+        .withAbsoluteSensorDiscontinuityPoint(1.0)
+        //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
+        .withMagnetOffset(TurretConstants.encoder1Offset); // Set the offset here
+    
+    CANcoderConfiguration config1 = new CANcoderConfiguration()
+        .withMagnetSensor(magnetConfig1);
+    
+    turretEncoder1.getConfigurator().apply(config1);
+    
+    // Configure CANcoder 2
+    MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
+        .withAbsoluteSensorDiscontinuityPoint(1.0)
+        //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
+        .withMagnetOffset(TurretConstants.encoder2Offset); // Set the offset here
+    
+        CANcoderConfiguration config2 = new CANcoderConfiguration()
+        .withMagnetSensor(magnetConfig2);
+    
+        turretEncoder2.getConfigurator().apply(config2);
+    }
+
     // Call this once per periodic loop to refresh all signals
     private void refreshStatusSignals() {
         BaseStatusSignal.refreshAll(motorPositionSignal, motorVelocitySignal, voltageSignal, encoderPositionSignal, encoderVelocitySignal);
@@ -171,7 +199,7 @@ public class Turret extends SubsystemBase {
         var easyCrt =
             new EasyCRTConfig(enc1Supplier, enc2Supplier)
                 .withEncoderRatios(TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth, TurretConstants.turretGearTeeth / TurretConstants.encoder2Teeth)
-                .withAbsoluteEncoderOffsets(Rotations.of(TurretConstants.encoder1Offset), Rotations.of(TurretConstants.encoder2Offset)) // set after mechanical zero
+                .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(0)) // WE ALREADY FLASHED OFFSETS
                 .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange), Rotations.of(TurretConstants.mechanismMaxRange)) // -360 deg to +720 deg
                 .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
                 .withAbsoluteEncoderInversions(false, false)

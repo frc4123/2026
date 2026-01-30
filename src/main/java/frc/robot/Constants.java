@@ -79,7 +79,7 @@ public class Constants {
 
     public static final class TurretConstants {
         public static final double stowPosition = 0;
-        public static final double velocity = 0;
+        public static final double velocity = 3; // when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 0;
 
         public static final int mechanismMinRange = -1; // -360 degrees
@@ -88,8 +88,8 @@ public class Constants {
 
         public static final double motorToTurretRatio = (48.0/9.0) * (180.0/24.0); 
 
-        public static final double rotorToEncoder1Ratio = 48/9;
-        public static final double sensorToMechanismRatio = 180.24;
+        public static final double rotorToEncoder1Ratio = 48 s/ 9;
+        public static final double sensorToMechanismRatio = 180 / 24;
 
         
         public static final double turretGearTeeth = 180;     // Turret gear (drives both encoders)
@@ -121,7 +121,7 @@ public class Constants {
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
 
-        public static final double kP = 0;
+        public static final double kP = 100;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kS = 0;
