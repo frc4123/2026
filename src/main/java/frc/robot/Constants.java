@@ -86,20 +86,24 @@ public class Constants {
         public static final int mechanismMaxRange = 1; // +360 degrees
         // this makes total of 720 degrees rotation^^^^
 
-        public static final double commonRatio = 1;
+        public static final double motorToTurretRatio = (48.0/9.0) * (180.0/24.0); 
 
-        public static final int driveGearTeeth = 9;
-        public static final int encoder1Pinion = 48; // ?
-        public static final int encoder2Pinion = 50; // ?
+        public static final double rotorToEncoder1Ratio = 48/9;
+        public static final double sensorToMechanismRatio = 180.24;
 
-        public static final int encoder1Offset = 0;
-        public static final int encoder2Offset = 0;
+        
+        public static final double turretGearTeeth = 180;     // Turret gear (drives both encoders)
+        public static final double encoder1Teeth = 24;      // Gear on Hex Shaft A that connects to turret
+        public static final double encoder2Teeth = 50;      // Gear on Hex Shaft B that connects to turret
+
+        public static final double encoder1Offset = -0.9159;
+        public static final double encoder2Offset = -0.01025;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
-        public static final int coverageMargin = 1;
+        public static final double coverageMargin = 1.2;
         public static final int minTeeth = 1;
         public static final int maxTeeth = 1;
-        public static final int maxIterations = 1;
+        public static final int maxIterations = 30;
 
         //TODO: change all tssssss
 

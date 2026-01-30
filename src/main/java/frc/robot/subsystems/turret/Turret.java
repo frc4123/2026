@@ -123,6 +123,9 @@ public class Turret extends SubsystemBase {
 
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
         config.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1; // ID of CANcoder
+
+        config.Feedback.RotorToSensorRatio = TurretConstants.rotorToEncoder1Ratio;    
+        config.Feedback.SensorToMechanismRatio = TurretConstants.sensorToMechanismRatio;
         
         // Configure the rest of your motor settings
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -149,7 +152,7 @@ public class Turret extends SubsystemBase {
 
 
     private double degreesToMotorRotations(double deg) {
-        return deg / 360.0 * TurretConstants.commonRatio;
+        return deg / 360.0 * TurretConstants.motorToTurretRatio;
     }
 
     private double normalizeAngle(double deg) {
@@ -167,11 +170,7 @@ public class Turret extends SubsystemBase {
 
         var easyCrt =
             new EasyCRTConfig(enc1Supplier, enc2Supplier)
-                .withCommonDriveGear(
-                    /* commonRatio (mech:drive) */ TurretConstants.commonRatio,
-                    /* driveGearTeeth */ TurretConstants.driveGearTeeth,
-                    /* encoder1Pinion */ TurretConstants.encoder1Pinion,
-                    /* encoder2Pinion */ TurretConstants.encoder2Pinion)
+                .withEncoderRatios(TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth, TurretConstants.turretGearTeeth / TurretConstants.encoder2Teeth)
                 .withAbsoluteEncoderOffsets(Rotations.of(TurretConstants.encoder1Offset), Rotations.of(TurretConstants.encoder2Offset)) // set after mechanical zero
                 .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange), Rotations.of(TurretConstants.mechanismMaxRange)) // -360 deg to +720 deg
                 .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
@@ -247,7 +246,7 @@ public class Turret extends SubsystemBase {
             return delta.getAngle();
         }
         /*this should allow the robot to face the hub from whatever position it is
-        we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret 
+        we will use this comma fnd if our turret breaks and we havfe to start auto aiming using swerve and not turret 
         */
        
 
@@ -352,7 +351,7 @@ public class Turret extends SubsystemBase {
         
         // 3. Total feedforward
         double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
-        double totalFF_rotPerSec = totalFF_degPerSec / 360.0 * TurretConstants.commonRatio;
+        double totalFF_rotPerSec = totalFF_degPerSec / 360.0 * TurretConstants.motorToTurretRatio;
 
         // Convert position target to motor rotations
         double targetRotations = degreesToMotorRotations(targetCumulative);
@@ -446,7 +445,7 @@ public class Turret extends SubsystemBase {
         // FIRST: Simulate motor response
         updateCumulativeAngle();
         double commandedRotations = motionMagic.Position;
-        double commandedDegrees = commandedRotations / TurretConstants.commonRatio * 360.0;
+        double commandedDegrees = commandedRotations / TurretConstants.motorToTurretRatio * 360.0;
         
         double step = 25.0;
         double diff = commandedDegrees - simulatedAngle;
