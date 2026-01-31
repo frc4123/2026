@@ -164,8 +164,8 @@ public class Turret extends SubsystemBase {
 
         turretEncoder1.getConfigurator().apply(config1);
     
-    // Configure CANcoder 2
-    MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
+        // Configure CANcoder 2
+        MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
         .withAbsoluteSensorDiscontinuityPoint(1.0)
         //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
         .withMagnetOffset(TurretConstants.encoder2Offset); // Set the offset here
@@ -178,7 +178,14 @@ public class Turret extends SubsystemBase {
 
     // Call this once per periodic loop to refresh all signals
     private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(motorPositionSignal, motorVelocitySignal, voltageSignal, encoder1PositionSignal, encoder2PositionSignal, encoderVelocitySignal);
+        BaseStatusSignal.refreshAll(
+            motorPositionSignal, 
+            motorVelocitySignal,
+            voltageSignal,
+            encoder1PositionSignal,
+            encoder2PositionSignal,
+            encoderVelocitySignal
+        );
     }
 
 
