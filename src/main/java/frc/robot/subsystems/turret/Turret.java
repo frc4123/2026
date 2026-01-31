@@ -81,7 +81,8 @@ public class Turret extends SubsystemBase {
     private final StatusSignal<AngularVelocity> motorVelocitySignal = turretMotor.getVelocity();
     private final StatusSignal<Voltage> voltageSignal = turretMotor.getMotorVoltage();
 
-    private final StatusSignal<Angle> encoderPositionSignal = turretEncoder1.getPosition();
+    private final StatusSignal<Angle> encoder1PositionSignal = turretEncoder1.getPosition();
+    private final StatusSignal<Angle> encoder2PositionSignal = turretEncoder2.getPosition();
     private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
 
 
@@ -115,6 +116,8 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = easyCrtSolver.getAngleOptional().get().in(Units.Degrees);
 ;
         prevAbsolute = cumulativeAngle;
+
+        turretEncoder1.setPosition(easyCrtSolver.getAngleOptional().get());
         //lastLoopTime = Timer.getFPGATimestamp();
 
         
@@ -150,16 +153,16 @@ public class Turret extends SubsystemBase {
     }
 
     private void configureCANcoders() {
-    // Configure CANcoder 1
-    MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
-        .withAbsoluteSensorDiscontinuityPoint(1.0)
-        //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
-        .withMagnetOffset(TurretConstants.encoder1Offset); // Set the offset here
-    
-    CANcoderConfiguration config1 = new CANcoderConfiguration()
-        .withMagnetSensor(magnetConfig1);
-    
-    turretEncoder1.getConfigurator().apply(config1);
+        // Configure CANcoder 1
+        MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
+            .withAbsoluteSensorDiscontinuityPoint(1.0)
+            //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
+            .withMagnetOffset(TurretConstants.encoder1Offset); // Set the offset here
+        
+        CANcoderConfiguration config1 = new CANcoderConfiguration()
+            .withMagnetSensor(magnetConfig1);
+
+        turretEncoder1.getConfigurator().apply(config1);
     
     // Configure CANcoder 2
     MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
@@ -175,7 +178,7 @@ public class Turret extends SubsystemBase {
 
     // Call this once per periodic loop to refresh all signals
     private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(motorPositionSignal, motorVelocitySignal, voltageSignal, encoderPositionSignal, encoderVelocitySignal);
+        BaseStatusSignal.refreshAll(motorPositionSignal, motorVelocitySignal, voltageSignal, encoder1PositionSignal, encoder2PositionSignal, encoderVelocitySignal);
     }
 
 
@@ -218,6 +221,7 @@ public class Turret extends SubsystemBase {
 
         // Create the solver:
         var easyCrtSolver = new EasyCRT(easyCrt);
+
         return easyCrtSolver;
     }
 
@@ -242,7 +246,8 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = encoderPositionSignal.getValueAsDouble() * 360;
+        cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
+        // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360;
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
@@ -455,17 +460,21 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updateCumulativeAngle();
-        checkDS();
         refreshStatusSignals();
-        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        checkDS();
+        updateCumulativeAngle();
         if (!hasAbsoluteZero) {
             tryResolveAbsolute();
             turretMotor.stopMotor();
             return;
         }
+        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        
 
-        SmartDashboard.putNumber("Turret Angle", getCumulativeAngle());
+        SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
+        SmartDashboard.putNumber("Encoder1 Position", encoder1PositionSignal.getValueAsDouble());
+        SmartDashboard.putNumber("Encoder2 Position", encoder2PositionSignal.getValueAsDouble());
+        SmartDashboard.putNumber("Motor Pos (rot)", motorPositionSignal.getValueAsDouble());
     }
 
    @Override
