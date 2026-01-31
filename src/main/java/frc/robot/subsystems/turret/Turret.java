@@ -246,8 +246,10 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
-        // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360;
+        double encoderAngle = encoder1PositionSignal.getValueAsDouble() * 360 ;
+        cumulativeAngle = encoderAngle / (TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth); // TODO: if the above doesnt work then sub this line in
+        //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
+        // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
