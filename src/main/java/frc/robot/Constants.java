@@ -82,6 +82,13 @@ public class Constants {
         public static final double velocity = 3; // when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 0;
 
+        public static final double kP = 100;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
+
         public static final int mechanismMinRange = -1; // -360 degrees
         public static final int mechanismMaxRange = 1; // +360 degrees
         // this makes total of 720 degrees rotation^^^^
@@ -120,13 +127,6 @@ public class Constants {
         public static final Transform3d transform3D = new Transform3d(robotToTurret, new Pose3d());
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
-
-        public static final double kP = 100;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kS = 0;
-        public static final double kV = 0;
-        public static final double kA = 0;
 
     }
 
