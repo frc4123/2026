@@ -41,6 +41,7 @@ import frc.robot.utils.FuelSim;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
+import frc.robot.commands.turret.Aim;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -68,12 +69,13 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(Constants.InputConstants.kDriverControllerPort0);
     //private final CommandGenericHID m_buttonBoard = new CommandGenericHID(Constants.InputConstants.kDriverControllerPort1);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus(drivetrain);
     private final Vision vision = new Vision(drivetrain, oculus);
-
     private final Turret turret = new Turret(drivetrain, vision);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
+
+    private final Aim aim = new Aim(turret, drivetrain, vision);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -87,6 +89,8 @@ public class RobotContainer {
 
         initializeAutoChooser();
         configureFuelSim();
+
+        turret.setDefaultCommand(aim);
     }
 
     private void configureBindings() {

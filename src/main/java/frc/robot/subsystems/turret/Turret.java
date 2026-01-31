@@ -17,15 +17,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -33,15 +29,16 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
-import yams.units.EasyCRT;
-import yams.units.EasyCRTConfig;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.TurretConstants;
+
+import yams.units.EasyCRT;
+import yams.units.EasyCRTConfig;
 
 /**
  * Turret subsystem for field-relative aiming.
@@ -114,7 +111,6 @@ public class Turret extends SubsystemBase {
         // Read encoder once at startup
         // double initial = turretEncoder1.getAbsolutePosition().getValueAsDouble();
         cumulativeAngle = easyCrtSolver.getAngleOptional().get().in(Units.Degrees);
-;
         prevAbsolute = cumulativeAngle;
 
         turretEncoder1.setPosition(easyCrtSolver.getAngleOptional().get());
@@ -477,7 +473,7 @@ public class Turret extends SubsystemBase {
             turretMotor.stopMotor();
             return;
         }
-        setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
+        //setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
 
         SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
