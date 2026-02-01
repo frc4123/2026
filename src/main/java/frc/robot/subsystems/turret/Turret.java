@@ -201,7 +201,7 @@ public class Turret extends SubsystemBase {
 
         var easyCrt =
             new EasyCRTConfig(enc1Supplier, enc2Supplier)
-                .withEncoderRatios(TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth, TurretConstants.turretGearTeeth / TurretConstants.encoder2Teeth)
+                .withEncoderRatios(TurretConstants.sensorToMechanismRatio, TurretConstants.turretGearTeeth / TurretConstants.encoder2Teeth)
                 .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(0)) // WE ALREADY FLASHED OFFSETS
                 .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange), Rotations.of(TurretConstants.mechanismMaxRange)) // -360 deg to +720 deg
                 .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
@@ -236,7 +236,7 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = mechAngle.in(Units.Degrees);
         prevAbsolute = cumulativeAngle;
 
-        double encoderRotations = (cumulativeAngle / 360) * ((TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth));
+        double encoderRotations = (cumulativeAngle / 360.0) * ((TurretConstants.sensorToMechanismRatio));
         turretEncoder1.setPosition(encoderRotations);
 
         hasAbsoluteZero = true;
@@ -249,8 +249,8 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        double encoderDegrees = encoder1PositionSignal.getValueAsDouble() * 360 ;
-        cumulativeAngle = encoderDegrees / (TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth); // TODO: if the above doesnt work then sub this line in
+        double encoderDegrees = encoder1PositionSignal.getValueAsDouble() * 360.0 ;
+        cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio); // TODO: if the above doesnt work then sub this line in
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
         // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
     }
@@ -356,7 +356,7 @@ public class Turret extends SubsystemBase {
 
         // Robot heading and yaw rate
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();
-        double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond / Math.PI * 180;
+        double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond / Math.PI * 180.0;
 
         // Convert field target into robot-relative turret target
         double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());

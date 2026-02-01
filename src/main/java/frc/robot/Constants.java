@@ -95,13 +95,13 @@ public class Constants {
 
         public static final double motorToTurretRatio = (48.0/9.0) * (180.0/24.0); 
 
-        public static final double rotorToEncoder1Ratio = 48 / 9;
-        public static final double sensorToMechanismRatio = 180 / 24;
+        public static final double rotorToEncoder1Ratio = 48.0 / 9.0;
+        public static final double sensorToMechanismRatio = 180.0 / 24.0;
 
         
-        public static final double turretGearTeeth = 180;     // Turret gear (drives both encoders)
-        public static final double encoder1Teeth = 24;      // Gear on Hex Shaft A that connects to turret
-        public static final double encoder2Teeth = 50;      // Gear on Hex Shaft B that connects to turret
+        public static final double turretGearTeeth = 180.0;     // Turret gear (drives both encoders)
+        public static final double encoder1Teeth = 24.0;      // Gear on Hex Shaft A that connects to turret
+        public static final double encoder2Teeth = 50.0;      // Gear on Hex Shaft B that connects to turret
 
         public static final double encoder1Offset = -0.9159;
         public static final double encoder2Offset = -0.01025;
