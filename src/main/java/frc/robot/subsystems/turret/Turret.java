@@ -63,7 +63,7 @@ public class Turret extends SubsystemBase {
     private boolean hasAbsoluteZero = false;
 
 
-    private EasyCRT easyCrtSolver = initCRT();
+    private EasyCRT easyCrtSolver;
 
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
@@ -106,14 +106,11 @@ public class Turret extends SubsystemBase {
 
         configureMotor();
         configureCANcoders();
-        initCRT();
+        easyCrtSolver = initCRT();
 
         // Read encoder once at startup
         // double initial = turretEncoder1.getAbsolutePosition().getValueAsDouble();
-        cumulativeAngle = easyCrtSolver.getAngleOptional().get().in(Units.Degrees);
-        prevAbsolute = cumulativeAngle;
-
-        turretEncoder1.setPosition(easyCrtSolver.getAngleOptional().get());
+        
         //lastLoopTime = Timer.getFPGATimestamp();
 
         
@@ -239,6 +236,9 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = mechAngle.in(Units.Degrees);
         prevAbsolute = cumulativeAngle;
 
+        double encoderRotations = (cumulativeAngle / 360) * ((TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth));
+        turretEncoder1.setPosition(encoderRotations);
+
         hasAbsoluteZero = true;
     }
 
@@ -249,8 +249,8 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        double encoderAngle = encoder1PositionSignal.getValueAsDouble() * 360 ;
-        cumulativeAngle = encoderAngle / (TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth); // TODO: if the above doesnt work then sub this line in
+        double encoderDegrees = encoder1PositionSignal.getValueAsDouble() * 360 ;
+        cumulativeAngle = encoderDegrees / (TurretConstants.turretGearTeeth / TurretConstants.encoder1Teeth); // TODO: if the above doesnt work then sub this line in
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
         // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
     }

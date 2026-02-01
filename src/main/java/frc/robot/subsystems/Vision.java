@@ -14,6 +14,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -89,6 +90,7 @@ public class Vision extends SubsystemBase{
         
     }
 
+
     public static PhotonPipelineResult getLatestResults(PhotonCamera camera) {
         List<PhotonPipelineResult> currentResultList = camera.getAllUnreadResults();
         
@@ -150,7 +152,7 @@ public class Vision extends SubsystemBase{
         
         if (Math.abs(pitchDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH || 
             Math.abs(rollDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH) {
-            return false; // Robot is tilted - probably on bump
+            return false; // Robot is tilted - probably on bump or climb
         }
         
         // Check 2: Z-axis acceleration (are we bouncing/airborne?)

@@ -107,25 +107,25 @@ public class Oculus extends SubsystemBase{
     
     public void publishQuestStatus(){
         OptionalInt questBattery = quest.getBatteryPercent();
-        boolean questTrackingStatus = quest.isTracking();
+        // boolean questTrackingStatus = quest.isTracking();
         int questBatteryInt;
 
         if (quest.isConnected() && loopLimiter % 10 == 0) {
             questBatteryInt = questBattery.getAsInt();
             SmartDashboard.putString("Oculus Quest Battery", questBatteryInt + "%");
-            SmartDashboard.putBoolean("Is Quest Tracking", questTrackingStatus);
-        } else if (quest.isConnected() != true) { 
+            // SmartDashboard.putBoolean("Is Quest Tracking", questTrackingStatus);
+        } else if (!quest.isConnected()) { 
             SmartDashboard.putString("Oculus Quest Battery", "unable to be retrieved");
         }
     }
 
-    public void publishQuestState(){
-        Pose3d questPose = getQuestPose();
-        if(questPose != null) {
-            Pose2d questPose2d = questPose.toPose2d();
-            posePub.set(questPose2d);
-        }
-    }
+    // public void publishQuestState(){
+    //     Pose3d questPose = getQuestPose();
+    //     if(questPose != null) {
+    //         Pose2d questPose2d = questPose.toPose2d();
+    //         posePub.set(questPose2d);
+    //     }
+    // }
 
     @Override
     public void periodic() {
