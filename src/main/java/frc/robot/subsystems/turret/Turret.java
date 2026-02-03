@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -66,11 +67,11 @@ public class Turret extends SubsystemBase {
     private EasyCRT easyCrtSolver;
 
     // Motion Magic controller object
-    private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
-            new DynamicMotionMagicTorqueCurrentFOC(
-                    TurretConstants.stowPosition,
-                    TurretConstants.velocity,
-                    TurretConstants.acceleration
+    private final MotionMagicVoltage motionMagic =
+            new MotionMagicVoltage(
+                    TurretConstants.stowPosition//, TODO: change to DynamicMotionMagicTorqueCurrentFOC
+                    //TurretConstants.velocity,
+                    //TurretConstants.acceleration
             );
 
     // Make sure these are initialized in your constructor:

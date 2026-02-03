@@ -79,11 +79,11 @@ public class Constants {
 
     public static final class TurretConstants {
         public static final double stowPosition = 0;
-        public static final double velocity = 4; // when your confident that the pid always reaches setpoint then jack ts up
-        public static final double acceleration = 2;
+        public static final double velocity = 4.5; // when your confident that the pid always reaches setpoint then jack ts up
+        public static final double acceleration = 4.25;
 
         public static final double kP = 300;
-        public static final double kI = 2; // i want to try 1.9
+        public static final double kI = 6.7; // i want to try 1.9
         public static final double kD = 0;
         public static final double kS = 0; // TODO 
         public static final double kV = 0;
