@@ -79,13 +79,13 @@ public class Constants {
 
     public static final class TurretConstants {
         public static final double stowPosition = 0;
-        public static final double velocity = 3; // when your confident that the pid always reaches setpoint then jack ts up
-        public static final double acceleration = 0;
+        public static final double velocity = 4; // when your confident that the pid always reaches setpoint then jack ts up
+        public static final double acceleration = 2;
 
-        public static final double kP = 100;
-        public static final double kI = 0;
+        public static final double kP = 300;
+        public static final double kI = 2; // i want to try 1.9
         public static final double kD = 0;
-        public static final double kS = 0;
+        public static final double kS = 0; // TODO 
         public static final double kV = 0;
         public static final double kA = 0;
 
@@ -140,7 +140,6 @@ public class Constants {
         public static final double frontRoll = Math.toRadians(0);
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
         public static final double frontYaw = Math.toRadians(0);
-        //TODO: get precise cords
 
         public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(0.02, 0.02, 0.035);
         // Trust down to 2cm in X directio
@@ -178,8 +177,6 @@ public class Constants {
                 Constants.VisionConstants.frontPitch,
                 Constants.VisionConstants.frontYaw)
         );
-
-        //TODO: DOUBLE CHECK THE HEIGHT OF HUB AND THE CORDINATE POSITIONS ARE GUESSES
 
         public static final double frontRoll = Math.toRadians(0);
         public static final double frontPitch = Math.toRadians(-60); // negative pitch is up according to 25 code

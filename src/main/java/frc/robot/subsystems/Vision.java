@@ -14,7 +14,6 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
