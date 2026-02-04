@@ -64,6 +64,8 @@ public class Turret extends SubsystemBase {
 
     private boolean hasAbsoluteZero = false;
 
+    private double initOffsetDegrees = 0.0; // Encoder rotations from zero at boot
+
 
     private EasyCRT easyCrtSolver;
 
@@ -235,9 +237,21 @@ public class Turret extends SubsystemBase {
 
         //double encoderRotations = (cumulativeAngle / 360.0) * TurretConstants.sensorToMechanismRatio;;// * ((TurretConstants.sensorToMechanismRatio));
         //turretEncoder1.setPosition(encoderRotations);
-        turretEncoder1.setPosition(
-            mechAngle.in(Units.Rotations) / TurretConstants.sensorToMechanismRatio
-        );
+        // turretEncoder1.setPosition(
+        //     mechAngle.in(Units.Rotations) / TurretConstants.sensorToMechanismRatio
+        // );
+
+        // Constrain to -360° to +360°
+        while (cumulativeAngle > 360.0) cumulativeAngle -= 360.0;
+        while (cumulativeAngle < -360.0) cumulativeAngle += 360.0;
+
+        // Current encoder reading using THE SAME MATH as updateCumulativeAngle()
+        double currentEncoderDegrees = encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio;
+        
+        // Calculate offset
+        initOffsetDegrees = cumulativeAngle - currentEncoderDegrees;
+        // Calculate offset: 87° - 3° = 84° offset
+        initOffsetDegrees = cumulativeAngle - currentEncoderDegrees;
 
 
         hasAbsoluteZero = true;
@@ -251,6 +265,7 @@ public class Turret extends SubsystemBase {
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
         cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio;
+        cumulativeAngle += initOffsetDegrees;
         //cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
         // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
@@ -469,7 +484,7 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         refreshStatusSignals();
         checkDS();
-        updateCumulativeAngle();
+        if(hasAbsoluteZero) {updateCumulativeAngle();}
         if (!hasAbsoluteZero) {
             tryResolveAbsolute();
             turretMotor.stopMotor();
