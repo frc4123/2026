@@ -79,8 +79,8 @@ public class Constants {
 
     public static final class TurretConstants {
         public static final double stowPosition = 0;
-        public static final double velocity = 4.5; // when your confident that the pid always reaches setpoint then jack ts up
-        public static final double acceleration = 4.25;
+        public static final double velocity = 1; // when your confident that the pid always reaches setpoint then jack ts up
+        public static final double acceleration = 2;
 
         public static final double kP = 300;
         public static final double kI = 6.7; // i want to try 1.9
@@ -103,8 +103,8 @@ public class Constants {
         public static final double encoder1Teeth = 24.0;      // Gear on Hex Shaft A that connects to turret
         public static final double encoder2Teeth = 50.0;      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.3588;
-        public static final double encoder2Offset = -0.80957;
+        public static final double encoder1Offset = -0.986;
+        public static final double encoder2Offset = -0.5926;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
