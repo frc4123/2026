@@ -18,6 +18,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -130,7 +131,7 @@ public class Turret extends SubsystemBase {
         
         // Configure the rest of your motor settings
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         turretMotor.getConfigurator().apply(config);
 
@@ -150,7 +151,7 @@ public class Turret extends SubsystemBase {
         // Configure CANcoder 1
         MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
             .withAbsoluteSensorDiscontinuityPoint(1.0)
-            //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
+            .withSensorDirection(SensorDirectionValue.Clockwise_Positive) //TODO: check which is which
             .withMagnetOffset(TurretConstants.encoder1Offset); // Set the offset here
         
         CANcoderConfiguration config1 = new CANcoderConfiguration()
@@ -161,7 +162,7 @@ public class Turret extends SubsystemBase {
         // Configure CANcoder 2
         MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
         .withAbsoluteSensorDiscontinuityPoint(1.0)
-        //.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) TODO: check which is which
+        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) //TODO: check which is which
         .withMagnetOffset(TurretConstants.encoder2Offset); // Set the offset here
     
         CANcoderConfiguration config2 = new CANcoderConfiguration()
@@ -232,8 +233,12 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = mechAngle.in(Units.Degrees);
         prevAbsolute = cumulativeAngle;
 
-        double encoderRotations = (cumulativeAngle / 360.0);// * ((TurretConstants.sensorToMechanismRatio));
-        turretEncoder1.setPosition(encoderRotations);
+        //double encoderRotations = (cumulativeAngle / 360.0) * TurretConstants.sensorToMechanismRatio;;// * ((TurretConstants.sensorToMechanismRatio));
+        //turretEncoder1.setPosition(encoderRotations);
+        turretEncoder1.setPosition(
+            mechAngle.in(Units.Rotations) / TurretConstants.sensorToMechanismRatio
+        );
+
 
         hasAbsoluteZero = true;
     }
@@ -245,7 +250,7 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360.0 ;
+        cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio;
         //cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
         // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
@@ -477,6 +482,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Encoder1 Position", encoder1PositionSignal.getValueAsDouble());
         SmartDashboard.putNumber("Encoder2 Position", encoder2PositionSignal.getValueAsDouble());
         SmartDashboard.putNumber("Motor Pos (rot)", motorPositionSignal.getValueAsDouble());
+        SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
+
     }
 
    @Override
