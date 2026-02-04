@@ -103,8 +103,8 @@ public class Constants {
         public static final double encoder1Teeth = 24.0;      // Gear on Hex Shaft A that connects to turret
         public static final double encoder2Teeth = 50.0;      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.9159;
-        public static final double encoder2Offset = -0.01025;
+        public static final double encoder1Offset = -0.3588;
+        public static final double encoder2Offset = -0.80957;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;

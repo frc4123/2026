@@ -182,11 +182,6 @@ public class Turret extends SubsystemBase {
         );
     }
 
-
-    private double degreesToMotorRotations(double deg) {
-        return deg / 360.0 * TurretConstants.motorToTurretRatio;
-    }
-
     private double normalizeAngle(double deg) {
         deg %= 360.0;
         if (deg > 180) deg -= 360;
@@ -237,7 +232,7 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = mechAngle.in(Units.Degrees);
         prevAbsolute = cumulativeAngle;
 
-        double encoderRotations = (cumulativeAngle / 360.0) * ((TurretConstants.sensorToMechanismRatio));
+        double encoderRotations = (cumulativeAngle / 360.0);// * ((TurretConstants.sensorToMechanismRatio));
         turretEncoder1.setPosition(encoderRotations);
 
         hasAbsoluteZero = true;
@@ -250,8 +245,8 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        double encoderDegrees = encoder1PositionSignal.getValueAsDouble() * 360.0 ;
-        cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
+        cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360.0 ;
+        //cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
         // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
     }
@@ -390,15 +385,16 @@ public class Turret extends SubsystemBase {
         
         // 3. Total feedforward
         double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
-        double totalFF_rotPerSec = totalFF_degPerSec / 360.0 * TurretConstants.motorToTurretRatio;
+        double totalFF_rotPerSec = totalFF_degPerSec / 360.0;
 
         // Convert position target to motor rotations
-        double targetRotations = degreesToMotorRotations(targetCumulative);
+        double targetRotations = targetCumulative / 360.0;
 
         // Command Motion Magic with combined velocity feedforward
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
+
                         .withFeedForward(totalFF_rotPerSec)
             );
         }
@@ -488,7 +484,7 @@ public class Turret extends SubsystemBase {
         // FIRST: Simulate motor response
         updateCumulativeAngle();
         double commandedRotations = motionMagic.Position;
-        double commandedDegrees = commandedRotations / TurretConstants.motorToTurretRatio * 360.0;
+        double commandedDegrees = commandedRotations * 360.0;
         
         double step = 25.0;
         double diff = commandedDegrees - simulatedAngle;
