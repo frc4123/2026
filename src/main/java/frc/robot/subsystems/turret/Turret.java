@@ -227,6 +227,11 @@ public class Turret extends SubsystemBase {
     private void tryResolveAbsolute() {
         if (hasAbsoluteZero) return;
 
+        if (!encoder1PositionSignal.getStatus().isOK() || !encoder2PositionSignal.getStatus().isOK()) {
+            System.out.println("Waiting for encoder signals...");
+            return;
+        }
+
         var angleOpt = easyCrtSolver.getAngleOptional();
         if (angleOpt.isEmpty()) return;
 
@@ -264,8 +269,7 @@ public class Turret extends SubsystemBase {
      */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio;
-        cumulativeAngle += initOffsetDegrees;
+        cumulativeAngle = initOffsetDegrees + (encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
         // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
@@ -375,7 +379,9 @@ public class Turret extends SubsystemBase {
         double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond / Math.PI * 180.0;
 
         // Convert field target into robot-relative turret target
+        SmartDashboard.putNumber("Field relative turret target", targetFieldAngle.getDegrees());
         double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
+        SmartDashboard.putNumber("Robot Relative Turret Target Rot", targetTurretAngle);
 
         // Compute shortest delta to target
         double current = cumulativeAngle;
@@ -408,16 +414,18 @@ public class Turret extends SubsystemBase {
         double totalFF_rotPerSec = totalFF_degPerSec / 360.0;
 
         // Convert position target to motor rotations
-        double targetRotations = targetCumulative / 360.0;
+        double targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;
 
         // Command Motion Magic with combined velocity feedforward
+        SmartDashboard.putNumber("TargetRotations", targetRotations);
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
 
-                        .withFeedForward(totalFF_rotPerSec)
-            );
-        }
+                        //.withFeedForward(totalFF_rotPerSec)
+                        .withFeedForward(0)
+        );
+    }
 
     public double getCumulativeAngle() {
         if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {
@@ -494,10 +502,10 @@ public class Turret extends SubsystemBase {
         
 
         SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
-        SmartDashboard.putNumber("Encoder1 Position", encoder1PositionSignal.getValueAsDouble());
-        SmartDashboard.putNumber("Encoder2 Position", encoder2PositionSignal.getValueAsDouble());
-        SmartDashboard.putNumber("Motor Pos (rot)", motorPositionSignal.getValueAsDouble());
-        SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
+    //     SmartDashboard.putNumber("Encoder1 Position", encoder1PositionSignal.getValueAsDouble());
+    //     SmartDashboard.putNumber("Encoder2 Position", encoder2PositionSignal.getValueAsDouble());
+    //     SmartDashboard.putNumber("Motor Pos (rot)", motorPositionSignal.getValueAsDouble());
+    //     SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
 
     }
 
