@@ -7,7 +7,9 @@ import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -75,6 +77,26 @@ public class Constants {
         public static final int kDriverControllerPort2 = 2;
         public static final boolean fieldOrientation = true;
         public static final double kDeadband = 0.028;
+    }
+
+    public static final class SwerveConstants {
+
+        public static final double CLOSE_TRANSLATION_PP_KP = 2.5; // 8
+        public static final double CLOSE_TRANSLATION_PP_KI = 0.0;
+        public static final double CLOSE_TRANSLATION_PP_KD = 0.0;
+
+        public static final double CLOSE_ROTATION_PP_KP = 5; // 8
+        public static final double CLOSE_ROTATION_PP_KI = 0.0;
+        public static final double CLOSE_ROTATION_PP_KD = 0.0;
+
+        public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
+        public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
+        
+        public static final double[][] ADDITIONS = {
+            {-0.5, -0.125}, // LEFT ADDITION // {0.342, 0} //0.385
+            {-0.5, -0.4}  // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w advantagescope
+            // {+forward/back-, +left/right-}
+        };
     }
 
     public static final class TurretConstants {
