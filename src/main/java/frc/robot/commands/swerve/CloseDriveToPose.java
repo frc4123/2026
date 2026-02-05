@@ -21,14 +21,14 @@ public class CloseDriveToPose extends Command {
         this.poseFinal = finalPose;
 
         this.xTranslationPID = new PIDController(Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KP, 
-                                                Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KI, 
-                                                Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KD);
+            Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KI, 
+            Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KD);
         this.yTranslationPID = new PIDController(Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KP, 
-                                                Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KI, 
-                                                Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KD);
+            Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KI, 
+            Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KD);
         this.rotationPID = new PIDController(Constants.SwerveConstants.CLOSE_ROTATION_PP_KP, 
-                                             Constants.SwerveConstants.CLOSE_ROTATION_PP_KI, 
-                                             Constants.SwerveConstants.CLOSE_ROTATION_PP_KD);
+            Constants.SwerveConstants.CLOSE_ROTATION_PP_KI, 
+            Constants.SwerveConstants.CLOSE_ROTATION_PP_KD);
         
         rotationPID.enableContinuousInput(-Math.PI, Math.PI);
 
