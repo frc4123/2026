@@ -41,6 +41,7 @@ import frc.robot.utils.FuelSim;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
+import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 
 public class RobotContainer {
@@ -76,6 +77,8 @@ public class RobotContainer {
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
+    private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
+    private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -121,7 +124,8 @@ public class RobotContainer {
             )
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        joystick.leftTrigger().whileTrue(leftDriveToClimb);
+        joystick.rightTrigger().whileTrue(rightDriveToClimb);
 
         joystick.b().whileTrue(
             drivetrain.applyRequest(() -> faceAngle
@@ -146,7 +150,7 @@ public class RobotContainer {
         // joystick.povLeft().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on button Y press.
-        joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.a().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
             .withVelocityY(0.1 * MaxSpeed)

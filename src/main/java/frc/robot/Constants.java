@@ -93,10 +93,13 @@ public class Constants {
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
         
         public static final double[][] ADDITIONS = {
-            {-0.5, -0.125}, // LEFT ADDITION // {0.342, 0} //0.385
-            {-0.5, -0.4}  // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w advantagescope
-            // {+forward/back-, +left/right-}
+            {1.0549228, 1.0422874}, // LEFT ADDITION // {0.342, 0} //0.385
+            {1.0549228, -1.0297126}  // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w advantagescope
+            // driver relative -> {+forward/back-, +left/right-}
         };
+
+        public static final Pose2d robotToClimber = new Pose2d(Units.inchesToMeters(2), Units.inchesToMeters(27.5/2.0), new Rotation2d());
+        //33.75 bumper width
     }
 
     public static final class TurretConstants {
