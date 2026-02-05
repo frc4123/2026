@@ -141,6 +141,7 @@ public class Turret extends SubsystemBase {
                 .withKP(TurretConstants.kP)
                 .withKI(TurretConstants.kI)
                 .withKD(TurretConstants.kD)
+                .withKS(TurretConstants.kS)
                 .withKV(TurretConstants.kV)
                 .withKA(TurretConstants.kA);
 
@@ -421,9 +422,8 @@ public class Turret extends SubsystemBase {
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
-
-                        //.withFeedForward(totalFF_rotPerSec)
-                        .withFeedForward(0)
+                        .withFeedForward(totalFF_rotPerSec)
+                        //.withFeedForward(0)
         );
     }
 

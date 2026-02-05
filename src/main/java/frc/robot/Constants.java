@@ -83,10 +83,10 @@ public class Constants {
         public static final double acceleration = 2;
 
         public static final double kP = 300;
-        public static final double kI = 6.7; // i want to try 1.9
+        public static final double kI = 6.7;
         public static final double kD = 0;
-        public static final double kS = 0; // TODO 
-        public static final double kV = 0;
+        public static final double kS = 0; // was 0.239 but dont need bc already moving so 0 for now
+        public static final double kV = 0.64 / 0.15;
         public static final double kA = 0;
 
         public static final int mechanismMinRange = -1; // -360 degrees
