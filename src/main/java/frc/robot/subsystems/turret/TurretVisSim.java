@@ -31,8 +31,8 @@ public class TurretVisSim extends SubsystemBase{
     private Translation3d[] trajectory = new Translation3d[50];
     private Supplier<Pose3d> poseSupplier;
     // private Supplier<ChassisSpeeds> fieldSpeedsSupplier;
-    private final int CAPACITY = 10000;
-    private int fuelStored = 10000;
+    private final int CAPACITY = 30;
+    private int fuelStored = 3;
     private Vision vision;
     private Turret turret;
 
