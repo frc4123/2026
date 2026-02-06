@@ -8,10 +8,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
-import com.ctre.phoenix6.HootAutoReplay;
+// import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.FuelSim;
