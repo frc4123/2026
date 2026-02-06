@@ -430,7 +430,7 @@ public class Turret extends SubsystemBase {
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
-                        .withFeedForward(feedforwardVolts)
+                        //.withFeedForward(feedforwardVolts)
                         //.withFeedForward(0)
         );
     }
