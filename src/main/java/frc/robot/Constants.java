@@ -104,7 +104,7 @@ public class Constants {
 
     public static final class TurretConstants {
         public static final double stowPosition = 0;
-        public static final double velocity = 1.75; // if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
+        public static final double velocity = 2.5; // 1.75 working if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 1.1;
 
         public static final double kP = 300;
@@ -128,8 +128,8 @@ public class Constants {
         public static final double encoder1Teeth = 24.0;      // Gear on Hex Shaft A that connects to turret
         public static final double encoder2Teeth = 50.0;      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.575928;
-        public static final double encoder2Offset = -0.597412;
+        public static final double encoder1Offset = -0.058349;
+        public static final double encoder2Offset = -0.382812;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -179,7 +179,7 @@ public class Constants {
         public static final double FLO_frontZ = Units.inchesToMeters(7.826); // 7.02
 
         public static final double FLO_frontRoll = Math.toRadians(0);
-        public static final double FLO_frontPitch = Math.toRadians(-75.0); // negative pitch is up according to 25 code
+        public static final double FLO_frontPitch = Math.toRadians(-15.0); // -75.0 negative pitch is up according to 25 code
         public static final double FLO_frontYaw = Math.toRadians(132.273);
 
         //FLI = Front_Left_Outside camera
@@ -188,7 +188,7 @@ public class Constants {
         public static final double FLI_frontZ = Units.inchesToMeters(7.979); // 7.02
 
         public static final double FLI_frontRoll = Math.toRadians(0);
-        public static final double FLI_frontPitch = Math.toRadians(-60.0); // negative pitch is up according to 25 code
+        public static final double FLI_frontPitch = Math.toRadians(-30.0); // -60 negative pitch is up according to 25 code
         public static final double FLI_frontYaw = Math.toRadians(30);
 
         //FR = Front_Right camera
@@ -197,7 +197,7 @@ public class Constants {
         public static final double FR_frontZ = Units.inchesToMeters(7.825761); // 7.02
 
         public static final double FR_frontRoll = Math.toRadians(0);
-        public static final double FR_frontPitch = Math.toRadians(-75.0); // negative pitch is up according to 25 code
+        public static final double FR_frontPitch = Math.toRadians(-15.0); // -75.0 negative pitch is up according to 25 code
         public static final double FR_frontYaw = Math.toRadians(-131.987);
 
         //blueHub translations

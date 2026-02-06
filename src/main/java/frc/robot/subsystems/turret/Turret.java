@@ -151,7 +151,6 @@ public class Turret extends SubsystemBase {
             .withMotionMagicAcceleration(TurretConstants.acceleration);
 
         turretMotor.getConfigurator().apply(pid);
-
         turretMotor.getConfigurator().apply(motionMagic);
     }
 
