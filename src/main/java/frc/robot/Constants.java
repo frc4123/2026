@@ -174,8 +174,8 @@ public class Constants {
     public static final class VisionConstants {
 
         //FLO = Front_Left_Outside camera
-        public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
-        public static final double FLO_frontY = Units.inchesToMeters(11.097);
+        public static final double FLO_frontX = Units.inchesToMeters(9.069 - 0.5); // 7.495 7.176364 -7.176364
+        public static final double FLO_frontY = Units.inchesToMeters(11.097 - 0.5);
         public static final double FLO_frontZ = Units.inchesToMeters(7.826); // 7.02
 
         public static final double FLO_frontRoll = Math.toRadians(0);
@@ -183,8 +183,8 @@ public class Constants {
         public static final double FLO_frontYaw = Math.toRadians(132.273);
 
         //FLI = Front_Left_Outside camera
-        public static final double FLI_frontX = Units.inchesToMeters(10.836); // 7.495 7.176364 -7.176364
-        public static final double FLI_frontY = Units.inchesToMeters(9.396);
+        public static final double FLI_frontX = Units.inchesToMeters(10.836 - 0.5); // 7.495 7.176364 -7.176364
+        public static final double FLI_frontY = Units.inchesToMeters(9.396 - 0.5);
         public static final double FLI_frontZ = Units.inchesToMeters(7.979); // 7.02
 
         public static final double FLI_frontRoll = Math.toRadians(0);
@@ -192,8 +192,8 @@ public class Constants {
         public static final double FLI_frontYaw = Math.toRadians(30);
 
         //FR = Front_Right camera
-        public static final double FR_frontX = Units.inchesToMeters(10.14); // 7.495 7.176364 -7.176364
-        public static final double FR_frontY = Units.inchesToMeters(-10.229);
+        public static final double FR_frontX = Units.inchesToMeters(10.14 - 0.5); // 7.495 7.176364 -7.176364
+        public static final double FR_frontY = Units.inchesToMeters(-10.229 + 0.5);
         public static final double FR_frontZ = Units.inchesToMeters(7.825761); // 7.02
 
         public static final double FR_frontRoll = Math.toRadians(0);
