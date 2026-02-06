@@ -30,6 +30,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -67,6 +68,7 @@ public class Turret extends SubsystemBase {
     private double initOffsetDegrees = 0.0; // Encoder rotations from zero at boot
 
     private double previousYawRate = 0.0;
+    private int bootDelayCounter = 0;
 
     private EasyCRT easyCrtSolver;
 
@@ -79,13 +81,13 @@ public class Turret extends SubsystemBase {
             );
 
     // Make sure these are initialized in your constructor:
-    private final StatusSignal<Angle> motorPositionSignal = turretMotor.getPosition();
-    private final StatusSignal<AngularVelocity> motorVelocitySignal = turretMotor.getVelocity();
-    private final StatusSignal<Voltage> voltageSignal = turretMotor.getMotorVoltage();
+    //private final StatusSignal<Angle> motorPositionSignal = turretMotor.getPosition();
+    // private final StatusSignal<AngularVelocity> motorVelocitySignal = turretMotor.getVelocity();
+    // private final StatusSignal<Voltage> voltageSignal = turretMotor.getMotorVoltage();
 
     private final StatusSignal<Angle> encoder1PositionSignal = turretEncoder1.getPosition();
     private final StatusSignal<Angle> encoder2PositionSignal = turretEncoder2.getPosition();
-    private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
+    // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
 
 
     // Physical turret limits relative to turret zero
@@ -111,6 +113,10 @@ public class Turret extends SubsystemBase {
 
         configureMotor();
         configureCANcoders();
+
+        refreshStatusSignals();  // Add this line!
+        Timer.delay(0.1);  
+
         easyCrtSolver = initCRT();
 
         // Read encoder once at startup
@@ -181,12 +187,12 @@ public class Turret extends SubsystemBase {
     // Call this once per periodic loop to refresh all signals
     private void refreshStatusSignals() {
         BaseStatusSignal.refreshAll(
-            motorPositionSignal, 
-            motorVelocitySignal,
-            voltageSignal,
+        //     motorPositionSignal, 
+        //     motorVelocitySignal,
+        //     voltageSignal,
             encoder1PositionSignal,
-            encoder2PositionSignal,
-            encoderVelocitySignal
+            encoder2PositionSignal//,
+        //     encoderVelocitySignal
         );
     }
 
@@ -231,6 +237,14 @@ public class Turret extends SubsystemBase {
 
     private void tryResolveAbsolute() {
         if (hasAbsoluteZero) return;
+        if (hasAbsoluteZero) return;
+    
+        // Wait 40 loops (~800ms) before trying to resolve
+        if (bootDelayCounter < 40) {
+            bootDelayCounter++;
+            return;
+        }
+
 
         if (!encoder1PositionSignal.getStatus().isOK() || !encoder2PositionSignal.getStatus().isOK()) {
             System.out.println("Waiting for encoder signals...");

@@ -10,6 +10,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.FuelSim;
@@ -19,10 +21,10 @@ public class Robot extends LoggedRobot {
 
     private final RobotContainer m_robotContainer;
 
-    /* log and replay timestamp and joystick data */
-    private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
-        .withTimestampReplay()
-        .withJoystickReplay();
+    // /* log and replay timestamp and joystick data */
+    // private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
+    //     .withTimestampReplay()
+    //     .withJoystickReplay();
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -30,11 +32,12 @@ public class Robot extends LoggedRobot {
             Logger.addDataReceiver(new NT4Publisher());
             Logger.start();
         }
+        DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     @Override
     public void robotPeriodic() {
-        m_timeAndJoystickReplay.update();
+        //m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
     }
 
