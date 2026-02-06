@@ -542,8 +542,8 @@ public class Vision extends SubsystemBase{
     @Override
     public void periodic() {
         switch(camProcessorCounter % 3) {
-            case 0: processVision_FLO(FLI_camera); break;
-            case 1: processVision_FLI(FLO_camera); break;
+            case 0: processVision_FLO(FLO_camera); break;
+            case 1: processVision_FLI(FLI_camera); break;
             case 2: processVision_FR(FR_camera); break;
         }
         camProcessorCounter++;
