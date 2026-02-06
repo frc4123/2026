@@ -105,14 +105,14 @@ public class Constants {
     public static final class TurretConstants {
         public static final double stowPosition = 0;
         public static final double velocity = 1; // when your confident that the pid always reaches setpoint then jack ts up
-        public static final double acceleration = 2;
+        public static final double acceleration = 1.1;
 
         public static final double kP = 300;
         public static final double kI = 6.7;
         public static final double kD = 0;
         public static final double kS = 0; // was 0.239 but dont need bc already moving so 0 for now
         public static final double kV = 4.4; // 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
-        public static final double kA = 0;
+        public static final double kA = 0.05; // 0.367048
 
         public static final int mechanismMinRange = -1; // -360 degrees
         public static final int mechanismMaxRange = 1; // +360 degrees
