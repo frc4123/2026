@@ -381,10 +381,11 @@ public class Turret extends SubsystemBase {
         // Convert field target into robot-relative turret target
         SmartDashboard.putNumber("Field relative turret target", targetFieldAngle.getDegrees());
         //double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
-        double predictionTime = 0.15; // 150ms - tune this!
+        double predictionTime = 0.2; // 200ms - tune this!
         Rotation2d predictedRobotHeading = robotHeading.plus(
             Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime)
         );
+        // TODO add acclaration to the predictor 
     
     double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
         SmartDashboard.putNumber("Robot Relative Turret Target Rot", targetTurretAngle);
