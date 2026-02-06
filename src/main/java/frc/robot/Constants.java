@@ -192,8 +192,8 @@ public class Constants {
         public static final double FLI_frontYaw = Math.toRadians(30);
 
         //FR = Front_Right camera
-        public static final double FR_frontX = Units.inchesToMeters(10.14 - 0.5); // 7.495 7.176364 -7.176364
-        public static final double FR_frontY = Units.inchesToMeters(-10.229 + 0.5);
+        public static final double FR_frontX = Units.inchesToMeters(10.229 - 0.5); // 7.495 7.176364 -7.176364
+        public static final double FR_frontY = Units.inchesToMeters(-10.140 + 0.5);
         public static final double FR_frontZ = Units.inchesToMeters(7.825761); // 7.02
 
         public static final double FR_frontRoll = Math.toRadians(0);
@@ -211,42 +211,8 @@ public class Constants {
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
         //Max acceptable roll and pitch to recieve photon data
-        public static final double MAX_ACCEPTABLE_PITCH = 6;
-        public static final double MAX_ACCEPTABLE_ROLL = 6;
-
-        // Camera transforms
-        public static final Transform3d FLO_robotToCam = new Transform3d(
-            new Translation3d(
-                Constants.VisionConstants.FLO_frontX,
-                Constants.VisionConstants.FLO_frontY,
-                Constants.VisionConstants.FLO_frontZ),
-            new Rotation3d(
-                Constants.VisionConstants.FLO_frontRoll,
-                Constants.VisionConstants.FLO_frontPitch,
-                Constants.VisionConstants.FLO_frontYaw)
-        );
-
-        public static final Transform3d FLI_robotToCam = new Transform3d(
-            new Translation3d(
-                Constants.VisionConstants.FLI_frontX,
-                Constants.VisionConstants.FLI_frontY,
-                Constants.VisionConstants.FLI_frontZ),
-            new Rotation3d(
-                Constants.VisionConstants.FLI_frontRoll,
-                Constants.VisionConstants.FLI_frontPitch,
-                Constants.VisionConstants.FLI_frontYaw)
-        );
-
-        public static final Transform3d FR_robotToCam = new Transform3d(
-            new Translation3d(
-                Constants.VisionConstants.FR_frontX,
-                Constants.VisionConstants.FR_frontY,
-                Constants.VisionConstants.FR_frontZ),
-            new Rotation3d(
-                Constants.VisionConstants.FR_frontRoll,
-                Constants.VisionConstants.FR_frontPitch,
-                Constants.VisionConstants.FR_frontYaw)
-        );
+        public static final double MAX_ACCEPTABLE_PITCH = 5;
+        public static final double MAX_ACCEPTABLE_ROLL = 5;
     }
 
     public static final class Sim{
