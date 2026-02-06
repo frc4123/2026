@@ -168,7 +168,7 @@ public class RobotContainer {
             .withVelocityX(-0.1 * MaxSpeed)
             .withVelocityY(0)));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        //drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     private void configureFuelSim() {
