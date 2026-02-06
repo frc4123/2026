@@ -7,9 +7,6 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -35,7 +32,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 
@@ -64,8 +61,8 @@ public class Vision extends SubsystemBase{
     private final PhotonPoseEstimator FLO_Estimator;
     private final PhotonPoseEstimator FLI_Estimator;
     private final PhotonPoseEstimator FR_Estimator;
-    
-    private final ExecutorService visionExecutor = Executors.newFixedThreadPool(3);
+
+    private int camProcessorCounter = 0;
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -544,10 +541,12 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // Just submit and move on - no .get() calls
-        visionExecutor.submit(() -> processVision_FLI(FLI_camera));
-        visionExecutor.submit(() -> processVision_FLO(FLO_camera));
-        visionExecutor.submit(() -> processVision_FR(FR_camera));
+        switch(camProcessorCounter % 3) {
+            case 0: processVision_FLO(FLI_camera); break;
+            case 1: processVision_FLI(FLO_camera); break;
+            case 2: processVision_FR(FR_camera); break;
+        }
+        camProcessorCounter++;
     }
 
 }

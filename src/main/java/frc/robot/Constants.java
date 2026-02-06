@@ -137,7 +137,6 @@ public class Constants {
         public static final int maxTeeth = 1;
         public static final int maxIterations = 30;
 
-        //TODO: change all tssssss
 
         public static final double offsetX = Units.inchesToMeters(8);
         public static final double offsetY = Units.inchesToMeters(-8);
