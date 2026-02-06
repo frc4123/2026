@@ -7,6 +7,9 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -32,12 +35,15 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase{
 
-    private final Transform3d robotToCam;
+    private final Transform3d FLO_robotToCam;
+    private final Transform3d FLI_robotToCam;
+    private final Transform3d FR_robotToCam;
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     // Standard deviations (tune these based on camera characteristics)
@@ -49,9 +55,17 @@ public class Vision extends SubsystemBase{
     // private final StructPublisher<Pose3d> CamPosePublisher;
     // private final StructPublisher<Transform3d> CamTargetTransformPublisher;
 
-    private final PhotonPoseEstimator frontEstimator;
-    private final PhotonCamera camera = new PhotonCamera("Arducam_OV9281_USB_Camera");
-    private final PhotonCamera turretCam = new PhotonCamera("Arducam_OV9281_USB_Camera_Turret");
+    
+    private final PhotonCamera FLO_camera = new PhotonCamera("Front_Left_Outside_Arducam_OV9281_USB_Camera");
+    private final PhotonCamera FLI_camera = new PhotonCamera("Front_Left_Inside_Arducam_OV9281_USB_Camera");
+    private final PhotonCamera FR_camera = new PhotonCamera("Front_Right_Arducam_OV9281_USB_Camera");
+    private final PhotonCamera turretCam = new PhotonCamera("Turret_Arducam_OV9281_USB_Camera");
+
+    private final PhotonPoseEstimator FLO_Estimator;
+    private final PhotonPoseEstimator FLI_Estimator;
+    private final PhotonPoseEstimator FR_Estimator;
+    
+    private final ExecutorService visionExecutor = Executors.newFixedThreadPool(3);
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -65,21 +79,53 @@ public class Vision extends SubsystemBase{
         this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/2026Welded.json");
 
         // Camera transforms
-        robotToCam = new Transform3d(
+        FLO_robotToCam = new Transform3d(
             new Translation3d(
-                VisionConstants.frontX,
-                VisionConstants.frontY,
-                VisionConstants.frontZ),
+                VisionConstants.FLO_frontX,
+                VisionConstants.FLO_frontY,
+                VisionConstants.FLO_frontZ),
             new Rotation3d(
-               VisionConstants.frontRoll,
-                VisionConstants.frontPitch,
-                VisionConstants.frontYaw)
+                VisionConstants.FLO_frontRoll,
+                VisionConstants.FLO_frontPitch,
+                VisionConstants.FLO_frontYaw)
+        );
+
+        FLI_robotToCam = new Transform3d(
+            new Translation3d(
+                VisionConstants.FLI_frontX,
+                VisionConstants.FLI_frontY,
+                VisionConstants.FLI_frontZ),
+            new Rotation3d(
+                VisionConstants.FLI_frontRoll,
+                VisionConstants.FLI_frontPitch,
+                VisionConstants.FLI_frontYaw)
+        );
+
+        FR_robotToCam = new Transform3d(
+            new Translation3d(
+                VisionConstants.FR_frontX,
+                VisionConstants.FR_frontY,
+                VisionConstants.FR_frontZ),
+            new Rotation3d(
+                VisionConstants.FR_frontRoll,
+                VisionConstants.FR_frontPitch,
+                VisionConstants.FR_frontYaw)
         );
 
         // front camera estimator (new 2026 syntax)
-        frontEstimator = new PhotonPoseEstimator(
+        FLO_Estimator = new PhotonPoseEstimator(
             aprilTagFieldLayout,
-            robotToCam
+            FLO_robotToCam
+        );
+
+        FLI_Estimator = new PhotonPoseEstimator(
+            aprilTagFieldLayout,
+            FLI_robotToCam
+        );
+
+        FR_Estimator = new PhotonPoseEstimator(
+            aprilTagFieldLayout,
+            FR_robotToCam
         );
 
         // Initialize NetworkTables publishers
@@ -103,7 +149,7 @@ public class Vision extends SubsystemBase{
         return null;  // No valid results found
     }
 
-    private void processVision(PhotonCamera camera) {
+    private void processVision_FLO(PhotonCamera camera) {
         
         if(!shouldAcceptPhotonUpdate()) {return;}
 
@@ -115,12 +161,92 @@ public class Vision extends SubsystemBase{
         
         // Strategy 1: Try multi-tag (if available from coprocessor)
         if (result.getMultiTagResult().isPresent()) {
-            estimatedPose = frontEstimator.estimateCoprocMultiTagPose(result);
+            estimatedPose = FLO_Estimator.estimateCoprocMultiTagPose(result);
         }
         
         // Strategy 2: Fallback to single tag (lowest ambiguity)
         if (estimatedPose.isEmpty()) {
-            estimatedPose = frontEstimator.estimateLowestAmbiguityPose(result);
+            estimatedPose = FLO_Estimator.estimateLowestAmbiguityPose(result);
+        }
+        
+        if (estimatedPose.isPresent()) {
+            EstimatedRobotPose est = estimatedPose.get();
+            Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
+            
+            // Add vision measurement to pose estimator
+            if(result.getBestTarget().getPoseAmbiguity() < 0.1){
+                drivetrain.addVisionMeasurement(
+                    est.estimatedPose.toPose2d(),
+                    est.timestampSeconds,
+                    stdDevs
+                );
+            }
+            
+            // Reset QuestNav when we have confident AprilTag measurement
+            if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
+                oculus.setRobotPose(est.estimatedPose);
+            }
+        }
+    }
+
+    private void processVision_FLI(PhotonCamera camera) {
+        
+        if(!shouldAcceptPhotonUpdate()) {return;}
+
+        PhotonPipelineResult result = getLatestResults(camera);
+        if (result == null) return;
+        
+        // Get pose using new 2026 methods
+        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
+        
+        // Strategy 1: Try multi-tag (if available from coprocessor)
+        if (result.getMultiTagResult().isPresent()) {
+            estimatedPose = FLI_Estimator.estimateCoprocMultiTagPose(result);
+        }
+        
+        // Strategy 2: Fallback to single tag (lowest ambiguity)
+        if (estimatedPose.isEmpty()) {
+            estimatedPose = FLI_Estimator.estimateLowestAmbiguityPose(result);
+        }
+        
+        if (estimatedPose.isPresent()) {
+            EstimatedRobotPose est = estimatedPose.get();
+            Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
+            
+            // Add vision measurement to pose estimator
+            if(result.getBestTarget().getPoseAmbiguity() < 0.1){
+                drivetrain.addVisionMeasurement(
+                    est.estimatedPose.toPose2d(),
+                    est.timestampSeconds,
+                    stdDevs
+                );
+            }
+            
+            // Reset QuestNav when we have confident AprilTag measurement
+            if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
+                oculus.setRobotPose(est.estimatedPose);
+            }
+        }
+    }
+
+    private void processVision_FR(PhotonCamera camera) {
+        
+        if(!shouldAcceptPhotonUpdate()) {return;}
+
+        PhotonPipelineResult result = getLatestResults(camera);
+        if (result == null) return;
+        
+        // Get pose using new 2026 methods
+        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
+        
+        // Strategy 1: Try multi-tag (if available from coprocessor)
+        if (result.getMultiTagResult().isPresent()) {
+            estimatedPose = FR_Estimator.estimateCoprocMultiTagPose(result);
+        }
+        
+        // Strategy 2: Fallback to single tag (lowest ambiguity)
+        if (estimatedPose.isEmpty()) {
+            estimatedPose = FR_Estimator.estimateLowestAmbiguityPose(result);
         }
         
         if (estimatedPose.isPresent()) {
@@ -418,7 +544,10 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic() {
-        processVision(camera);
+        // Just submit and move on - no .get() calls
+        visionExecutor.submit(() -> processVision_FLI(FLI_camera));
+        visionExecutor.submit(() -> processVision_FLO(FLO_camera));
+        visionExecutor.submit(() -> processVision_FR(FR_camera));
     }
 
 }

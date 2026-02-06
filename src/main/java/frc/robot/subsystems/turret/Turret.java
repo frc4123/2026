@@ -65,6 +65,7 @@ public class Turret extends SubsystemBase {
 
     private double initOffsetDegrees = 0.0; // Encoder rotations from zero at boot
 
+    private double previousYawRate = 0.0;
 
     private EasyCRT easyCrtSolver;
 
@@ -322,50 +323,50 @@ public class Turret extends SubsystemBase {
      * Calculate feedforward for robot translation causing angle to target to change.
      * Mimics the same target calculation logic as targetAngle.
      */
-    private double calculateTranslationFeedforward() {
-        Pose2d robotPose = drivetrain.getState().Pose;
+    // private double calculateTranslationFeedforward() {
+    //     Pose2d robotPose = drivetrain.getState().Pose;
         
-        // Same target selection logic as targetAngle
-        Translation2d target;
-        Pose3d blueHub = VisionConstants.blueHub;
-        Pose3d redHub = VisionConstants.redHub;
+    //     // Same target selection logic as targetAngle
+    //     Translation2d target;
+    //     Pose3d blueHub = VisionConstants.blueHub;
+    //     Pose3d redHub = VisionConstants.redHub;
 
-        if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = VisionConstants.blueHub.getTranslation().toTranslation2d();
-        } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = VisionConstants.redHub.getTranslation().toTranslation2d();
-        } else {
-            // No valid target, return 0 feedforward
-            return 0.0;
-        }
+    //     if(isBlue && robotPose.getX() < blueHub.getX()){
+    //         target = VisionConstants.blueHub.getTranslation().toTranslation2d();
+    //     } else if (isRed && robotPose.getX() > redHub.getX()){
+    //         target = VisionConstants.redHub.getTranslation().toTranslation2d();
+    //     } else {
+    //         // No valid target, return 0 feedforward
+    //         return 0.0;
+    //     }
         
-        // Account for turret offset from robot center (same as targetAngle)
-        Translation2d robotPos = robotPose.getTranslation();
-        Translation2d turretPos = robotPos.plus(
-            TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
-        );
+    //     // Account for turret offset from robot center (same as targetAngle)
+    //     Translation2d robotPos = robotPose.getTranslation();
+    //     Translation2d turretPos = robotPos.plus(
+    //         TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
+    //     );
                 
-        // Vector from turret to target
-        Translation2d toTarget = target.minus(turretPos);
+    //     // Vector from turret to target
+    //     Translation2d toTarget = target.minus(turretPos);
         
-        double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
+    //     double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
         
-        if (distanceSquared < 0.0001) {
-            return 0.0; // Avoid division by zero when very close
-        }
+    //     if (distanceSquared < 0.0001) {
+    //         return 0.0; // Avoid division by zero when very close
+    //     }
         
-        // Get robot velocity in field frame
-        var robotSpeeds = drivetrain.getState().Speeds;
+    //     // Get robot velocity in field frame
+    //     var robotSpeeds = drivetrain.getState().Speeds;
         
-        // Cross product gives angular velocity (rad/s)
-        double crossProduct = robotSpeeds.vxMetersPerSecond * toTarget.getY() - 
-                            robotSpeeds.vyMetersPerSecond * toTarget.getX();
+    //     // Cross product gives angular velocity (rad/s)
+    //     double crossProduct = robotSpeeds.vxMetersPerSecond * toTarget.getY() - 
+    //                         robotSpeeds.vyMetersPerSecond * toTarget.getX();
         
-        double angularVelocity_radPerSec = crossProduct / distanceSquared;
+    //     double angularVelocity_radPerSec = crossProduct / distanceSquared;
         
-        // Convert to degrees per second (to match your rotation FF units)
-        return angularVelocity_radPerSec * 180.0 / Math.PI;
-    }
+    //     // Convert to degrees per second (to match your rotation FF units)
+    //     return angularVelocity_radPerSec * 180.0 / Math.PI;
+    // }
     /**
      * Field-relative turret control with yaw velocity feedforward.
      */
@@ -382,12 +383,29 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Field relative turret target", targetFieldAngle.getDegrees());
         //double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
         double predictionTime = 0.2; // 200ms - tune this!
+        
+        // Estimate angular acceleration from previous velocity
+        double currentYawRate = robotYawRateDegPerSec;
+        double angularAccel = (currentYawRate - previousYawRate) / 0.02; // assuming 20ms loop time
+
+        Rotation2d predictedRobotHeading = robotHeading.plus(
+            Rotation2d.fromDegrees(
+                robotYawRateDegPerSec * predictionTime + 
+                0.5 * angularAccel * predictionTime * predictionTime
+            )
+        );
+
+        /* REPLACE LINES 387-396 WITH THIS IF IT JITTERS TMR
         Rotation2d predictedRobotHeading = robotHeading.plus(
             Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime)
         );
-        // TODO add acclaration to the predictor 
+
+        double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
+        */
+
+        previousYawRate = robotYawRateDegPerSec;
     
-    double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
+        double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
         SmartDashboard.putNumber("Robot Relative Turret Target Rot", targetTurretAngle);
 
         // Compute shortest delta to target
@@ -411,17 +429,17 @@ public class Turret extends SubsystemBase {
         // ========== FEEDFORWARD CALCULATION ==========
     
         // 1. Robot rotation feedforward (compensates for robot spinning)
-        double rotationFF_degPerSec = -robotYawRateDegPerSec;
+        //double rotationFF_degPerSec = -robotYawRateDegPerSec;
         
         // 2. Robot translation feedforward (compensates for robot driving)
-        double translationFF_degPerSec = calculateTranslationFeedforward();
+        //double translationFF_degPerSec = calculateTranslationFeedforward();
         
         // 3. Total feedforward
-        double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
-        double totalFF_rotPerSec = totalFF_degPerSec / 360.0;
+        //double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
+        //double totalFF_rotPerSec = totalFF_degPerSec / 360.0;
 
         // 4. convert to volts
-        double feedforwardVolts = totalFF_rotPerSec * TurretConstants.kV;
+        //double feedforwardVolts = totalFF_rotPerSec * TurretConstants.kV;
 
         // Convert position target to motor rotations
         double targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;

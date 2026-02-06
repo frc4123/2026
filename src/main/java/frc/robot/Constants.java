@@ -174,38 +174,80 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        //Front Forward Camera Translation and Angle
-        public static final double frontX = Units.inchesToMeters(-11.5); // 7.495 7.176364 -7.176364
-        public static final double frontY = Units.inchesToMeters(0);
-        public static final double frontZ = Units.inchesToMeters(8.186116); // 7.02
+        //FLO = Front_Left_Outside camera
+        public static final double FLO_frontX = Units.inchesToMeters(-11.5); // 7.495 7.176364 -7.176364
+        public static final double FLO_frontY = Units.inchesToMeters(0);
+        public static final double FLO_frontZ = Units.inchesToMeters(8.186116); // 7.02
 
+        public static final double FLO_frontRoll = Math.toRadians(0);
+        public static final double FLO_frontPitch = Math.toRadians(-60); // negative pitch is up according to 25 code
+        public static final double FLO_frontYaw = Math.toRadians(180);
+
+        //FLI = Front_Left_Outside camera
+        public static final double FLI_frontX = Units.inchesToMeters(0); // 7.495 7.176364 -7.176364
+        public static final double FLI_frontY = Units.inchesToMeters(0);
+        public static final double FLI_frontZ = Units.inchesToMeters(0); // 7.02
+
+        public static final double FLI_frontRoll = Math.toRadians(0);
+        public static final double FLI_frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
+        public static final double FLI_frontYaw = Math.toRadians(0);
+
+        //FR = Front_Right camera
+        public static final double FR_frontX = Units.inchesToMeters(0); // 7.495 7.176364 -7.176364
+        public static final double FR_frontY = Units.inchesToMeters(0);
+        public static final double FR_frontZ = Units.inchesToMeters(0); // 7.02
+
+        public static final double FR_frontRoll = Math.toRadians(0);
+        public static final double FR_frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
+        public static final double FR_frontYaw = Math.toRadians(0);
+
+        //blueHub translations
         public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.4304264, new Rotation3d());
         public static final Translation2d blueHubTranslation2d = blueHub.getTranslation().toTranslation2d();
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
+        //redHub translations
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264, new Rotation3d());
         public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
+        //Max acceptable roll and pitch to recieve photon data
         public static final double MAX_ACCEPTABLE_PITCH = 6;
         public static final double MAX_ACCEPTABLE_ROLL = 6;
 
-
         // Camera transforms
-        public static final Transform3d robotToCam = new Transform3d(
+        public static final Transform3d FLO_robotToCam = new Transform3d(
             new Translation3d(
-                Constants.VisionConstants.frontX,
-                Constants.VisionConstants.frontY,
-                Constants.VisionConstants.frontZ),
+                Constants.VisionConstants.FLO_frontX,
+                Constants.VisionConstants.FLO_frontY,
+                Constants.VisionConstants.FLO_frontZ),
             new Rotation3d(
-                Constants.VisionConstants.frontRoll,
-                Constants.VisionConstants.frontPitch,
-                Constants.VisionConstants.frontYaw)
+                Constants.VisionConstants.FLO_frontRoll,
+                Constants.VisionConstants.FLO_frontPitch,
+                Constants.VisionConstants.FLO_frontYaw)
         );
 
-        public static final double frontRoll = Math.toRadians(0);
-        public static final double frontPitch = Math.toRadians(-60); // negative pitch is up according to 25 code
-        public static final double frontYaw = Math.toRadians(180);
+        public static final Transform3d FLI_robotToCam = new Transform3d(
+            new Translation3d(
+                Constants.VisionConstants.FLI_frontX,
+                Constants.VisionConstants.FLI_frontY,
+                Constants.VisionConstants.FLI_frontZ),
+            new Rotation3d(
+                Constants.VisionConstants.FLI_frontRoll,
+                Constants.VisionConstants.FLI_frontPitch,
+                Constants.VisionConstants.FLI_frontYaw)
+        );
+
+        public static final Transform3d FR_robotToCam = new Transform3d(
+            new Translation3d(
+                Constants.VisionConstants.FR_frontX,
+                Constants.VisionConstants.FR_frontY,
+                Constants.VisionConstants.FR_frontZ),
+            new Rotation3d(
+                Constants.VisionConstants.FR_frontRoll,
+                Constants.VisionConstants.FR_frontPitch,
+                Constants.VisionConstants.FR_frontYaw)
+        );
     }
 
     public static final class Sim{
