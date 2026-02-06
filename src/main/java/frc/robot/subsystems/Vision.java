@@ -425,6 +425,58 @@ public class Vision extends SubsystemBase{
 
             Translation2d delta = target.minus(robotPos);
             return delta.getAngle();
+
+        } else if (isBlue && robotPose.getY() >= 5.029){
+            target = VisionConstants.blueDepot.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+
+        } else if (isRed && robotPose.getY() >= 5.029){
+            target = VisionConstants.redAimThreshold.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+
+        } else if (isBlue && robotPose.getY() < 5.029 && robotPose.getY() > 4.044){
+            target = VisionConstants.blueLeftBumpCorner.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+            
+        } else if (isRed && robotPose.getY() < 5.029 && robotPose.getY() > 4.044) {
+            target = VisionConstants.redRightBumpCorner.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+        } else if (isBlue && robotPose.getY() <= 4.044 && robotPose.getY() > 3.059) {
+            target = VisionConstants.blueRightBumpCorner.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+        } else if (isRed && robotPose.getY() <= 4.044  && robotPose.getY() > 3.059){
+            target = VisionConstants.redLeftBumpCorner.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+        } else if (isBlue && robotPose.getY() <= 3.059){
+            target = VisionConstants.blueAimThreshold.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
+        } else if (isRed && robotPose.getY() <= 3.059){
+            target = VisionConstants.redDepot.getTranslation().toTranslation2d();
+            Translation2d robotPos = robotPose.getTranslation();
+
+            Translation2d delta = target.minus(robotPos);
+            return delta.getAngle();
         }
         /*this should allow the robot to face the hub from whatever position it is
         we will use this command if our turret breaks and we havfe to start auto aiming using swerve and not turret
