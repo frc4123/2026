@@ -104,7 +104,7 @@ public class Constants {
 
     public static final class TurretConstants {
         public static final double stowPosition = 0;
-        public static final double velocity = 1; // when your confident that the pid always reaches setpoint then jack ts up
+        public static final double velocity = 1.75; // if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 1.1;
 
         public static final double kP = 300;

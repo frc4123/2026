@@ -9,6 +9,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -145,9 +146,13 @@ public class Turret extends SubsystemBase {
                 .withKV(TurretConstants.kV)
                 .withKA(TurretConstants.kA);
 
+        MotionMagicConfigs motionMagic = new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(TurretConstants.velocity)
+            .withMotionMagicAcceleration(TurretConstants.acceleration);
+
         turretMotor.getConfigurator().apply(pid);
 
-
+        turretMotor.getConfigurator().apply(motionMagic);
     }
 
     private void configureCANcoders() {
