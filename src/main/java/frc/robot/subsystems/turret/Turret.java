@@ -413,6 +413,9 @@ public class Turret extends SubsystemBase {
         double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
         double totalFF_rotPerSec = totalFF_degPerSec / 360.0;
 
+        // 4. convert to volts
+        double feedforwardVolts = totalFF_rotPerSec * TurretConstants.kV;
+
         // Convert position target to motor rotations
         double targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;
 
@@ -421,7 +424,7 @@ public class Turret extends SubsystemBase {
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
-                        .withFeedForward(totalFF_rotPerSec)
+                        .withFeedForward(feedforwardVolts)
                         //.withFeedForward(0)
         );
     }
