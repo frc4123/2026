@@ -26,8 +26,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Voltage;
+// import edu.wpi.first.units.measure.AngularVelocity;
+// import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -295,48 +295,65 @@ public class Turret extends SubsystemBase {
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
-
-        Translation2d target;
-        Pose3d blueHub = VisionConstants.blueHub;
-        Pose3d redHub = VisionConstants.redHub;
-
-        if(isBlue && robotPose.getX() < blueHub.getX()){
-            target = VisionConstants.blueHub.getTranslation().toTranslation2d();
-            Translation2d robotPos = robotPose.getTranslation();
-        
-           Translation2d turretPos = robotPos.plus(
-                TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
-            );
-
-            Translation2d delta = target.minus(turretPos);
-            return delta.getAngle();
-
-        } else if (isRed && robotPose.getX() > redHub.getX()){
-            target = VisionConstants.redHub.getTranslation().toTranslation2d();
-            Translation2d robotPos = robotPose.getTranslation();
-
-            Translation2d turretPos = robotPos.plus(
-                TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
-            );
-
-            Translation2d delta = target.minus(turretPos);
-            return delta.getAngle();
+        if(isBlue == false && isRed == false){
+            if(DriverStation.isDSAttached()){
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
         }
-        /*this should allow the robot to face the hub from whatever position it is
-        we will use this comma fnd if our turret breaks and we havfe to start auto aiming using swerve and not turret 
-        */
-       
 
+        double x = robotPose.getX();
+        double y = robotPose.getY();
+
+        if (isBlue) {
+            if(x < VisionConstants.blueHub.getX()){
+                return getAngleToTarget(robotPose, VisionConstants.blueHub.getTranslation().toTranslation2d());
+            // Check Y zones from top to bottom
+            }else if (y >= 5.029) {
+                // Top zone - face depot
+                return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
+            } else if (y > 4.044) {
+                // Upper middle zone - face left bump corner
+                return getAngleToTarget(robotPose, VisionConstants.blueLeftBumpCorner.getTranslation().toTranslation2d());
+            } else if (y > 3.059) {
+                // Lower middle zone - face right bump corner
+                return getAngleToTarget(robotPose, VisionConstants.blueRightBumpCorner.getTranslation().toTranslation2d());
+            } else {
+                // Bottom zone - face aim threshold
+                return getAngleToTarget(robotPose, VisionConstants.blueAimThreshold.getTranslation().toTranslation2d());
+            }
+
+        } else if (isRed) {
+            // Check Y zones from top to bottom
+            if(x > VisionConstants.redHub.getX()){
+                return getAngleToTarget(robotPose, VisionConstants.redHub.getTranslation().toTranslation2d());
+            // Check Y zones from top to bottom
+            } else if (y >= 5.029) {
+                // Top zone - face aim threshold
+                return getAngleToTarget(robotPose, VisionConstants.redAimThreshold.getTranslation().toTranslation2d());
+            } else if (y > 4.044) {
+                // Upper middle zone - face right bump corner
+                return getAngleToTarget(robotPose, VisionConstants.redRightBumpCorner.getTranslation().toTranslation2d());
+            } else if (y > 3.059) {
+                // Lower middle zone - face left bump corner
+                return getAngleToTarget(robotPose, VisionConstants.redLeftBumpCorner.getTranslation().toTranslation2d());
+            } else {
+                // Bottom zone - face depot
+                return getAngleToTarget(robotPose, VisionConstants.redDepot.getTranslation().toTranslation2d());
+            }
+        }
+        
         return new Rotation2d(0);
-        /*
-        if it does this then this function didnt work :(, this line only exists so that we dont crash code 
-        we have to return something since the functino isnt void
-        */
-
-        /* we can also reuse ts for turret because this function is just telling us what angle to face our scoring point
-        based on position */
     }
 
+    // Helper method to calculate angle
+    private Rotation2d getAngleToTarget(Pose2d robotPose, Translation2d target) {
+        Translation2d delta = target.minus(robotPose.getTranslation());
+        return delta.getAngle();
+    }
         /**
      * Calculate feedforward for robot translation causing angle to target to change.
      * Mimics the same target calculation logic as targetAngle.
@@ -408,8 +425,8 @@ public class Turret extends SubsystemBase {
 
         Rotation2d predictedRobotHeading = robotHeading.plus(
             Rotation2d.fromDegrees(
-                robotYawRateDegPerSec * predictionTime + 
-                0.5 * angularAccel * predictionTime * predictionTime
+                robotYawRateDegPerSec * predictionTime// + 
+                //0.5 * angularAccel * predictionTime * predictionTime
             )
         );
 

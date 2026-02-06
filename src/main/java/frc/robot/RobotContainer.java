@@ -63,7 +63,7 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);   
     // Field-centric strafing request using controller's d-pad
 
-    //private final Telemetry logger = new Telemetry(MaxSpeed);
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -168,7 +168,7 @@ public class RobotContainer {
             .withVelocityX(-0.1 * MaxSpeed)
             .withVelocityY(0)));
 
-        //drivetrain.registerTelemetry(logger::telemeterize);
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     private void configureFuelSim() {

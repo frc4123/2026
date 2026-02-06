@@ -206,16 +206,16 @@ public class Constants {
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
         //blueDepot pose
-        public static final Pose3d blueDepot = new Pose3d (0.7, 6.0, 0.0, new Rotation3d());
+        public static final Pose3d blueDepot = new Pose3d (0.7, 6.0, 1, new Rotation3d());
 
         //blueLeftBumpCorner pose
-        public static final Pose3d blueLeftBumpCorner = new Pose3d (4.03, 6.74, 0.0, new Rotation3d());
+        public static final Pose3d blueLeftBumpCorner = new Pose3d (4.03, 6.74, 1, new Rotation3d());
 
         //blueLeftBumpCorner pose
-        public static final Pose3d blueRightBumpCorner = new Pose3d (4.03, 1.438, 0.0, new Rotation3d());
+        public static final Pose3d blueRightBumpCorner = new Pose3d (4.03, 1.438, 1, new Rotation3d());
 
         //redAimThreshold pose
-        public static final Pose3d blueAimThreshold = new Pose3d (0.7, 2.080, 0.0, new Rotation3d());
+        public static final Pose3d blueAimThreshold = new Pose3d (0.7, 2.080, 1, new Rotation3d());
 
         //redHub translations
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264, new Rotation3d());
@@ -223,16 +223,16 @@ public class Constants {
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
         //redAimThreshold pose
-        public static final Pose3d redAimThreshold = new Pose3d (15.82, 6.0, 0.0, new Rotation3d());
+        public static final Pose3d redAimThreshold = new Pose3d (15.82, 6.0, 1, new Rotation3d());
 
         //redRightBumpCorner pose
-        public static final Pose3d redRightBumpCorner = new Pose3d (12.505, 6.74, 0.0, new Rotation3d());
+        public static final Pose3d redRightBumpCorner = new Pose3d (12.505, 6.74, 1, new Rotation3d());
 
         //redRightBumpCorner pose
-        public static final Pose3d redLeftBumpCorner = new Pose3d (12.505, 1.552, 0.0, new Rotation3d());
+        public static final Pose3d redLeftBumpCorner = new Pose3d (12.505, 1.552, 1, new Rotation3d());
 
         //blueDepot pose
-        public static final Pose3d redDepot = new Pose3d (15.82, 2.080, 0.0, new Rotation3d());
+        public static final Pose3d redDepot = new Pose3d (15.82, 2.080, 1, new Rotation3d());
 
         //Max acceptable roll and pitch to recieve photon data
         public static final double MAX_ACCEPTABLE_PITCH = 5;
