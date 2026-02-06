@@ -146,7 +146,7 @@ public class Vision extends SubsystemBase{
         return null;  // No valid results found
     }
 
-    private void processVision_FLO(PhotonCamera camera) {
+    private void processVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
         
         if(!shouldAcceptPhotonUpdate()) {return;}
 
@@ -158,12 +158,12 @@ public class Vision extends SubsystemBase{
         
         // Strategy 1: Try multi-tag (if available from coprocessor)
         if (result.getMultiTagResult().isPresent()) {
-            estimatedPose = FLO_Estimator.estimateCoprocMultiTagPose(result);
+            estimatedPose = estimator.estimateCoprocMultiTagPose(result);
         }
         
         // Strategy 2: Fallback to single tag (lowest ambiguity)
         if (estimatedPose.isEmpty()) {
-            estimatedPose = FLO_Estimator.estimateLowestAmbiguityPose(result);
+            estimatedPose = estimator.estimateLowestAmbiguityPose(result);
         }
         
         if (estimatedPose.isPresent()) {
@@ -185,87 +185,7 @@ public class Vision extends SubsystemBase{
             }
         }
     }
-
-    private void processVision_FLI(PhotonCamera camera) {
-        
-        if(!shouldAcceptPhotonUpdate()) {return;}
-
-        PhotonPipelineResult result = getLatestResults(camera);
-        if (result == null) return;
-        
-        // Get pose using new 2026 methods
-        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-        
-        // Strategy 1: Try multi-tag (if available from coprocessor)
-        if (result.getMultiTagResult().isPresent()) {
-            estimatedPose = FLI_Estimator.estimateCoprocMultiTagPose(result);
-        }
-        
-        // Strategy 2: Fallback to single tag (lowest ambiguity)
-        if (estimatedPose.isEmpty()) {
-            estimatedPose = FLI_Estimator.estimateLowestAmbiguityPose(result);
-        }
-        
-        if (estimatedPose.isPresent()) {
-            EstimatedRobotPose est = estimatedPose.get();
-            Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
-            
-            // Add vision measurement to pose estimator
-            if(result.getBestTarget().getPoseAmbiguity() < 0.1){
-                drivetrain.addVisionMeasurement(
-                    est.estimatedPose.toPose2d(),
-                    est.timestampSeconds,
-                    stdDevs
-                );
-            }
-            
-            // Reset QuestNav when we have confident AprilTag measurement
-            if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
-                oculus.setRobotPose(est.estimatedPose);
-            }
-        }
-    }
-
-    private void processVision_FR(PhotonCamera camera) {
-        
-        if(!shouldAcceptPhotonUpdate()) {return;}
-
-        PhotonPipelineResult result = getLatestResults(camera);
-        if (result == null) return;
-        
-        // Get pose using new 2026 methods
-        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-        
-        // Strategy 1: Try multi-tag (if available from coprocessor)
-        if (result.getMultiTagResult().isPresent()) {
-            estimatedPose = FR_Estimator.estimateCoprocMultiTagPose(result);
-        }
-        
-        // Strategy 2: Fallback to single tag (lowest ambiguity)
-        if (estimatedPose.isEmpty()) {
-            estimatedPose = FR_Estimator.estimateLowestAmbiguityPose(result);
-        }
-        
-        if (estimatedPose.isPresent()) {
-            EstimatedRobotPose est = estimatedPose.get();
-            Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
-            
-            // Add vision measurement to pose estimator
-            if(result.getBestTarget().getPoseAmbiguity() < 0.1){
-                drivetrain.addVisionMeasurement(
-                    est.estimatedPose.toPose2d(),
-                    est.timestampSeconds,
-                    stdDevs
-                );
-            }
-            
-            // Reset QuestNav when we have confident AprilTag measurement
-            if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
-                oculus.setRobotPose(est.estimatedPose);
-            }
-        }
-    }
-
+    
     private boolean shouldAcceptPhotonUpdate() {
         // Check 1: Robot pitch/roll (are we tilted like going over bump?)
         Rotation3d rotation = drivetrain.getRotation3d();
@@ -542,9 +462,9 @@ public class Vision extends SubsystemBase{
     @Override
     public void periodic() {
         switch(camProcessorCounter % 3) {
-            case 0: processVision_FLO(FLO_camera); break;
-            case 1: processVision_FLI(FLI_camera); break;
-            case 2: processVision_FR(FR_camera); break;
+            case 0: processVision(FLO_camera, FLO_Estimator); break;
+            case 1: processVision(FLI_camera, FLI_Estimator); break;
+            case 2: processVision(FR_camera, FR_Estimator); break;
         }
         camProcessorCounter++;
     }
