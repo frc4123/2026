@@ -21,7 +21,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
@@ -425,8 +424,8 @@ public class Turret extends SubsystemBase {
 
         Rotation2d predictedRobotHeading = robotHeading.plus(
             Rotation2d.fromDegrees(
-                robotYawRateDegPerSec * predictionTime// + 
-                //0.5 * angularAccel * predictionTime * predictionTime
+                robotYawRateDegPerSec * predictionTime + 
+                0.5 * angularAccel * predictionTime * predictionTime
             )
         );
 

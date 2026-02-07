@@ -39,6 +39,7 @@ import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
 import frc.robot.commands.autos.mtest;
+import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.swerve.DriveToClimb;
@@ -243,6 +244,11 @@ public class RobotContainer {
         autoChooser.addOption("2 Cycle Depot Climb Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
             new SequentialCommandGroup(new twoCycleDepot().twoCycleDepotLeft())
+        ));
+
+        autoChooser.addOption("3 Bump Right", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new threeBumpRight().threeBumpAuto())
         ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
