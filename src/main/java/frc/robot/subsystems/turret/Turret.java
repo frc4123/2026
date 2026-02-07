@@ -353,14 +353,14 @@ public class Turret extends SubsystemBase {
         Translation2d delta = target.minus(robotPose.getTranslation());
         return delta.getAngle();
     }
-    
+
     /**
      * Field-relative turret control with yaw velocity feedforward.
      */
     public void setFieldAngle(Rotation2d targetFieldAngle, double cameraOffset) {
 
         // Clamp vision offset
-        cameraOffset = Math.max(-1.0, Math.min(1.0, cameraOffset));
+        cameraOffset = Math.max(-3.0, Math.min(3.0, cameraOffset));
 
         // Robot heading and yaw rate
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();
