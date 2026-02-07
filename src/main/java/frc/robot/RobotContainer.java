@@ -158,7 +158,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> faceAngle
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.7)
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.7) 
-                .withTargetDirection(new Rotation2d(joystick.getLeftY(), joystick.getLeftX()))
+                .withTargetDirection(new Rotation2d(joystick.getLeftY(), joystick.getLeftX()).plus(Rotation2d.fromDegrees(180)))
             )
         );
 
