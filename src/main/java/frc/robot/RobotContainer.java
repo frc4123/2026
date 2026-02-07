@@ -59,7 +59,9 @@ public class RobotContainer {
 
     private final SwerveRequest.FieldCentricFacingAngle faceAngle = new SwerveRequest.FieldCentricFacingAngle()
             .withDriveRequestType(DriveRequestType.Velocity)
-            .withSteerRequestType(SteerRequestType.Position);
+            .withSteerRequestType(SteerRequestType.Position)
+            .withDeadband(MaxSpeed * 0.02)
+            .withRotationalDeadband(MaxAngularRate * 0.02);
 
     private final SwerveRequest.FieldCentric robotStrafe = new SwerveRequest.FieldCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);   
@@ -155,11 +157,25 @@ public class RobotContainer {
         joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         joystick.a().whileTrue(
-            drivetrain.applyRequest(() -> faceAngle
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.7)
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.7) 
-                .withTargetDirection(new Rotation2d(joystick.getLeftY(), joystick.getLeftX()).plus(Rotation2d.fromDegrees(180)))
-            )
+            drivetrain.applyRequest(() -> {
+                double leftY = -joystick.getLeftY();
+                double leftX = -joystick.getLeftX();
+                
+                double magnitude = Math.sqrt(leftX * leftX + leftY * leftY);
+                Rotation2d targetDirection;
+                
+                if (magnitude > 0.1) { // Only update rotation when stick is moved
+                    targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
+                } else {
+                    // Joystick centered - hold current heading
+                    targetDirection = drivetrain.getState().Pose.getRotation();
+                }
+                
+                return faceAngle
+                    .withVelocityX(leftY * MaxSpeed * 0.25)
+                    .withVelocityY(leftX * MaxSpeed * 0.25)
+                    .withTargetDirection(targetDirection);
+            })
         );
 
         joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
