@@ -353,54 +353,7 @@ public class Turret extends SubsystemBase {
         Translation2d delta = target.minus(robotPose.getTranslation());
         return delta.getAngle();
     }
-        /**
-     * Calculate feedforward for robot translation causing angle to target to change.
-     * Mimics the same target calculation logic as targetAngle.
-     */
-    // private double calculateTranslationFeedforward() {
-    //     Pose2d robotPose = drivetrain.getState().Pose;
-        
-    //     // Same target selection logic as targetAngle
-    //     Translation2d target;
-    //     Pose3d blueHub = VisionConstants.blueHub;
-    //     Pose3d redHub = VisionConstants.redHub;
-
-    //     if(isBlue && robotPose.getX() < blueHub.getX()){
-    //         target = VisionConstants.blueHub.getTranslation().toTranslation2d();
-    //     } else if (isRed && robotPose.getX() > redHub.getX()){
-    //         target = VisionConstants.redHub.getTranslation().toTranslation2d();
-    //     } else {
-    //         // No valid target, return 0 feedforward
-    //         return 0.0;
-    //     }
-        
-    //     // Account for turret offset from robot center (same as targetAngle)
-    //     Translation2d robotPos = robotPose.getTranslation();
-    //     Translation2d turretPos = robotPos.plus(
-    //         TurretConstants.turretOffset.rotateBy(robotPose.getRotation())
-    //     );
-                
-    //     // Vector from turret to target
-    //     Translation2d toTarget = target.minus(turretPos);
-        
-    //     double distanceSquared = toTarget.getNorm() * toTarget.getNorm();
-        
-    //     if (distanceSquared < 0.0001) {
-    //         return 0.0; // Avoid division by zero when very close
-    //     }
-        
-    //     // Get robot velocity in field frame
-    //     var robotSpeeds = drivetrain.getState().Speeds;
-        
-    //     // Cross product gives angular velocity (rad/s)
-    //     double crossProduct = robotSpeeds.vxMetersPerSecond * toTarget.getY() - 
-    //                         robotSpeeds.vyMetersPerSecond * toTarget.getX();
-        
-    //     double angularVelocity_radPerSec = crossProduct / distanceSquared;
-        
-    //     // Convert to degrees per second (to match your rotation FF units)
-    //     return angularVelocity_radPerSec * 180.0 / Math.PI;
-    // }
+    
     /**
      * Field-relative turret control with yaw velocity feedforward.
      */
@@ -460,21 +413,6 @@ public class Turret extends SubsystemBase {
         targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
         //clamp in case
 
-        // ========== FEEDFORWARD CALCULATION ==========
-    
-        // 1. Robot rotation feedforward (compensates for robot spinning)
-        //double rotationFF_degPerSec = -robotYawRateDegPerSec;
-        
-        // 2. Robot translation feedforward (compensates for robot driving)
-        //double translationFF_degPerSec = calculateTranslationFeedforward();
-        
-        // 3. Total feedforward
-        //double totalFF_degPerSec = rotationFF_degPerSec + translationFF_degPerSec;
-        //double totalFF_rotPerSec = totalFF_degPerSec / 360.0;
-
-        // 4. convert to volts
-        //double feedforwardVolts = totalFF_rotPerSec * TurretConstants.kV;
-
         // Convert position target to motor rotations
         double targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;
 
@@ -512,42 +450,6 @@ public class Turret extends SubsystemBase {
             }
         }
     }
-
-    /**
-     * Returns the current 3D pose of the turret in field coordinates.
-     * Combines robot position with turret rotation.
-     */
-    // public Pose3d getTurretPose3d() {
-    //     // Get robot pose
-    //     Pose2d robotPose = drivetrain.getState().Pose;
-        
-    //     // Convert to 3D (robot is on the ground)
-    //     Pose3d robotPose3d = new Pose3d(
-    //         robotPose.getX(),
-    //         robotPose.getY(),
-    //         0.0, // z position (on field)
-    //         new Rotation3d(0, 0, robotPose.getRotation().getRadians())
-    //     );
-        
-    //     // Turret offset from robot center
-    //     Translation3d turretTranslation = new Translation3d(
-    //         TurretConstants.offsetX,
-    //         TurretConstants.offsetY,
-    //         TurretConstants.offsetZ // You'll need to add this constant 
-    //     );
-        
-    //     // Turret rotation (field-relative)
-    //     Rotation2d fieldAngle = new Rotation2d(Math.toRadians(
-    //         normalizeAngle(cumulativeAngle) + robotPose.getRotation().getDegrees()
-    //     ));
-        
-    //     Rotation3d turretRotation = new Rotation3d(0, 0, fieldAngle.getRadians());
-        
-    //     // Combine: robot pose + turret offset + turret rotation
-    //     Transform3d turretTransform = new Transform3d(turretTranslation, turretRotation);
-        
-    //     return robotPose3d.transformBy(turretTransform);
-    // }
 
     @Override
     public void periodic() {

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.12952785011574,
-        "y": 3.006817346643519
+        "x": 8.521157118055557,
+        "y": 2.850795500578704
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.356701388888889,
-        "y": 2.4152727864583334
+        "x": 7.748330656828705,
+        "y": 2.2592509403935184
       },
       "isLocked": false,
       "linkedName": "3BumpRight 3-4"
@@ -49,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 165.0
   },
   "reversed": false,
   "folder": "3BumpRight",
