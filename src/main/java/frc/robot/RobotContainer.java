@@ -15,6 +15,7 @@ import java.lang.Math;
 // import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -151,7 +152,15 @@ public class RobotContainer {
         // joystick.povLeft().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on button Y press.
-        joystick.a().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() -> faceAngle
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.7)
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.7) 
+                .withTargetDirection(new Rotation2d(joystick.getLeftY(), joystick.getLeftX()))
+            )
+        );
 
         joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
             .withVelocityY(0.1 * MaxSpeed)
