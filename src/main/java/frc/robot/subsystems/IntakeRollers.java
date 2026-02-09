@@ -26,7 +26,7 @@ public class IntakeRollers extends SubsystemBase{
 
     CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
 
-    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Turret, canivore);
+    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake, canivore);
       // Motion Magic controller object
     private final MotionMagicVelocityVoltage motionMagic =
         new MotionMagicVelocityVoltage(
