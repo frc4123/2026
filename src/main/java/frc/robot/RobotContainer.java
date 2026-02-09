@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.IntakeRollers;
 import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
@@ -43,6 +45,8 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
+import frc.robot.commands.intakeRollers.IntakeIn;
+import frc.robot.commands.intakeRollers.IntakeStop;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 
@@ -79,10 +83,13 @@ public class RobotContainer {
     private final Vision vision = new Vision(drivetrain, oculus);
     private final Turret turret = new Turret(drivetrain, vision);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
+    private final IntakeRollers intakeRollers = new IntakeRollers();
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
+    private final IntakeIn intakeIn = new IntakeIn(intakeRollers);
+    private final IntakeStop intakeStop = new IntakeStop(intakeRollers);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -195,7 +202,15 @@ public class RobotContainer {
             .withVelocityY(0)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        //  --------- BUTTONBOARD COMMANDS ---------- //
+
+        joystick.a().onTrue(intakeIn);
+        joystick.a().onFalse(intakeStop);
     }
+
+    
+
 
     private void configureFuelSim() {
         FuelSim instance = FuelSim.getInstance();

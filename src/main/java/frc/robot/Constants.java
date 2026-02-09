@@ -75,6 +75,16 @@ public class Constants {
         public static final double VEL_MULTIPLIER = 70.0; // multiplies goal velocity for targetting
         public static final double VEL_POWER = 0.3; // raises goal velocity to power
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
+
+        public static final double zeroVelo = 0;
+        public static final double intakeVelo = 50;
+       
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0; 
+        public static final double kA = 0; 
     }
 
     public static final class InputConstants {
