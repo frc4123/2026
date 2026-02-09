@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeRollers;
 import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.Vision;
@@ -44,8 +45,10 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
-import frc.robot.commands.intakeRollers.IntakeIn;
-import frc.robot.commands.intakeRollers.IntakeStop;
+import frc.robot.commands.intakeArm.IntakeArmIn;
+import frc.robot.commands.intakeArm.IntakeArmOut;
+import frc.robot.commands.intakeRollers.IntakeRollersIn;
+import frc.robot.commands.intakeRollers.IntakeRollersStop;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 
@@ -83,12 +86,15 @@ public class RobotContainer {
     private final Turret turret = new Turret(drivetrain, vision);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
     private final IntakeRollers intakeRollers = new IntakeRollers();
+    private final IntakeArm intakeArm = new IntakeArm();
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
-    private final IntakeIn intakeIn = new IntakeIn(intakeRollers);
-    private final IntakeStop intakeStop = new IntakeStop(intakeRollers);
+    private final IntakeRollersIn intakeRollersIn = new IntakeRollersIn(intakeRollers);
+    private final IntakeRollersStop intakeRollersStop = new IntakeRollersStop(intakeRollers);
+    private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
+    private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -204,8 +210,10 @@ public class RobotContainer {
 
         //  --------- BUTTONBOARD COMMANDS ---------- //
 
-        joystick.a().onTrue(intakeIn);
-        joystick.a().onFalse(intakeStop);
+        joystick.a().onTrue(intakeRollersIn);
+        joystick.a().onFalse(intakeRollersStop);
+        // joystick.a().onTrue(intakeArmOut);
+        // joystick.a().onFalse(intakeArmIn);
     }
 
     

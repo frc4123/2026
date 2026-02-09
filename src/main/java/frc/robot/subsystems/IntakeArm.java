@@ -1,14 +1,13 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-import frc.robot.Constants.IntakeRollerConstants;
+import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.Constants.TurretConstants;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -16,21 +15,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class IntakeRollers extends SubsystemBase{
+public class IntakeArm extends SubsystemBase{
 
     CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
 
-    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Rollers, canivore);
+    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Arm, canivore);
       // Motion Magic controller object
-    private final MotionMagicVelocityVoltage motionMagic =
-        new MotionMagicVelocityVoltage(
+    private final MotionMagicVoltage motionMagic =
+        new MotionMagicVoltage(
             TurretConstants.stowPosition//, TODO: change to DynamicMotionMagicTorqueCurrentFOC
             //TurretConstants.velocity,
             //TurretConstants.acceleration
         );
 
         
-    public IntakeRollers(){
+    public IntakeArm(){
         // τηισ ισ ωερυ ιμπορταντ
         configureMotor();
     }
@@ -39,12 +38,12 @@ public class IntakeRollers extends SubsystemBase{
         intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
 
         Slot0Configs pid = new Slot0Configs()
-                .withKP(IntakeRollerConstants.kP)
-                .withKI(IntakeRollerConstants.kI)
-                .withKD(IntakeRollerConstants.kD)
-                .withKS(IntakeRollerConstants.kS)
-                .withKV(IntakeRollerConstants.kV)
-                .withKA(IntakeRollerConstants.kA);
+                .withKP(IntakeArmConstants.kP)
+                .withKI(IntakeArmConstants.kI)
+                .withKD(IntakeArmConstants.kD)
+                .withKS(IntakeArmConstants.kS)
+                .withKV(IntakeArmConstants.kV)
+                .withKA(IntakeArmConstants.kA);
 
     //  MotionMagicConfigs motionMagic = new MotionMagicConfigs()
     //         .withMotionMagicCruiseVelocity(TurretConstants.velocity)
@@ -54,21 +53,20 @@ public class IntakeRollers extends SubsystemBase{
     //  turretMotor.getConfigurator().apply(motionMagic);
     }
 
-    public void setIntakeVelo(double velo){
+    public void setIntakePosition(double velo){
         intakeRollerMotor.setControl(  
-            motionMagic.withVelocity(velo));
+            motionMagic.withPosition(velo));
     }
 
-    public double getIntakeVelo() {
-        return intakeRollerMotor.getVelocity().getValueAsDouble();
+    public double getIntakePosition() {
+        return intakeRollerMotor.getPosition().getValueAsDouble();
     }
-
 
     @Override
     public void periodic() {
         // if (DriverStation.isEnabled()) {
         //     m_shooter.end(true);
         // }
-        SmartDashboard.putNumber("Intake Velo", getIntakeVelo());
+        SmartDashboard.putNumber("Intake Position", getIntakePosition());
     }
 }

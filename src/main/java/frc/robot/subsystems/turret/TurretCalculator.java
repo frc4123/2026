@@ -13,9 +13,9 @@ import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
-import static frc.robot.Constants.IntakeConstants.BASE_VEL;
-import static frc.robot.Constants.IntakeConstants.VEL_MULTIPLIER;
-import static frc.robot.Constants.IntakeConstants.VEL_POWER;
+import static frc.robot.Constants.IntakeRollerConstants.BASE_VEL;
+import static frc.robot.Constants.IntakeRollerConstants.VEL_MULTIPLIER;
+import static frc.robot.Constants.IntakeRollerConstants.VEL_POWER;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;

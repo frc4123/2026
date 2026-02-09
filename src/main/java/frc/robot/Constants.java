@@ -55,11 +55,24 @@ public class Constants {
 
         public static final int Intake_Arm = 19;
 
-        public static final int Intake = 20;
+        public static final int Intake_Rollers = 20;
 
     }
+   
+    public static class IntakeArmConstants{
+       
+        public static final double stowPosition = 0;
+        public static final double outPosition = 5;
+       
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0; 
+        public static final double kA = 0; 
+    }
 
-    public static class IntakeConstants {
+    public static class IntakeRollerConstants {
         public static final int LEFT_RACK_ID = 0;
         public static final int RIGHT_RACK_ID = 0;
         public static final int LEFT_SPIN_ID = 0;
