@@ -116,7 +116,7 @@ public class Turret extends SubsystemBase {
 
         easyCrtSolver = initCRT();
 
-        // Read encoder once at startup
+        // Read encoder once at startup 
         // double initial = turretEncoder1.getAbsolutePosition().getValueAsDouble();
         
         //lastLoopTime = Timer.getFPGATimestamp();
