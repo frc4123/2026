@@ -53,6 +53,10 @@ public class Constants {
         public static final int Turret_Encoder1 = 16;
         public static final int Turret_Encoder2 = 18;
 
+        public static final int Intake_Arm = 19;
+
+        public static final int Intake = 20;
+
     }
 
     public static class IntakeConstants {
@@ -157,7 +161,7 @@ public class Constants {
     }
 
     public static final class Hood {
-        
+
         // In Constants.TurretConstants or wherever appropriate
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(20);  // Your minimum angle
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(65);  // Your maximum angle
