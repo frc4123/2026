@@ -27,6 +27,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.Constants;
+import frc.robot.Constants.Hood;
 import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
@@ -51,6 +52,15 @@ public class TurretCalculator {
         double angle = Math.atan(
                 ((vel * vel) + Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 * y_dist * vel * vel)))
                         / (g * x_dist));
+
+         // Clamp to physical constraints
+        Angle calculatedAngle = Radians.of(angle);
+        if (calculatedAngle.lt(Hood.MIN_HOOD_ANGLE)) {
+            return Hood.MIN_HOOD_ANGLE;
+        } else if (calculatedAngle.gt(Hood.MAX_HOOD_ANGLE)) {
+            return Hood.MAX_HOOD_ANGLE;
+        }
+
         return Radians.of(angle);
     }
 
@@ -111,7 +121,39 @@ public class TurretCalculator {
         double b = (D1 - A1 * a) / B1;
         double theta = Math.atan(b);
         double v0 = Math.sqrt(-g / (2 * a * (Math.cos(theta)) * (Math.cos(theta))));
-        return new ShotData(InchesPerSecond.of(v0), Radians.of(theta), predictedTarget);
+
+        // Clamp angle to physical constraints
+        Angle calculatedAngle = Radians.of(theta);
+        boolean wasClamped = false;
+        
+        if (calculatedAngle.lt(Hood.MIN_HOOD_ANGLE)) {
+            calculatedAngle = Hood.MIN_HOOD_ANGLE;
+            wasClamped = true;
+        } else if (calculatedAngle.gt(Hood.MAX_HOOD_ANGLE)) {
+            calculatedAngle = Hood.MAX_HOOD_ANGLE;
+            wasClamped = true;
+        }
+        
+        // If we clamped, recalculate velocity for the new angle
+        double finalV0;
+        if (wasClamped) {
+            double clampedTheta = calculatedAngle.in(Radians);
+            double cosTheta = Math.cos(clampedTheta);
+            double tanTheta = Math.tan(clampedTheta);
+            double denominator = 2 * cosTheta * cosTheta * (x_dist * tanTheta - y_dist);
+            
+            if (denominator > 0) {
+                finalV0 = Math.sqrt(g * x_dist / denominator);
+            } else {
+                // Shot not physically possible - use original velocity
+                finalV0 = v0;
+            }
+        } else {
+            finalV0 = v0;
+        }
+        
+        // ShotData constructor expects: (double exitVelocity_in/s, double hoodAngle_radians, Translation3d target)
+        return new ShotData(finalV0, calculatedAngle.in(Radians), predictedTarget);
     }
 
     // use an iterative lookahead approach to determine shot parameters for a moving robot
