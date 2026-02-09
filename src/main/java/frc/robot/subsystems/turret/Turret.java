@@ -97,8 +97,6 @@ public class Turret extends SubsystemBase {
     private double cumulativeAngle;
     private double simulatedAngle = 0.0; // sim version of cumulativeAngle
 
-    private double prevAbsolute;
-
     // Swerve reference for heading and yaw rate
     private final CommandSwerveDrivetrain drivetrain;
     private final Vision vision;
@@ -122,6 +120,19 @@ public class Turret extends SubsystemBase {
         // double initial = turretEncoder1.getAbsolutePosition().getValueAsDouble();
         
         //lastLoopTime = Timer.getFPGATimestamp();
+
+        if (Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {
+            // Simulation setup
+            hasAbsoluteZero = true;
+            cumulativeAngle = 0.0;
+            simulatedAngle = 0.0;
+            initOffsetDegrees = 0.0;
+        } else {
+            // Real robot setup
+            refreshStatusSignals();
+            Timer.delay(0.1);
+            easyCrtSolver = initCRT();
+        }
 
         
     }
@@ -256,7 +267,6 @@ public class Turret extends SubsystemBase {
         Angle mechAngle = angleOpt.get();
 
         cumulativeAngle = mechAngle.in(Units.Degrees);
-        prevAbsolute = cumulativeAngle;
 
         //double encoderRotations = (cumulativeAngle / 360.0) * TurretConstants.sensorToMechanismRatio;;// * ((TurretConstants.sensorToMechanismRatio));
         //turretEncoder1.setPosition(encoderRotations);
@@ -474,12 +484,14 @@ public class Turret extends SubsystemBase {
 
    @Override
     public void simulationPeriodic() {
-        // FIRST: Simulate motor response
-        updateCumulativeAngle();
-        double commandedRotations = motionMagic.Position;
-        double commandedDegrees = commandedRotations * 360.0;
+        // Don't call updateCumulativeAngle() - we're simulating it here
         
-        double step = 25.0;
+        // Get commanded position
+        double commandedRotations = motionMagic.Position;
+        double commandedDegrees = commandedRotations * 360.0 + initOffsetDegrees;
+        
+        // Simulate motor movement with slew rate
+        double step = 25.0; // degrees per 20ms
         double diff = commandedDegrees - simulatedAngle;
         
         if (Math.abs(diff) > step) {
@@ -488,18 +500,10 @@ public class Turret extends SubsystemBase {
             simulatedAngle = commandedDegrees;
         }
         
-        // THEN: Update cumulative tracking
-        double absDegrees = simulatedAngle % 360.0;
-        if (absDegrees < 0) absDegrees += 360.0;
+        // Update cumulativeAngle to match simulation
+        cumulativeAngle = simulatedAngle;
         
-        double delta = absDegrees - prevAbsolute;
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
-        
-        cumulativeAngle += delta;
-        prevAbsolute = absDegrees;
-        
-        // FINALLY: Command the turret for NEXT loop
+        // Command the turret for NEXT loop
         setFieldAngle(targetAngle(drivetrain.getState().Pose), vision.getTurretCamOffset());
         
         SmartDashboard.putNumber("Turret Angle (Sim)", simulatedAngle);
