@@ -97,6 +97,7 @@ public class Constants {
     }
 
     public static final class InputConstants {
+
         public static final int kDriverControllerPort0 = 0;
         public static final int kDriverControllerPort1 = 1;
         public static final int kDriverControllerPort2 = 2;
@@ -176,7 +177,6 @@ public class Constants {
         public static final Transform3d transform3D = new Transform3d(robotToTurret, new Pose3d());
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
-
     }
 
     public static final class Hood {
@@ -184,7 +184,6 @@ public class Constants {
         // In Constants.TurretConstants or wherever appropriate
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(20);  // Your minimum angle
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(65);  // Your maximum angle
-
     }
 
     public static final class Quest {
@@ -267,11 +266,20 @@ public class Constants {
         //blueDepot pose
         public static final Pose3d redDepot = new Pose3d (15.82, 2.080, 1, new Rotation3d());
 
+        // threshold for how close we are to the blue bump/trench for auto rotation
+        public static final double blueLeftBumpOrTrenchThreshold = 3;
+        public static final double blueRightBumpOrTrenchThreshold = 6.7;
+
+        // threshold for how close we are to the bump/trench for auto rotation
+        public static final double redLeftBumpOrTrenchThreshold = 10.45;
+        public static final double redRightBumpOrTrenchThreshold = 13.632;
+
+        public static final double topBumpTrenchEdge = 6.627;
+        public static final double bottomBumpTrenchEdge = 1.43;
+
         //Max acceptable roll and pitch to recieve photon data
         public static final double MAX_ACCEPTABLE_PITCH = 5;
         public static final double MAX_ACCEPTABLE_ROLL = 5;
-
-
     }
 
     public static final class Sim{
@@ -285,6 +293,7 @@ public class Constants {
     }
 
     public static class FieldConstants {
+
         public static final Distance FIELD_LENGTH = Inches.of(650.12);
         public static final Distance FIELD_WIDTH = Inches.of(316.64);
 

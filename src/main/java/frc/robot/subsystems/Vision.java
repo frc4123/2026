@@ -412,10 +412,19 @@ public class Vision extends SubsystemBase{
         double y = robotPose.getY();
 
         if (isBlue) {
-            if(x < VisionConstants.blueHub.getX()){
+
+            boolean isBumpOrTrench = (
+                x >= VisionConstants.blueLeftBumpOrTrenchThreshold && 
+                x <= VisionConstants.blueRightBumpOrTrenchThreshold
+            ) ? true : false;
+
+            if (isBumpOrTrench){
+
+                return getBumpOrTrench(y, robotPose.getRotation());
+            } else if(x < VisionConstants.blueHub.getX()){
                 return getAngleToTarget(robotPose, VisionConstants.blueHub.getTranslation().toTranslation2d());
-            // Check Y zones from top to bottom
-            }else if (y >= 5.029) {
+                // Check Y zones from top to bottom
+            } else if (y >= 5.029) {
                 // Top zone - face depot
                 return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
             } else if (y > 4.044) {
@@ -431,7 +440,15 @@ public class Vision extends SubsystemBase{
 
         } else if (isRed) {
             // Check Y zones from top to bottom
-            if(x > VisionConstants.redHub.getX()){
+            boolean isBumpOrTrench = (
+                x >= VisionConstants.redLeftBumpOrTrenchThreshold && 
+                x <= VisionConstants.redRightBumpOrTrenchThreshold
+            ) ? true : false;
+
+            if (isBumpOrTrench){
+
+                return getBumpOrTrench(y, robotPose.getRotation());
+            } else if(x > VisionConstants.redHub.getX()){
                 return getAngleToTarget(robotPose, VisionConstants.redHub.getTranslation().toTranslation2d());
             // Check Y zones from top to bottom
             } else if (y >= 5.029) {
@@ -450,6 +467,20 @@ public class Vision extends SubsystemBase{
         }
         
         return new Rotation2d(0);
+    }
+
+    private Rotation2d getBumpOrTrench(double y, Rotation2d rotation) {
+
+        if( y >= VisionConstants.topBumpTrenchEdge ||
+            y <= VisionConstants.bottomBumpTrenchEdge) {
+
+            double closest = 90 * Math.round(rotation.getDegrees() / 90.0) ;
+            return new Rotation2d(closest);
+        } else {
+            
+            double closest = 45 * Math.round(rotation.getDegrees() / 90.0) + 45;
+            return new Rotation2d(closest);
+        }
     }
 
     // Helper method to calculate angle
