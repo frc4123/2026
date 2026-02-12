@@ -55,7 +55,7 @@ public class Constants {
 
         public static final int Intake_Arm = 19;
 
-        public static final int Intake_Rollers = 20;
+        public static final int Intake_Roller = 20;
 
     }
    
@@ -73,11 +73,6 @@ public class Constants {
     }
 
     public static class IntakeRollerConstants {
-        public static final int LEFT_RACK_ID = 0;
-        public static final int RIGHT_RACK_ID = 0;
-        public static final int LEFT_SPIN_ID = 0;
-        public static final int RIGHT_SPIN_ID = 0;
-
 
         public static final Distance STOW_POS = Inches.of(0);
         public static final Distance DEPLOY_POS = Inches.of(10.875);
@@ -91,9 +86,10 @@ public class Constants {
 
         public static final double zeroVelo = 0;
         public static final double intakeVelo = 50;
+        public static final double intakeAcc = 30;
        
-        public static final double kP = 0;
-        public static final double kI = 0;
+        public static final double kP = 0.426;
+        public static final double kI = 0.0441;
         public static final double kD = 0;
         public static final double kS = 0; 
         public static final double kV = 0; 

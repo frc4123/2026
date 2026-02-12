@@ -5,6 +5,7 @@ import frc.robot.Constants.IntakeRollerConstants;
 import frc.robot.Constants.TurretConstants;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -16,11 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class IntakeRollers extends SubsystemBase{
+public class IntakeRoller extends SubsystemBase{
 
     CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
 
-    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Rollers, canivore);
+    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Roller, canivore);
       // Motion Magic controller object
     private final MotionMagicVelocityVoltage motionMagic =
         new MotionMagicVelocityVoltage(
@@ -30,7 +31,7 @@ public class IntakeRollers extends SubsystemBase{
         );
 
         
-    public IntakeRollers(){
+    public IntakeRoller(){
         // τηισ ισ ωερυ ιμπορταντ
         configureMotor();
     }
@@ -46,12 +47,12 @@ public class IntakeRollers extends SubsystemBase{
                 .withKV(IntakeRollerConstants.kV)
                 .withKA(IntakeRollerConstants.kA);
 
-    //  MotionMagicConfigs motionMagic = new MotionMagicConfigs()
-    //         .withMotionMagicCruiseVelocity(TurretConstants.velocity)
-    //         .withMotionMagicAcceleration(TurretConstants.acceleration);
+        MotionMagicConfigs motionMagic = new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(IntakeRollerConstants.intakeVelo)
+            .withMotionMagicAcceleration(IntakeRollerConstants.intakeAcc);
 
         intakeRollerMotor.getConfigurator().apply(pid);
-    //  turretMotor.getConfigurator().apply(motionMagic);
+        intakeRollerMotor.getConfigurator().apply(motionMagic);
     }
 
     public void setIntakeVelo(double velo){

@@ -33,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IntakeArm;
-import frc.robot.subsystems.IntakeRollers;
+import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
@@ -85,7 +85,7 @@ public class RobotContainer {
     private final Vision vision = new Vision(drivetrain, oculus);
     private final Turret turret = new Turret(drivetrain, vision);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
-    private final IntakeRollers intakeRollers = new IntakeRollers();
+    private final IntakeRoller intakeRollers = new IntakeRoller();
     private final IntakeArm intakeArm = new IntakeArm();
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
