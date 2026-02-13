@@ -214,21 +214,43 @@ public class TurretVisSim extends SubsystemBase{
         return false;
     }
 
+    public void updateFuelWithAzimuth(LinearVelocity vel, Angle elevationAngle, double azimuthRadians) {
+    double elevationRad = elevationAngle.in(Radians);
+    
+    // Use the PASSED azimuth instead of turret's current angle
+    double horizontalVel = Math.cos(elevationRad) * vel.in(MetersPerSecond);
+    double fieldXVel = horizontalVel * Math.cos(azimuthRadians);
+    double fieldYVel = horizontalVel * Math.sin(azimuthRadians);
+    double fieldZVel = Math.sin(elevationRad) * vel.in(MetersPerSecond);
+    
+    Translation3d trajVel = new Translation3d(fieldXVel, fieldYVel, fieldZVel);
+    Translation3d turretPos = getTurretPosition();
+    
+    for (int i = 0; i < trajectory.length; i++) {
+        double t = i * 0.04;
+        double x = trajVel.getX() * t + turretPos.getX();
+        double y = trajVel.getY() * t + turretPos.getY();
+        double z = trajVel.getZ() * t - 0.5 * 9.81 * t * t + turretPos.getZ();
+
+        trajectory[i] = new Translation3d(x, y, z);
+    }
+
+    Logger.recordOutput("Turret/Trajectory", trajectory);
+    Logger.recordOutput("Turret/TrajectoryAzimuth", Math.toDegrees(azimuthRadians));
+}
+
     @Override
     public void simulationPeriodic() {
         Translation3d target = getTurretTarget();
         ShotData calculatedShot;
         
-        // Choose calculation method based on whether we're passing or shooting at hub
         if (isPassingShot()) {
-            // Use simple pass calculation (no funnel clearance needed)
             calculatedShot = TurretCalculator.calculatePass(
                 poseSupplier.get().toPose2d(), 
                 target
             );
             Logger.recordOutput("Turret/ShotMode", "PASS");
         } else {
-            // Use funnel clearance calculation for hub shots
             calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
                 poseSupplier.get().toPose2d(), 
                 new ChassisSpeeds(), 
@@ -238,12 +260,19 @@ public class TurretVisSim extends SubsystemBase{
             Logger.recordOutput("Turret/ShotMode", "HUB");
         }
         
-        updateFuel(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle());
+        // Calculate the ACTUAL azimuth angle to the target
+        Translation3d turretPos = getTurretPosition();
+        double dx = target.getX() - turretPos.getX();
+        double dy = target.getY() - turretPos.getY();
+        double azimuthToTarget = Math.atan2(dy, dx);
+        
+        // Update trajectory using the CALCULATED direction to target
+        updateFuelWithAzimuth(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle(), azimuthToTarget);
         update3dPose(Degrees.of(turret.getFieldAngle()));
         
-        // Log the shot data 
         Logger.recordOutput("Turret/Shot", calculatedShot);
         Logger.recordOutput("Turret/TargetPosition", target);
+        Logger.recordOutput("Turret/CalculatedAzimuth", Math.toDegrees(azimuthToTarget));
     }
     
 }
