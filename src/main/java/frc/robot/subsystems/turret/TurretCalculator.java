@@ -161,6 +161,42 @@ public class TurretCalculator {
         return new ShotData(InchesPerSecond.of(finalV0).in(MetersPerSecond), calculatedAngle.in(Radians), predictedTarget);
     }
 
+    public static ShotData calculatePass(Pose2d robot, Translation3d target) {
+        double x_dist = getDistanceToTarget(robot, target).in(Inches);
+        double y_dist = target.getMeasureZ()
+                .minus(Meters.of(Constants.TurretConstants.offsetZ))
+                .in(Inches);
+        double g = 386; // inches/s²
+        
+        // Use a fixed, comfortable velocity for passing (tune this!)
+        double v0 = 200.0; // inches/second - adjust based on testing
+        
+        // Solve for angle: θ = atan((v² ± sqrt(v⁴ - g(gx² + 2yv²))) / (gx))
+        double discriminant = Math.pow(v0, 4) - g * (g * x_dist * x_dist + 2 * y_dist * v0 * v0);
+        
+        if (discriminant < 0) {
+            // Shot impossible at this velocity, increase it
+            v0 = Math.sqrt(g * Math.sqrt(x_dist * x_dist + y_dist * y_dist));
+            discriminant = Math.pow(v0, 4) - g * (g * x_dist * x_dist + 2 * y_dist * v0 * v0);
+        }
+        
+        // Use the lower arc (+ in the formula gives higher arc)
+        double theta = Math.atan(
+            ((v0 * v0) + Math.sqrt(discriminant)) / (g * x_dist)
+        );
+        
+        // Clamp angle to physical constraints
+        Angle calculatedAngle = Radians.of(theta);
+        if (calculatedAngle.lt(Hood.MIN_HOOD_ANGLE)) {
+            calculatedAngle = Hood.MIN_HOOD_ANGLE;
+        } else if (calculatedAngle.gt(Hood.MAX_HOOD_ANGLE)) {
+            calculatedAngle = Hood.MAX_HOOD_ANGLE;
+        }
+        
+        return new ShotData(InchesPerSecond.of(v0).in(MetersPerSecond), 
+                        calculatedAngle.in(Radians), target);
+    }
+
     // use an iterative lookahead approach to determine shot parameters for a moving robot
     public static ShotData iterativeMovingShotFromFunnelClearance(
             Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations) {

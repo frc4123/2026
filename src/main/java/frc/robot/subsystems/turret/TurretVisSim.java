@@ -159,31 +159,91 @@ public class TurretVisSim extends SubsystemBase{
     }
 
     public Translation3d getTurretTarget(){
-        if(vision.isBlue() &&  poseSupplier.get().getX() < Constants.VisionConstants.blueHub.getX()){
-            return Constants.VisionConstants.blueHubTranslation3d;
-        }
-        else if(vision.isRed() && poseSupplier.get().getX() > Constants.VisionConstants.redHub.getX()) {
-            return Constants.VisionConstants.redHubTranslation3d;
-        }
-        return Constants.VisionConstants.blueHubTranslation3d;
+    double x = poseSupplier.get().getX();
+    double y = poseSupplier.get().getY();
 
+    if(vision.isBlue()) {
+        if(x < Constants.VisionConstants.blueHub.getX()){
+            return Constants.VisionConstants.blueHubTranslation3d;
+        // Past hub - match the Y zones from Turret.targetAngle()
+        } else if (y >= 5.029) {
+            // Top zone - depot
+            return Constants.VisionConstants.blueDepot.getTranslation(); // Convert Pose2d to Translation3d
+        } else if (y > 4.044) {
+            // Upper middle zone - left bump corner
+            return Constants.VisionConstants.blueLeftBumpCorner.getTranslation();
+        } else if (y > 3.059) {
+            // Lower middle zone - right bump corner
+            return Constants.VisionConstants.blueRightBumpCorner.getTranslation();
+        } else {
+            // Bottom zone - aim threshold
+            return Constants.VisionConstants.blueAimThreshold.getTranslation();
+        }
+    }
+    else if(vision.isRed()) {
+        if(x > Constants.VisionConstants.redHub.getX()){
+            return Constants.VisionConstants.redHubTranslation3d;
+        // Past hub - match the Y zones from Turret.targetAngle()
+        } else if (y >= 5.029) {
+            // Top zone - aim threshold
+            return Constants.VisionConstants.redAimThreshold.getTranslation();
+        } else if (y > 4.044) {
+            // Upper middle zone - right bump corner
+            return Constants.VisionConstants.redRightBumpCorner.getTranslation();
+        } else if (y > 3.059) {
+            // Lower middle zone - left bump corner
+            return Constants.VisionConstants.redLeftBumpCorner.getTranslation();
+        } else {
+            // Bottom zone - depot
+            return Constants.VisionConstants.redDepot.getTranslation();
+        }
+    }
+    
+    return Constants.VisionConstants.blueHubTranslation3d;
+}
+    
+    private boolean isPassingShot() {
+        double robotX = poseSupplier.get().getX();
+        
+        if(vision.isBlue()) {
+            return robotX > Constants.VisionConstants.blueHub.getX();
+        } else if(vision.isRed()) {
+            return robotX < Constants.VisionConstants.redHub.getX();
+        }
+        
+        return false;
     }
 
     @Override
     public void simulationPeriodic() {
-        ShotData calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
-            poseSupplier.get().toPose2d(), 
-            new ChassisSpeeds(), 
-            getTurretTarget(), 
-            3 // or whatever LOOKAHEAD_ITERATIONS you use
-        );
+        Translation3d target = getTurretTarget();
+        ShotData calculatedShot;
+        
+        // Choose calculation method based on whether we're passing or shooting at hub
+        if (isPassingShot()) {
+            // Use simple pass calculation (no funnel clearance needed)
+            calculatedShot = TurretCalculator.calculatePass(
+                poseSupplier.get().toPose2d(), 
+                target
+            );
+            Logger.recordOutput("Turret/ShotMode", "PASS");
+        } else {
+            // Use funnel clearance calculation for hub shots
+            calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                poseSupplier.get().toPose2d(), 
+                new ChassisSpeeds(), 
+                target, 
+                3
+            );
+            Logger.recordOutput("Turret/ShotMode", "HUB");
+        }
+        
         updateFuel(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle());
         update3dPose(Degrees.of(turret.getFieldAngle()));
-        // Use the same calculation method as the other Turret.java
-        
         
         // Log the shot data 
         Logger.recordOutput("Turret/Shot", calculatedShot);
+        Logger.recordOutput("Turret/TargetPosition", target);
     }
     
 }
