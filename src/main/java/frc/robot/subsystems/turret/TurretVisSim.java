@@ -159,49 +159,49 @@ public class TurretVisSim extends SubsystemBase{
     }
 
     public Translation3d getTurretTarget(){
-    double x = poseSupplier.get().getX();
-    double y = poseSupplier.get().getY();
+        double x = poseSupplier.get().getX();
+        double y = poseSupplier.get().getY();
 
-    if(vision.isBlue()) {
-        if(x < Constants.VisionConstants.blueHub.getX()){
-            return Constants.VisionConstants.blueHubTranslation3d;
-        // Past hub - match the Y zones from Turret.targetAngle()
-        } else if (y >= 5.029) {
-            // Top zone - depot
-            return Constants.VisionConstants.blueDepot.getTranslation(); // Convert Pose2d to Translation3d
-        } else if (y > 4.044) {
-            // Upper middle zone - left bump corner
-            return Constants.VisionConstants.blueLeftBumpCorner.getTranslation();
-        } else if (y > 3.059) {
-            // Lower middle zone - right bump corner
-            return Constants.VisionConstants.blueRightBumpCorner.getTranslation();
-        } else {
-            // Bottom zone - aim threshold
-            return Constants.VisionConstants.blueAimThreshold.getTranslation();
+        if(vision.isBlue()) {
+            if(x < Constants.VisionConstants.blueHub.getX()){
+                return Constants.VisionConstants.blueHubTranslation3d;
+            // Past hub - match the Y zones from Turret.targetAngle()
+            } else if (y >= 5.029) {
+                // Top zone - depot
+                return Constants.VisionConstants.blueDepot.getTranslation(); // Convert Pose2d to Translation3d
+            } else if (y > 4.044) {
+                // Upper middle zone - left bump corner
+                return Constants.VisionConstants.blueLeftBumpCorner.getTranslation();
+            } else if (y > 3.059) {
+                // Lower middle zone - right bump corner
+                return Constants.VisionConstants.blueRightBumpCorner.getTranslation();
+            } else {
+                // Bottom zone - aim threshold
+                return Constants.VisionConstants.blueAimThreshold.getTranslation();
+            }
         }
-    }
-    else if(vision.isRed()) {
-        if(x > Constants.VisionConstants.redHub.getX()){
-            return Constants.VisionConstants.redHubTranslation3d;
-        // Past hub - match the Y zones from Turret.targetAngle()
-        } else if (y >= 5.029) {
-            // Top zone - aim threshold
-            return Constants.VisionConstants.redAimThreshold.getTranslation();
-        } else if (y > 4.044) {
-            // Upper middle zone - right bump corner
-            return Constants.VisionConstants.redRightBumpCorner.getTranslation();
-        } else if (y > 3.059) {
-            // Lower middle zone - left bump corner
-            return Constants.VisionConstants.redLeftBumpCorner.getTranslation();
-        } else {
-            // Bottom zone - depot
-            return Constants.VisionConstants.redDepot.getTranslation();
+        else if(vision.isRed()) {
+            if(x > Constants.VisionConstants.redHub.getX()){
+                return Constants.VisionConstants.redHubTranslation3d;
+            // Past hub - match the Y zones from Turret.targetAngle()
+            } else if (y >= 5.029) {
+                // Top zone - aim threshold
+                return Constants.VisionConstants.redAimThreshold.getTranslation();
+            } else if (y > 4.044) {
+                // Upper middle zone - right bump corner
+                return Constants.VisionConstants.redRightBumpCorner.getTranslation();
+            } else if (y > 3.059) {
+                // Lower middle zone - left bump corner
+                return Constants.VisionConstants.redLeftBumpCorner.getTranslation();
+            } else {
+                // Bottom zone - depot
+                return Constants.VisionConstants.redDepot.getTranslation();
+            }
         }
+    
+        return Constants.VisionConstants.blueHubTranslation3d;
     }
-    
-    return Constants.VisionConstants.blueHubTranslation3d;
-}
-    
+        
     private boolean isPassingShot() {
         double robotX = poseSupplier.get().getX();
         
