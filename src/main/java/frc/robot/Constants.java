@@ -269,12 +269,12 @@ public class Constants {
         public static final Pose3d redDepot = new Pose3d (15.82, 2.080, 1, new Rotation3d());
 
         // threshold for how close we are to the blue bump/trench for auto rotation
-        public static final double blueLeftBumpOrTrenchThreshold = 3;
-        public static final double blueRightBumpOrTrenchThreshold = 6.7;
+        public static final double blueLeftBumpOrTrenchThreshold = 2.5;
+        public static final double blueRightBumpOrTrenchThreshold = 7.25;
 
         // threshold for how close we are to the bump/trench for auto rotation
-        public static final double redLeftBumpOrTrenchThreshold = 10.45;
-        public static final double redRightBumpOrTrenchThreshold = 13.632;
+        public static final double redLeftBumpOrTrenchThreshold = 10.0;
+        public static final double redRightBumpOrTrenchThreshold = 14.0;
 
         public static final double topBumpTrenchEdge = 6.627;
         public static final double bottomBumpTrenchEdge = 1.43;

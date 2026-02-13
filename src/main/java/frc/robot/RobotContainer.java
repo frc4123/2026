@@ -145,8 +145,8 @@ public class RobotContainer {
 
         joystick.b().whileTrue(
             drivetrain.applyRequest(() -> faceAngle
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed) 
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed) 
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2) 
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2) 
                 .withTargetDirection(vision.angleToFace(drivetrain.getState().Pose))
                 .withTargetRateFeedforward(
                     vision.targetFF(drivetrain.getState().Pose, 
