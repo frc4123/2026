@@ -476,7 +476,9 @@ public class Vision extends SubsystemBase{
             return new Rotation2d(Math.toRadians(closest));
         } else {
             
-            double closest = 45 * Math.round((rotation.getDegrees() - 45) / 90.0) + 45;
+            // Add 45 to shift, snap to nearest 90, then subtract 45
+            double closest = 90 * Math.round((rotation.getDegrees() - 45) / 90.0) + 45;
+            
             return new Rotation2d(Math.toRadians(closest));
         }
     }
