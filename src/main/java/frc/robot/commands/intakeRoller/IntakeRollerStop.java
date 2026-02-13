@@ -9,7 +9,7 @@ public class IntakeRollerStop extends Command{
     IntakeRoller intakeRollers;
 
     public IntakeRollerStop(IntakeRoller intakeRollers) {
-        intakeRollers = this.intakeRollers;
+        this.intakeRollers = intakeRollers;
     }
 
     @Override

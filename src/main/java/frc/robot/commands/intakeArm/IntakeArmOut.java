@@ -9,7 +9,7 @@ public class IntakeArmOut extends Command{
     IntakeArm intakeArm;
 
     public IntakeArmOut(IntakeArm intakeArm) {
-        intakeArm = this.intakeArm;
+        this.intakeArm = intakeArm;
     }
 
     @Override
