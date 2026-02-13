@@ -46,7 +46,7 @@ public class IntakeArm extends SubsystemBase{
             .withKA(IntakeArmConstants.kA);
 
     //  MotionMagicConfigs motionMagic = new MotionMagicConfigs()
-    //         .withMotionMagicCruiseVelocity(TurretConstants.velocity)
+    //         .withMotionMagicCruiseVelocity(TurretConstants.velocity) 
     //         .withMotionMagicAcceleration(TurretConstants.acceleration);
 
         intakeRollerMotor.getConfigurator().apply(pid);
