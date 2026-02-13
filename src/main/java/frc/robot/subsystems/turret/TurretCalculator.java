@@ -158,7 +158,7 @@ public class TurretCalculator {
         }
         
         // ShotData constructor expects: (double exitVelocity_in/s, double hoodAngle_radians, Translation3d target)
-        return new ShotData(finalV0, calculatedAngle.in(Radians), predictedTarget);
+        return new ShotData(InchesPerSecond.of(finalV0).in(MetersPerSecond), calculatedAngle.in(Radians), predictedTarget);
     }
 
     // use an iterative lookahead approach to determine shot parameters for a moving robot
