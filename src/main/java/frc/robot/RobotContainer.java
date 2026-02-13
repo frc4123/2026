@@ -148,10 +148,10 @@ public class RobotContainer {
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2) 
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2) 
                 .withTargetDirection(vision.angleToFace(drivetrain.getState().Pose))
-                .withTargetRateFeedforward(
-                    vision.targetFF(drivetrain.getState().Pose, 
-                    vision.getHub(),
-                    drivetrain.getState().Speeds))
+                // .withTargetRateFeedforward(
+                //     vision.targetFF(drivetrain.getState().Pose, 
+                //     vision.getHub(),
+                //     drivetrain.getState().Speeds))
             )
         );
         //face desired angle of robot towards the Hub when B is held
