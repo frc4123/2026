@@ -243,10 +243,10 @@ public class Constants {
         public static final Pose3d blueDepot = new Pose3d (0.7, 6.0, 1, new Rotation3d());
 
         //blueLeftBumpCorner pose
-        public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 6.74, 1, new Rotation3d()); //x4.03
+        public static final Pose3d blueLeftBumpCorner = new Pose3d (2.75, 6.74, 1, new Rotation3d()); //x4.03
 
         //blueLeftBumpCorner pose
-        public static final Pose3d blueRightBumpCorner = new Pose3d (3.5, 1.438, 1, new Rotation3d()); //x4.03
+        public static final Pose3d blueRightBumpCorner = new Pose3d (2.75, 1.438, 1, new Rotation3d()); //x4.03
 
         //redAimThreshold pose
         public static final Pose3d blueAimThreshold = new Pose3d (0.7, 2.080, 1, new Rotation3d());
@@ -260,10 +260,10 @@ public class Constants {
         public static final Pose3d redAimThreshold = new Pose3d (15.82, 6.0, 1, new Rotation3d());
 
         //redRightBumpCorner pose
-        public static final Pose3d redRightBumpCorner = new Pose3d (13, 6.74, 1, new Rotation3d()); //12.505
+        public static final Pose3d redRightBumpCorner = new Pose3d (13.75, 6.74, 1, new Rotation3d()); //12.505
 
         //redRightBumpCorner pose
-        public static final Pose3d redLeftBumpCorner = new Pose3d (13, 1.552, 1, new Rotation3d()); //12.505
+        public static final Pose3d redLeftBumpCorner = new Pose3d (13.75, 1.552, 1, new Rotation3d()); //12.505
 
         //blueDepot pose
         public static final Pose3d redDepot = new Pose3d (15.82, 2.080, 1, new Rotation3d());
