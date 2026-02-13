@@ -138,15 +138,20 @@ public class TurretCalculator {
         double finalV0;
         if (wasClamped) {
             double clampedTheta = calculatedAngle.in(Radians);
+            // Standard projectile motion: solve for v0 given angle, x_dist, y_dist
             double cosTheta = Math.cos(clampedTheta);
-            double tanTheta = Math.tan(clampedTheta);
+            double sinTheta = Math.sin(clampedTheta);
+            double tanTheta = sinTheta / cosTheta;
+            
+            // v0 = sqrt(g * x_dist^2 / (2 * cos^2(θ) * (x_dist * tan(θ) - y_dist)))
+            double numerator = g * x_dist * x_dist;
             double denominator = 2 * cosTheta * cosTheta * (x_dist * tanTheta - y_dist);
             
             if (denominator > 0) {
-                finalV0 = Math.sqrt(g * x_dist / denominator);
+                finalV0 = Math.sqrt(numerator / denominator);
             } else {
-                // Shot not physically possible - use original velocity
-                finalV0 = v0;
+                // Shot physically impossible - mark as invalid or use max velocity
+                finalV0 = Double.NaN; // Or some max velocity constant
             }
         } else {
             finalV0 = v0;
