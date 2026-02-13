@@ -474,7 +474,7 @@ public class Vision extends SubsystemBase{
             // Top or bottom - use 0 or 180 based on which is closer
             double deg = rotation.getDegrees();
             double closest = (Math.abs(deg) < 90 || Math.abs(deg) > 270) ? 0 : 180;
-            return new Rotation2d(Math.toRadians(closest));
+            return new Rotation2d(Math.toRadians(0));
             
         } else {
             
@@ -485,7 +485,7 @@ public class Vision extends SubsystemBase{
             while (deg >= 360) deg -= 360;
             
             double closest = (deg < 135 || deg >= 315) ? 45 : 225;
-            return new Rotation2d(Math.toRadians(closest));
+            return new Rotation2d(Math.toRadians(45));
         }
     }
 
