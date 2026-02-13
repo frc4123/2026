@@ -57,6 +57,8 @@ public class Constants {
 
         public static final int Intake_Roller = 20;
 
+        public static final int Intake_CANdi = 21;
+
     }
    
     public static class IntakeArmConstants{
