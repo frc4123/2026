@@ -468,15 +468,23 @@ public class Vision extends SubsystemBase{
     }
 
     private Rotation2d getBumpOrTrench(double y, Rotation2d rotation) {
-
-        if( y >= VisionConstants.topBumpTrenchEdge ||
+        if (y >= VisionConstants.topBumpTrenchEdge ||
             y <= VisionConstants.bottomBumpTrenchEdge) {
-
-            double closest = 90 * Math.round(rotation.getDegrees() / 90.0);
+            
+            // Top or bottom - use 0 or 180 based on which is closer
+            double deg = rotation.getDegrees();
+            double closest = (Math.abs(deg) < 90 || Math.abs(deg) > 270) ? 0 : 180;
             return new Rotation2d(Math.toRadians(closest));
+            
         } else {
             
-            double closest = 45 * Math.round((rotation.getDegrees() - 45) / 90.0) + 45;
+            // Middle trench - use 45 or 225 based on which is closer
+            double deg = rotation.getDegrees();
+            // Normalize to 0-360
+            while (deg < 0) deg += 360;
+            while (deg >= 360) deg -= 360;
+            
+            double closest = (deg < 135 || deg >= 315) ? 45 : 225;
             return new Rotation2d(Math.toRadians(closest));
         }
     }
