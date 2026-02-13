@@ -419,7 +419,6 @@ public class Vision extends SubsystemBase{
             ) ? true : false;
 
             if (isBumpOrTrench){
-
                 return getBumpOrTrench(y, robotPose.getRotation());
             } else if(x < VisionConstants.blueHub.getX()){
                 return getAngleToTarget(robotPose, VisionConstants.blueHub.getTranslation().toTranslation2d());
@@ -446,7 +445,6 @@ public class Vision extends SubsystemBase{
             ) ? true : false;
 
             if (isBumpOrTrench){
-
                 return getBumpOrTrench(y, robotPose.getRotation());
             } else if(x > VisionConstants.redHub.getX()){
                 return getAngleToTarget(robotPose, VisionConstants.redHub.getTranslation().toTranslation2d());
@@ -474,12 +472,12 @@ public class Vision extends SubsystemBase{
         if( y >= VisionConstants.topBumpTrenchEdge ||
             y <= VisionConstants.bottomBumpTrenchEdge) {
 
-            double closest = 90 * Math.round(rotation.getDegrees() / 90.0) ;
-            return new Rotation2d(closest);
+            double closest = 90 * Math.round(rotation.getDegrees() / 90.0);
+            return new Rotation2d(Math.toRadians(closest));
         } else {
             
-            double closest = 45 * Math.round(rotation.getDegrees() / 90.0) + 45;
-            return new Rotation2d(closest);
+            double closest = 45 * Math.round((rotation.getDegrees() - 45) / 90.0) + 45;
+            return new Rotation2d(Math.toRadians(closest));
         }
     }
 
