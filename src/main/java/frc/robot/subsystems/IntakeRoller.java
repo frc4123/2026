@@ -40,12 +40,12 @@ public class IntakeRoller extends SubsystemBase{
         intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
 
         Slot0Configs pid = new Slot0Configs()
-                .withKP(IntakeRollerConstants.kP)
-                .withKI(IntakeRollerConstants.kI)
-                .withKD(IntakeRollerConstants.kD)
-                .withKS(IntakeRollerConstants.kS)
-                .withKV(IntakeRollerConstants.kV)
-                .withKA(IntakeRollerConstants.kA);
+            .withKP(IntakeRollerConstants.kP)
+            .withKI(IntakeRollerConstants.kI)
+            .withKD(IntakeRollerConstants.kD)
+            .withKS(IntakeRollerConstants.kS)
+            .withKV(IntakeRollerConstants.kV)
+            .withKA(IntakeRollerConstants.kA);
 
         MotionMagicConfigs motionMagic = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(IntakeRollerConstants.intakeVelo)

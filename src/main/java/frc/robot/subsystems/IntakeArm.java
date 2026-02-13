@@ -38,12 +38,12 @@ public class IntakeArm extends SubsystemBase{
         intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
 
         Slot0Configs pid = new Slot0Configs()
-                .withKP(IntakeArmConstants.kP)
-                .withKI(IntakeArmConstants.kI)
-                .withKD(IntakeArmConstants.kD)
-                .withKS(IntakeArmConstants.kS)
-                .withKV(IntakeArmConstants.kV)
-                .withKA(IntakeArmConstants.kA);
+            .withKP(IntakeArmConstants.kP)
+            .withKI(IntakeArmConstants.kI)
+            .withKD(IntakeArmConstants.kD)
+            .withKS(IntakeArmConstants.kS)
+            .withKV(IntakeArmConstants.kV)
+            .withKA(IntakeArmConstants.kA);
 
     //  MotionMagicConfigs motionMagic = new MotionMagicConfigs()
     //         .withMotionMagicCruiseVelocity(TurretConstants.velocity)

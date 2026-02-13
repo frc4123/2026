@@ -47,8 +47,8 @@ import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmOut;
-import frc.robot.commands.intakeRollers.IntakeRollersIn;
-import frc.robot.commands.intakeRollers.IntakeRollersStop;
+import frc.robot.commands.intakeRoller.IntakeRollerIn;
+import frc.robot.commands.intakeRoller.IntakeRollerStop;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 
@@ -91,8 +91,8 @@ public class RobotContainer {
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
-    private final IntakeRollersIn intakeRollersIn = new IntakeRollersIn(intakeRollers);
-    private final IntakeRollersStop intakeRollersStop = new IntakeRollersStop(intakeRollers);
+    private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers);
+    private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
 
