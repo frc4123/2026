@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -72,11 +73,11 @@ public class Turret extends SubsystemBase {
     private EasyCRT easyCrtSolver;
 
     // Motion Magic controller object
-    private final MotionMagicVoltage motionMagic =
-            new MotionMagicVoltage(
-                    TurretConstants.stowPosition//, TODO: change to DynamicMotionMagicTorqueCurrentFOC
-                    //TurretConstants.velocity,
-                    //TurretConstants.acceleration
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
+            new DynamicMotionMagicTorqueCurrentFOC(
+                TurretConstants.stowPosition,
+                TurretConstants.velocity,
+                TurretConstants.acceleration
             );
 
     // Make sure these are initialized in your constructor:
@@ -155,19 +156,15 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(config);
 
         Slot0Configs pid = new Slot0Configs()
-                .withKP(TurretConstants.kP)
-                .withKI(TurretConstants.kI)
-                .withKD(TurretConstants.kD)
-                .withKS(TurretConstants.kS)
-                .withKV(TurretConstants.kV)
-                .withKA(TurretConstants.kA);
-
-        MotionMagicConfigs motionMagic = new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(TurretConstants.velocity)
-            .withMotionMagicAcceleration(TurretConstants.acceleration);
+            .withKP(TurretConstants.kP)
+            .withKI(TurretConstants.kI)
+            .withKD(TurretConstants.kD)
+            .withKS(TurretConstants.kS)
+            .withKV(TurretConstants.kV)
+            .withKA(TurretConstants.kA);
 
         turretMotor.getConfigurator().apply(pid);
-        turretMotor.getConfigurator().apply(motionMagic);
+        //turretMotor.getConfigurator().apply(motionMagic);
     }
 
     private void configureCANcoders() {
