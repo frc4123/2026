@@ -137,9 +137,9 @@ public class Constants {
         public static final double kP = 300;
         public static final double kI = 11;
         public static final double kD = 4.7;
-        public static final double kS = 0.055; // was 0.239 but dont need bc already moving so 0 for now
-        public static final double kV = 0.1; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
-        public static final double kA = 0.02; //0.05; // 0.367048
+        public static final double kS = 1.25; // was 0.239 but dont need bc already moving so 0 for now
+        public static final double kV = 2.5; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
+        public static final double kA = 0.35; //0.05; // 0.367048
 
         public static final int mechanismMinRange = -1; // -360 degrees
         public static final int mechanismMaxRange = 1; // +360 degrees
