@@ -136,7 +136,7 @@ public class Constants {
 
         public static final double kP = 300;
         public static final double kI = 11;
-        public static final double kD = 4.7;
+        public static final double kD = 10.4123;
         public static final double kS = 1.25;
         public static final double kV = 0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
         public static final double kA = 0.028; //0.05; // 0.367048
@@ -155,8 +155,8 @@ public class Constants {
         public static final double encoder1Teeth = 24.0;      // Gear on Hex Shaft A that connects to turret
         public static final double encoder2Teeth = 50.0;      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.406738;
-        public static final double encoder2Offset = -0.975342;
+        public static final double encoder1Offset = -0.992676;
+        public static final double encoder2Offset = -0.575928;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
