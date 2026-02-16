@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.316404803240742,
-        "y": 2.5942583188657404
+        "x": 4.981009620949075,
+        "y": 2.25669212962963
       },
       "isLocked": false,
       "linkedName": "3BumpRight 4-5"
@@ -55,7 +55,7 @@
   "folder": "3BumpRight",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 165.0
+    "rotation": -155.0
   },
   "useDefaultConstraints": true
 }

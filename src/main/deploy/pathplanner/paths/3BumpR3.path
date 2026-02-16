@@ -55,7 +55,7 @@
   "folder": "3BumpRight",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 145.0
+    "rotation": -145.0
   },
   "useDefaultConstraints": true
 }

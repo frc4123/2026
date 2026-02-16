@@ -49,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 165.0
+    "rotation": -155.0
   },
   "reversed": false,
   "folder": "3BumpRight",
