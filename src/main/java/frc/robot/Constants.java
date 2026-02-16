@@ -59,6 +59,38 @@ public class Constants {
 
         public static final int Intake_Roller = 20;
     }
+
+    public static final class InputConstants {
+
+        public static final int kDriverControllerPort0 = 0;
+        public static final int kDriverControllerPort1 = 1;
+        public static final int kDriverControllerPort2 = 2;
+        public static final boolean fieldOrientation = true;
+        public static final double kDeadband = 0.028;
+    }
+
+    public static final class SwerveConstants {
+
+        public static final double CLOSE_TRANSLATION_PP_KP = 2.5; // 8
+        public static final double CLOSE_TRANSLATION_PP_KI = 0.0;
+        public static final double CLOSE_TRANSLATION_PP_KD = 0.0;
+
+        public static final double CLOSE_ROTATION_PP_KP = 5; // 8
+        public static final double CLOSE_ROTATION_PP_KI = 0.0;
+        public static final double CLOSE_ROTATION_PP_KD = 0.0;
+
+        public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
+        public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
+        
+        public static final double[][] ADDITIONS = {
+            {1.0549228, 1.0422874}, // LEFT ADDITION // {0.342, 0} //0.385
+            {1.0549228, -1.0297126}  // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w advantagescope
+            // driver relative -> {+forward/back-, +left/right-}
+        };
+
+        public static final Pose2d robotToClimber = new Pose2d(Units.inchesToMeters(2), Units.inchesToMeters(27.5/2.0), new Rotation2d());
+        //33.75 bumper width
+    }
    
     public static class IntakeArmConstants{
        
@@ -95,38 +127,6 @@ public class Constants {
         public static final double kS = 0; 
         public static final double kV = 0.118;  //try this 0;
         public static final double kA = 0; 
-    }
-
-    public static final class InputConstants {
-
-        public static final int kDriverControllerPort0 = 0;
-        public static final int kDriverControllerPort1 = 1;
-        public static final int kDriverControllerPort2 = 2;
-        public static final boolean fieldOrientation = true;
-        public static final double kDeadband = 0.028;
-    }
-
-    public static final class SwerveConstants {
-
-        public static final double CLOSE_TRANSLATION_PP_KP = 2.5; // 8
-        public static final double CLOSE_TRANSLATION_PP_KI = 0.0;
-        public static final double CLOSE_TRANSLATION_PP_KD = 0.0;
-
-        public static final double CLOSE_ROTATION_PP_KP = 5; // 8
-        public static final double CLOSE_ROTATION_PP_KI = 0.0;
-        public static final double CLOSE_ROTATION_PP_KD = 0.0;
-
-        public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
-        public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
-        
-        public static final double[][] ADDITIONS = {
-            {1.0549228, 1.0422874}, // LEFT ADDITION // {0.342, 0} //0.385
-            {1.0549228, -1.0297126}  // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w advantagescope
-            // driver relative -> {+forward/back-, +left/right-}
-        };
-
-        public static final Pose2d robotToClimber = new Pose2d(Units.inchesToMeters(2), Units.inchesToMeters(27.5/2.0), new Rotation2d());
-        //33.75 bumper width
     }
 
     public static final class TurretConstants {
@@ -183,8 +183,8 @@ public class Constants {
     public static final class Hood {
 
         // In Constants.TurretConstants or wherever appropriate
-        public static final Angle MIN_HOOD_ANGLE = Degrees.of(20);  // Your minimum angle
-        public static final Angle MAX_HOOD_ANGLE = Degrees.of(65);  // Your maximum angle
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
+        public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
     }
 
     public static final class Quest {

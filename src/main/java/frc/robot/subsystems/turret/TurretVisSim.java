@@ -273,6 +273,7 @@ public class TurretVisSim extends SubsystemBase{
         Logger.recordOutput("Turret/Shot", calculatedShot);
         Logger.recordOutput("Turret/TargetPosition", target);
         Logger.recordOutput("Turret/CalculatedAzimuth", Math.toDegrees(azimuthToTarget));
+        Logger.recordOutput("Turret/Hood Angle", calculatedShot.getHoodAngle().in(Degrees));
     }
     
 }
