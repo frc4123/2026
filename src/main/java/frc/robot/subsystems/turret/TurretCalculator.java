@@ -27,11 +27,12 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.Constants;
-import frc.robot.Constants.Hood;
+import frc.robot.Constants.HoodConstants;
 import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
 public class TurretCalculator {
+
     public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
         Translation2d turretPos =
         robot.getTranslation().plus(
@@ -55,10 +56,10 @@ public class TurretCalculator {
 
          // Clamp to physical constraints
         Angle calculatedAngle = Radians.of(angle);
-        if (calculatedAngle.lt(Hood.MIN_HOOD_ANGLE)) {
-            return Hood.MIN_HOOD_ANGLE;
-        } else if (calculatedAngle.gt(Hood.MAX_HOOD_ANGLE)) {
-            return Hood.MAX_HOOD_ANGLE;
+        if (calculatedAngle.lt(HoodConstants.MIN_HOOD_ANGLE)) {
+            return HoodConstants.MIN_HOOD_ANGLE;
+        } else if (calculatedAngle.gt(HoodConstants.MAX_HOOD_ANGLE)) {
+            return HoodConstants.MAX_HOOD_ANGLE;
         }
 
         return Radians.of(angle);
@@ -126,11 +127,11 @@ public class TurretCalculator {
         Angle calculatedAngle = Radians.of(theta);
         boolean wasClamped = false;
         
-        if (calculatedAngle.lt(Hood.MIN_HOOD_ANGLE)) {
-            calculatedAngle = Hood.MIN_HOOD_ANGLE;
+        if (calculatedAngle.lt(HoodConstants.MIN_HOOD_ANGLE)) {
+            calculatedAngle = HoodConstants.MIN_HOOD_ANGLE;
             wasClamped = true;
-        } else if (calculatedAngle.gt(Hood.MAX_HOOD_ANGLE)) {
-            calculatedAngle = Hood.MAX_HOOD_ANGLE;
+        } else if (calculatedAngle.gt(HoodConstants.MAX_HOOD_ANGLE)) {
+            calculatedAngle = HoodConstants.MAX_HOOD_ANGLE;
             wasClamped = true;
         }
         
@@ -187,10 +188,10 @@ public class TurretCalculator {
         
         // Clamp angle to physical constraints
         Angle calculatedAngle = Radians.of(theta);
-        if (calculatedAngle.lt(Hood.MIN_HOOD_ANGLE)) {
-            calculatedAngle = Hood.MIN_HOOD_ANGLE;
-        } else if (calculatedAngle.gt(Hood.MAX_HOOD_ANGLE)) {
-            calculatedAngle = Hood.MAX_HOOD_ANGLE;
+        if (calculatedAngle.lt(HoodConstants.MIN_HOOD_ANGLE)) {
+            calculatedAngle = HoodConstants.MIN_HOOD_ANGLE;
+        } else if (calculatedAngle.gt(HoodConstants.MAX_HOOD_ANGLE)) {
+            calculatedAngle = HoodConstants.MAX_HOOD_ANGLE;
         }
         
         return new ShotData(InchesPerSecond.of(v0).in(MetersPerSecond), 
