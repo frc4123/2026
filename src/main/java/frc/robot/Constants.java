@@ -130,6 +130,7 @@ public class Constants {
     }
 
     public static final class TurretConstants {
+
         public static final double stowPosition = 0;
         public static final double velocity = 5; //2.5 // 1.75 working if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 5; // 3 before replacing with 1.1 try lowering kv //1.1
@@ -180,11 +181,15 @@ public class Constants {
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
     }
 
-    public static final class Hood {
+    public static final class HoodConstants {
 
         // In Constants.TurretConstants or wherever appropriate
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
+    }
+
+    public static final class ShooterConstants {
+        //public static final LinearVelocity shotVelocity = InchesPerSecond.of(59.5);
     }
 
     public static final class Quest {
