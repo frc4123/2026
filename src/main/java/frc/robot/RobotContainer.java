@@ -81,8 +81,8 @@ public class RobotContainer {
     //private final CommandGenericHID m_buttonBoard = new CommandGenericHID(Constants.InputConstants.kDriverControllerPort1);
 
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final Oculus oculus = new Oculus(drivetrain);
-    private final Vision vision = new Vision(drivetrain, oculus);
+    private final Oculus oculus = new Oculus();
+    private final Vision vision = new Vision(oculus);
     private final Turret turret = new Turret(drivetrain, vision);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
     private final IntakeRoller intakeRollers = new IntakeRoller();

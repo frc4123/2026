@@ -18,7 +18,7 @@ import gg.questnav.questnav.QuestNav;
 
 public class Oculus extends SubsystemBase{
 
-    private final CommandSwerveDrivetrain drivetrain;
+    private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final Transform3d robotToQuest;
     private int loopLimiter = 0;
     private PoseFrame[] unreadFrames;
@@ -26,8 +26,7 @@ public class Oculus extends SubsystemBase{
 
     QuestNav quest = new QuestNav();
 
-    public Oculus(CommandSwerveDrivetrain drivetrain) {
-        this.drivetrain = drivetrain;
+    public Oculus() {
 
         robotToQuest = new Transform3d(
             new Translation3d(
@@ -100,7 +99,7 @@ public class Oculus extends SubsystemBase{
                 // You can put some sort of filtering here if you would like!
 
                 // Add the measurement to our estimator
-                drivetrain.addVisionMeasurement(robotPose.toPose2d(), timestamp, Constants.Quest.QUESTNAV_STD_DEVS);
+                swerve.addVisionMeasurement(robotPose.toPose2d(), timestamp, Constants.Quest.QUESTNAV_STD_DEVS);
             }
         }
     }

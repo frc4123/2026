@@ -67,11 +67,10 @@ public class Vision extends SubsystemBase{
     private static boolean isBlue = false;
     private static boolean isRed = false;
 
-    private final CommandSwerveDrivetrain drivetrain;
+    private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
 
-    public Vision(CommandSwerveDrivetrain drivetrain, Oculus oculus) {
-        this.drivetrain = drivetrain;
+    public Vision(Oculus oculus) {
         this.oculus = oculus;
         this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/2026Welded.json");
 
@@ -172,7 +171,7 @@ public class Vision extends SubsystemBase{
             
             // Add vision measurement to pose estimator
             if(result.getBestTarget().getPoseAmbiguity() < 0.1){
-                drivetrain.addVisionMeasurement(
+                swerve.addVisionMeasurement(
                     est.estimatedPose.toPose2d(),
                     est.timestampSeconds,
                     stdDevs
@@ -188,7 +187,7 @@ public class Vision extends SubsystemBase{
     
     private boolean shouldAcceptPhotonUpdate() {
         // Check 1: Robot pitch/roll (are we tilted like going over bump?)
-        Rotation3d rotation = drivetrain.getRotation3d();
+        Rotation3d rotation = swerve.getRotation3d();
         double pitchDeg = Math.toDegrees(rotation.getY());
         double rollDeg = Math.toDegrees(rotation.getX());
         
