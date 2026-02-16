@@ -11,10 +11,12 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 // import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.FuelSim;
+import frc.robot.utils.ShiftHelpers;
 
 public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
@@ -39,6 +41,9 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         //m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
+        SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
+        SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
+        SmartDashboard.putNumber("Match Data/TimeLeftInShift", ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
     }
 
     @Override
