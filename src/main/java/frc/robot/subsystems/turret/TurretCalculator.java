@@ -54,6 +54,15 @@ public class TurretCalculator {
                 ((vel * vel) + Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 * y_dist * vel * vel)))
                         / (g * x_dist));
 
+        /* 
+        
+        try subbing this in for line 53
+        double angle = Math.atan(
+            ((vel * vel) - Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 * y_dist * vel * vel)))
+            / (g * x_dist));
+
+        */
+
          // Clamp to physical constraints
         Angle calculatedAngle = Radians.of(angle);
         if (calculatedAngle.lt(HoodConstants.MIN_HOOD_ANGLE)) {
