@@ -278,7 +278,7 @@ public class RobotContainer {
     }
 
     public void initializeAutoChooser() {
-        autoChooser.setDefaultOption("5 Meter Test", new ParallelCommandGroup(
+        autoChooser.setDefaultOption("super secret auto", new ParallelCommandGroup(
             new WaitCommand(0.01),
             new SequentialCommandGroup(new mtest().metertest()))
         );
