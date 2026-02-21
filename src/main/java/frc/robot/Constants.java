@@ -63,6 +63,8 @@ public class Constants {
 
         public static final int Hood = 21;
         public static final int Hood_CANdi = 22;
+
+        public static final int Shooter = 23;
     }
 
     public static final class InputConstants {
@@ -206,10 +208,22 @@ public class Constants {
 
     }
 
+public static final class ShooterConstants {
 
-    public static final class ShooterConstants {
-        //public static final LinearVelocity shotVelocity = InchesPerSecond.of(59.5);
+        // In Constants.TurretConstants or wherever appropriate
+        public static final double MIN_SPEED = 0;  // Your minimum speed
+//TODO 
+        public static final double kP = 0;
+        public static final double kI = 0; 
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0; 
+        public static final double kA = 0; 
+        
+        public static final double acceleration = 0;
+
     }
+
 
     public static final class Quest {
 

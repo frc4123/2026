@@ -32,9 +32,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Oculus;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretCalculator;
@@ -45,10 +47,12 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
+import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmOut;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
+import frc.robot.commands.shooter.SetShooterVelocity;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 
@@ -87,6 +91,8 @@ public class RobotContainer {
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
     private final IntakeRoller intakeRollers = new IntakeRoller();
     private final IntakeArm intakeArm = new IntakeArm();
+    private final Hood hood = new Hood();
+    private final Shooter shooter = new Shooter();
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
@@ -95,6 +101,8 @@ public class RobotContainer {
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
+    private final HoodAim hoodAim = new HoodAim(hood);
+    private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -110,6 +118,8 @@ public class RobotContainer {
         configureFuelSim();
 
         turret.setDefaultCommand(aim);
+        hood.setDefaultCommand(hoodAim);
+        shooter.setDefaultCommand(setShooterVelocity);
     }
 
     private void configureBindings() {
