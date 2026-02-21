@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,7 +30,7 @@ public class Constants {
 
     public static final class CanIdCanivore { 
 
-        public static final String ID = "Good Boy CANivore 10";
+        public static final CANBus canivore = new CANBus("Good Boy CANivore 10");
 
         public static final int Front_Left_Drive = 2;
         public static final int Front_Right_Drive = 3;
@@ -58,6 +60,9 @@ public class Constants {
         public static final int Intake_Arm = 19;
 
         public static final int Intake_Roller = 20;
+
+        public static final int Hood = 21;
+        public static final int Hood_CANdi = 22;
     }
 
     public static final class InputConstants {
@@ -186,7 +191,21 @@ public class Constants {
         // In Constants.TurretConstants or wherever appropriate
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
+
+        public static final double kP = 0;
+        public static final double kI = 0; 
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0; 
+        public static final double kA = 0; 
+
+        public static final double velocity = 0;
+        public static final double acceleration = 0;
+
+        public static final double stowPosition = Math.toDegrees(MIN_HOOD_ANGLE.magnitude());
+
     }
+
 
     public static final class ShooterConstants {
         //public static final LinearVelocity shotVelocity = InchesPerSecond.of(59.5);
