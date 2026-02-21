@@ -5,7 +5,6 @@ import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.Constants.TurretConstants;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
@@ -20,10 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeArm extends SubsystemBase{
 
-    CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
-
-    private final TalonFX intakeMotor = new TalonFX(Constants.CanIdCanivore.Intake_Arm, canivore);
-    private final CANdi intakeCANdi = new CANdi(Constants.CanIdCanivore.Intake_CANdi, canivore);
+    private final TalonFX intakeMotor = new TalonFX(Constants.CanIdCanivore.Intake_Arm, Constants.CanIdCanivore.canivore);
+    private final CANdi intakeCANdi = new CANdi(Constants.CanIdCanivore.Intake_CANdi, Constants.CanIdCanivore.canivore);
 
     private StatusSignal<Boolean> s1Signal = intakeCANdi.getS1Closed();
 

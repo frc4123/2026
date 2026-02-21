@@ -5,15 +5,12 @@ import static edu.wpi.first.units.Units.Rotations;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -51,13 +48,12 @@ import yams.units.EasyCRTConfig;
  */
 public class Turret extends SubsystemBase {
 
-    CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
     // Motor controlling turret rotation
-    private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.Turret, canivore);
+    private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.Turret, Constants.CanIdCanivore.canivore);
 
     // Absolute turret encoder
-    private final CANcoder turretEncoder1 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder1, canivore);
-    private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder2, canivore);
+    private final CANcoder turretEncoder1 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder1, Constants.CanIdCanivore.canivore);
+    private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder2, Constants.CanIdCanivore.canivore);
 
     private static boolean isBlue = false;
     private static boolean isRed = false;

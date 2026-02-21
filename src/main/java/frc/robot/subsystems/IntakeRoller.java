@@ -4,7 +4,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.IntakeRollerConstants;
 import frc.robot.Constants.TurretConstants;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
@@ -19,9 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase{
 
-    CANBus canivore = new CANBus(Constants.CanIdCanivore.ID);
-
-    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Roller, canivore);
+    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Roller, Constants.CanIdCanivore.canivore);
       // Motion Magic controller object
     private final MotionMagicVelocityVoltage motionMagic =
         new MotionMagicVelocityVoltage(
