@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeRollerConstants;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -17,7 +16,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase{
 
-    private final TalonFX intakeRollerMotor = new TalonFX(Constants.CanIdCanivore.Intake_Roller, Constants.CanIdCanivore.canivore);
+    private final TalonFX intakeRollerMotor = new TalonFX(
+        Constants.CanIdCanivore.Intake_Roller,
+        Constants.CanIdCanivore.canivore
+    );
     // Motion Magic controller object
 
     private final MotionMagicVelocityVoltage motionMagic =
@@ -42,12 +44,7 @@ public class IntakeRoller extends SubsystemBase{
             .withKV(IntakeRollerConstants.kV)
             .withKA(IntakeRollerConstants.kA);
 
-        MotionMagicConfigs motionMagic = new MotionMagicConfigs()
-            .withMotionMagicCruiseVelocity(IntakeRollerConstants.intakeVelo)
-            .withMotionMagicAcceleration(IntakeRollerConstants.intakeAcc);
-
         intakeRollerMotor.getConfigurator().apply(pid);
-        intakeRollerMotor.getConfigurator().apply(motionMagic);
     }
 
     public void setIntakeVelo(double velo){
