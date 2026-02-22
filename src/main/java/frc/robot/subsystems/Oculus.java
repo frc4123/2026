@@ -99,7 +99,11 @@ public class Oculus extends SubsystemBase{
                 // You can put some sort of filtering here if you would like!
 
                 // Add the measurement to our estimator
-                swerve.addVisionMeasurement(robotPose.toPose2d(), timestamp, Constants.Quest.QUESTNAV_STD_DEVS);
+                swerve.addVisionMeasurement(
+                    robotPose.toPose2d(),
+                    timestamp,
+                    Constants.Quest.QUESTNAV_STD_DEVS
+                );
             }
         }
     }
