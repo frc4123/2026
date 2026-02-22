@@ -65,6 +65,12 @@ public class Constants {
         public static final int Hood_CANdi = 22;
 
         public static final int Shooter = 23;
+
+        public static final int Climb = 24;
+
+        public static final int SevenEleven = 25;
+
+        public static final int Uptake = 26;
     }
 
     public static final class InputConstants {
@@ -110,6 +116,9 @@ public class Constants {
         public static final double kS = 0; 
         public static final double kV = 0; 
         public static final double kA = 0; 
+
+        public static final double velocity = 0;
+        public static final double acceleration = 0;
     }
 
     public static class IntakeRollerConstants {
@@ -118,8 +127,6 @@ public class Constants {
         public static final Distance DEPLOY_POS = Inches.of(10.875);
         public static final Voltage SPIN_VOLTAGE = Volts.of(3);
 
-        public static final LinearVelocity MIN_SWITCH_ROBOT_VELOCITY = MetersPerSecond.of(0.5);
-
         public static final double VEL_MULTIPLIER = 70.0; // multiplies goal velocity for targetting
         public static final double VEL_POWER = 0.3; // raises goal velocity to power
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
@@ -127,6 +134,34 @@ public class Constants {
         public static final double zeroVelo = 0;
         public static final double intakeVelo = 75;
         public static final double intakeAcc = 180;
+       
+        public static final double kP = 0.426;
+        public static final double kI = 0; // was 0.0441
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0.118;  //try this 0;
+        public static final double kA = 0; 
+    }
+
+    public static class SevenElevenConstants {
+
+        public static final double zeroVelo = 0;
+        public static final double sevenElevenVelo = 30;
+        public static final double sevenElevenAcc = 30;
+       
+        public static final double kP = 0.426;
+        public static final double kI = 0; // was 0.0441
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0.118;  //try this 0;
+        public static final double kA = 0; 
+    }
+
+    public static class UptakeConstants {
+
+        public static final double zeroVelo = 0;
+        public static final double uptakeVelo = 70;
+        public static final double uptakeAcc = 150;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -208,11 +243,11 @@ public class Constants {
 
     }
 
-public static final class ShooterConstants {
+    public static final class ShooterConstants {
 
         // In Constants.TurretConstants or wherever appropriate
-        public static final double MIN_SPEED = 0;  // Your minimum speed
-//TODO 
+        public static final double MIN_SPEED = 0;  // TODO Your minimum speed
+
         public static final double kP = 0;
         public static final double kI = 0; 
         public static final double kD = 0;
@@ -222,6 +257,22 @@ public static final class ShooterConstants {
         
         public static final double acceleration = 0;
 
+    }
+
+    public static final class ClimbConstants {
+        // In Constants.TurretConstants or wherever appropriate
+        public static final double downPosition = 0;
+        public static final double upPosition = 0;  // TODO Your minimum speed
+
+        public static final double kP = 0;
+        public static final double kI = 0; 
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0; 
+        public static final double kA = 0; 
+        
+        public static final double velocity = 0;
+        public static final double acceleration = 0;
     }
 
 

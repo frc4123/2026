@@ -36,6 +36,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Oculus;
+import frc.robot.subsystems.SevenEleven;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
@@ -52,6 +53,7 @@ import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmOut;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
+import frc.robot.commands.sevenEleven.Roll;
 import frc.robot.commands.shooter.SetShooterVelocity;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
@@ -90,6 +92,7 @@ public class RobotContainer {
     private final Turret turret = new Turret(drivetrain, vision);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
     private final IntakeRoller intakeRollers = new IntakeRoller();
+    private final SevenEleven sevenEleven = new SevenEleven();
     private final IntakeArm intakeArm = new IntakeArm();
     private final Hood hood = new Hood();
     private final Shooter shooter = new Shooter();
@@ -99,6 +102,7 @@ public class RobotContainer {
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
+    private final Roll roll = new Roll(sevenEleven);
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     private final HoodAim hoodAim = new HoodAim(hood);
@@ -120,6 +124,7 @@ public class RobotContainer {
         turret.setDefaultCommand(aim);
         hood.setDefaultCommand(hoodAim);
         shooter.setDefaultCommand(setShooterVelocity);
+        sevenEleven.setDefaultCommand(roll);
     }
 
     private void configureBindings() {
