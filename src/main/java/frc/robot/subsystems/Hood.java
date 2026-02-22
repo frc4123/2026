@@ -51,7 +51,6 @@ public class Hood extends SubsystemBase{
 
         hoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
-      
         Slot0Configs pid = new Slot0Configs()
             .withKP(HoodConstants.kP)
             .withKI(HoodConstants.kI)
@@ -86,9 +85,7 @@ public class Hood extends SubsystemBase{
     }
 
     public double getHoodDegrees(){
-        
         return Math.toDegrees(hoodPosition.getValueAsDouble());
-
     }
 
     public void zeroHood(){
