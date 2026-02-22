@@ -9,7 +9,7 @@ import frc.robot.utils.Target;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -22,11 +22,14 @@ public class Shooter extends SubsystemBase{
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-    private final TalonFX shooterMotor = new TalonFX(Constants.CanIdCanivore.Shooter, Constants.CanIdCanivore.canivore);
-      // Motion Magic controller object
-    private final MotionMagicVelocityVoltage motionMagic =
-        new MotionMagicVelocityVoltage(ShooterConstants.MIN_SPEED) 
-           .withAcceleration(ShooterConstants.acceleration
+    private final TalonFX shooterMotor = new TalonFX(
+        Constants.CanIdCanivore.Shooter,
+        Constants.CanIdCanivore.canivore
+    );
+
+    private final VelocityTorqueCurrentFOC motionMagic =
+        new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED)
+            .withAcceleration(ShooterConstants.acceleration
         );
         
     public Shooter(){
