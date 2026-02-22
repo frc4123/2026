@@ -2,13 +2,11 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeArmConstants;
-import frc.robot.Constants.TurretConstants;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
-
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -19,17 +17,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeArm extends SubsystemBase{
 
-    private final TalonFX intakeMotor = new TalonFX(Constants.CanIdCanivore.Intake_Arm, Constants.CanIdCanivore.canivore);
-    private final CANdi intakeCANdi = new CANdi(Constants.CanIdCanivore.Intake_CANdi, Constants.CanIdCanivore.canivore);
+    private final TalonFX intakeArmMotor = new TalonFX(
+        Constants.CanIdCanivore.Intake_Arm,
+        Constants.CanIdCanivore.canivore
+    );
+
+    private final CANdi intakeCANdi = new CANdi(
+        Constants.CanIdCanivore.Intake_CANdi,
+        Constants.CanIdCanivore.canivore
+    );
 
     private StatusSignal<Boolean> s1Signal = intakeCANdi.getS1Closed();
 
     // Motion Magic controller object
-    private final MotionMagicVoltage motionMagic =
-        new MotionMagicVoltage(
-            TurretConstants.stowPosition//, TODO: change to DynamicMotionMagicTorqueCurrentFOC
-            //TurretConstants.velocity,
-            //TurretConstants.acceleration
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
+        new DynamicMotionMagicTorqueCurrentFOC(
+            IntakeArmConstants.stowPosition,
+            IntakeArmConstants.velocity,
+            IntakeArmConstants.acceleration
         );
 
         
@@ -39,7 +44,7 @@ public class IntakeArm extends SubsystemBase{
     }
 
     private void configureMotor() {
-        intakeMotor.setNeutralMode(NeutralModeValue.Brake);
+        intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
 
         Slot0Configs pid = new Slot0Configs()
             .withKP(IntakeArmConstants.kP)
@@ -49,12 +54,7 @@ public class IntakeArm extends SubsystemBase{
             .withKV(IntakeArmConstants.kV)
             .withKA(IntakeArmConstants.kA);
 
-    //  MotionMagicConfigs motionMagic = new MotionMagicConfigs()
-    //         .withMotionMagicCruiseVelocity(TurretConstants.velocity) 
-    //         .withMotionMagicAcceleration(TurretConstants.acceleration);
-
-        intakeMotor.getConfigurator().apply(pid);
-    //  turretMotor.getConfigurator().apply(motionMagic);
+        intakeArmMotor.getConfigurator().apply(pid);
     }
 
     private void refreshStatusSignals() {
@@ -64,16 +64,16 @@ public class IntakeArm extends SubsystemBase{
     }
 
     public void setIntakePosition(double pos){
-        intakeMotor.setControl(  
+        intakeArmMotor.setControl(  
             motionMagic.withPosition(pos));
     }
 
     public double getIntakePosition() {
-        return intakeMotor.getPosition().getValueAsDouble();
+        return intakeArmMotor.getPosition().getValueAsDouble();
     }
 
     public void zeroIntake() {
-        intakeMotor.setPosition(0);
+        intakeArmMotor.setPosition(0);
     }
 
     public boolean isSwitchPressed(){
