@@ -33,7 +33,7 @@ public class SevenEleven extends SubsystemBase{
     }
 
     private void configureMotor() {
-        sevenElevenMotor.setNeutralMode(NeutralModeValue.Brake);
+        sevenElevenMotor.setNeutralMode(NeutralModeValue.Coast);
 
         Slot0Configs pid = new Slot0Configs()
             .withKP(SevenElevenConstants.kP)

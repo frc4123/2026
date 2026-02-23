@@ -5,24 +5,19 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
-import frc.robot.utils.Target;
+import frc.robot.utils.ShotCache;
 
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Shooter extends SubsystemBase{
-
-    private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     private final TalonFX shooterMotor = new TalonFX(
         Constants.CanIdCanivore.Shooter,
@@ -50,21 +45,12 @@ public class Shooter extends SubsystemBase{
             .withKV(ShooterConstants.kV)
             .withKA(ShooterConstants.kA);
 
-        FeedbackConfigs feedbackUnits = new FeedbackConfigs()
-            .withSensorToMechanismRatio(ShooterConstants.sensorToMechanismRatio);
-
-        shooterMotor.getConfigurator().apply(feedbackUnits);
         shooterMotor.getConfigurator().apply(pid);
     }
 
     public void setShooterVelo() {
 
-        ShotData shot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
-                swerve.getState().Pose, 
-                new ChassisSpeeds(), 
-                Target.getTarget(), 
-                3
-        );
+        ShotData shot = ShotCache.get();
 
         double Velo = shot.getExitVelocity().in(MetersPerSecond)
             / (2 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));

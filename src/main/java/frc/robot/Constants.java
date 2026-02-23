@@ -250,7 +250,7 @@ public class Constants {
 
         public static final Distance flywheelRadius = Inches.of(2); //TODO find the magnitude
 
-        public static final double sensorToMechanismRatio = 180.0 / 24.0; //TODO: ask joseph
+        public static final double sensorToMechanismRatio = 1 / 1; //TODO: ask joseph
 
         public static final double kP = 0;
         public static final double kI = 0; 

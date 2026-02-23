@@ -243,7 +243,7 @@ public class RobotContainer {
         instance.registerIntake(
                 -Constants.Sim.fullLength,
                 Constants.Sim.fullLength / 2,
-                ((-Constants.Sim.fullWidth + 0.5) / 2)+ Units.inchesToMeters(7),
+                ((-Constants.Sim.fullWidth + 0.5) / 2) + Units.inchesToMeters(7),
                 (-Constants.Sim.fullWidth + 0.5) / 2 ,
                 () -> turretVisSim.canIntake(),
                 () -> turretVisSim.intakeFuel());
@@ -251,7 +251,7 @@ public class RobotContainer {
                 -Constants.Sim.fullLength / 2,
                 Constants.Sim.fullLength / 2,
                 Constants.Sim.fullWidth / 2,
-                (Constants.Sim.fullWidth / 2)+ Units.inchesToMeters(7),
+                (Constants.Sim.fullWidth / 2) + Units.inchesToMeters(7),
                 () -> turretVisSim.canIntake(),
                 () -> turretVisSim.intakeFuel());
 

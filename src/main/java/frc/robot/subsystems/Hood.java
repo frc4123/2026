@@ -13,21 +13,17 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
-import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
-import frc.robot.utils.Target;
+import frc.robot.utils.ShotCache;
 
 public class Hood extends SubsystemBase{
 
     private boolean wasPressed = false;
-
-    private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     private final TalonFX hoodMotor = new TalonFX(
         Constants.CanIdCanivore.Hood,
@@ -89,12 +85,7 @@ public class Hood extends SubsystemBase{
     
     public void setHoodAngle() {
 
-        ShotData shot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
-                swerve.getState().Pose, 
-                new ChassisSpeeds(), 
-                Target.getTarget(), 
-                3
-        );
+        ShotData shot = ShotCache.get();
 
         double desiredAngle = shot.getHoodAngle().in(Degrees);
 

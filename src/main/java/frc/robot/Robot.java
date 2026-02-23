@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
+import frc.robot.utils.ShotCache;
 
 public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
@@ -41,6 +42,7 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         //m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
+        ShotCache.update();
         SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
         SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
         SmartDashboard.putNumber("Match Data/TimeLeftInShift", ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
