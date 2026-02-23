@@ -137,19 +137,19 @@ public class Turret extends SubsystemBase {
     private void configureMotor() {
         turretMotor.setNeutralMode(NeutralModeValue.Brake);
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        TalonFXConfiguration feedbackUnits = new TalonFXConfiguration();
 
-        config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        config.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1; // ID of CANcoder
+        feedbackUnits.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        feedbackUnits.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1; // ID of CANcoder
 
-        config.Feedback.RotorToSensorRatio = TurretConstants.rotorToEncoder1Ratio;    
-        config.Feedback.SensorToMechanismRatio = TurretConstants.sensorToMechanismRatio;
+        feedbackUnits.Feedback.RotorToSensorRatio = TurretConstants.rotorToEncoder1Ratio;    
+        feedbackUnits.Feedback.SensorToMechanismRatio = TurretConstants.sensorToMechanismRatio;
         
         // Configure the rest of your motor settings
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        feedbackUnits.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        feedbackUnits.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        turretMotor.getConfigurator().apply(config);
+        
 
         Slot0Configs pid = new Slot0Configs()
             .withKP(TurretConstants.kP)
@@ -159,6 +159,7 @@ public class Turret extends SubsystemBase {
             .withKV(TurretConstants.kV)
             .withKA(TurretConstants.kA);
 
+        turretMotor.getConfigurator().apply(feedbackUnits);
         turretMotor.getConfigurator().apply(pid);
         //turretMotor.getConfigurator().apply(motionMagic);
     }
