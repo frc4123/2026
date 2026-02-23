@@ -223,27 +223,6 @@ public class Constants {
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
     }
 
-    public static final class HoodConstants {
-
-        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
-        public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
-
-        public static final double sensorToMechanismRatio = 180.0 / 24.0; //TODO ask joseph
-
-        public static final double kP = 0;
-        public static final double kI = 0; 
-        public static final double kD = 0;
-        public static final double kS = 0; 
-        public static final double kV = 0; 
-        public static final double kA = 0; 
-
-        public static final double velocity = 0;
-        public static final double acceleration = 0;
-
-        public static final double stowPosition = Math.toDegrees(MIN_HOOD_ANGLE.magnitude());
-
-    }
-
     public static final class ShooterConstants {
 
         public static final LinearVelocity MIN_SPEED = MetersPerSecond.of(6);  // TODO find the minimum speed
@@ -260,6 +239,27 @@ public class Constants {
         public static final double kA = 0; 
         
         public static final double acceleration = 0;
+
+    }
+
+    public static final class HoodConstants {
+
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
+        public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
+
+        public static final double sensorToMechanismRatio = 136.0 / 1; //TODO confirm joseph is right lmao
+
+        public static final double kP = 0;
+        public static final double kI = 0; 
+        public static final double kD = 0;
+        public static final double kS = 0; 
+        public static final double kV = 0; 
+        public static final double kA = 0; 
+
+        public static final double velocity = 0;
+        public static final double acceleration = 0;
+
+        public static final double stowPosition = Math.toDegrees(MIN_HOOD_ANGLE.magnitude());
 
     }
 
