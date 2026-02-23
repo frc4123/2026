@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-
-import static edu.wpi.first.units.Units.Rotations;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -23,11 +25,14 @@ import frc.robot.utils.Target;
 
 public class Hood extends SubsystemBase{
 
+    private boolean wasPressed = false;
+
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     private final TalonFX hoodMotor = new TalonFX(
         Constants.CanIdCanivore.Hood,
-        Constants.CanIdCanivore.canivore);
+        Constants.CanIdCanivore.canivore
+    );
     
     private final CANdi hoodCANdi = new CANdi(Constants.CanIdCanivore.Hood_CANdi, Constants.CanIdCanivore.canivore);
 
@@ -40,12 +45,12 @@ public class Hood extends SubsystemBase{
             HoodConstants.stowPosition,
             HoodConstants.velocity,
             HoodConstants.acceleration
+            
         );
 
     public Hood() {
         configureMotor();
     }
-
    
     private void configureMotor() {
 
@@ -59,7 +64,20 @@ public class Hood extends SubsystemBase{
             .withKV(HoodConstants.kV)
             .withKA(HoodConstants.kA);
 
+        SoftwareLimitSwitchConfigs softLimits = new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold((HoodConstants.MAX_HOOD_ANGLE.in(Degrees)))  // rotations
+            .withReverseSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(HoodConstants.MIN_HOOD_ANGLE.in(Degrees));  // rotations
+
+        FeedbackConfigs feedbackUnits = new FeedbackConfigs()
+            .withSensorToMechanismRatio(HoodConstants.sensorToMechanismRatio / 360);
+
         hoodMotor.getConfigurator().apply(pid);
+        hoodMotor.getConfigurator().apply(softLimits);
+        hoodMotor.getConfigurator().apply(feedbackUnits);
+
+        zeroHood();   
     }
 
     private void refreshStatusSignals() {
@@ -68,7 +86,6 @@ public class Hood extends SubsystemBase{
             hoodPosition
         );
     }
-    
     
     public void setHoodAngle() {
 
@@ -79,13 +96,13 @@ public class Hood extends SubsystemBase{
                 3
         );
 
-        double desiredAngle = shot.getHoodAngle().magnitude();
+        double desiredAngle = shot.getHoodAngle().in(Degrees);
 
-        hoodMotor.setControl(motionMagic.withPosition(Rotations.of(desiredAngle)));
+        hoodMotor.setControl(motionMagic.withPosition(desiredAngle));
     }
 
     public double getHoodDegrees(){
-        return Math.toDegrees(hoodPosition.getValueAsDouble());
+        return hoodPosition.getValueAsDouble();
     }
 
     public void zeroHood(){
@@ -99,11 +116,13 @@ public class Hood extends SubsystemBase{
     @Override 
     public void periodic(){
         refreshStatusSignals();
-        if(isSwitchPressed()){
+
+        boolean pressed = isSwitchPressed();
+        if (pressed && !wasPressed) {
             zeroHood();
         }
+        wasPressed = pressed;
 
         SmartDashboard.putNumber("Hood Position", getHoodDegrees());
     }
-
 }
