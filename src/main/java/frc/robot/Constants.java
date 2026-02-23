@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.CANBus;
@@ -224,9 +225,10 @@ public class Constants {
 
     public static final class HoodConstants {
 
-        // In Constants.TurretConstants or wherever appropriate
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
+
+        public static final double sensorToMechanismRatio = 180.0 / 24.0; //TODO ask joseph
 
         public static final double kP = 0;
         public static final double kI = 0; 
@@ -244,8 +246,11 @@ public class Constants {
 
     public static final class ShooterConstants {
 
-        // In Constants.TurretConstants or wherever appropriate
-        public static final double MIN_SPEED = 0;  // TODO Your minimum speed
+        public static final LinearVelocity MIN_SPEED = MetersPerSecond.of(6);  // TODO find the minimum speed
+
+        public static final Distance flywheelRadius = Inches.of(2); //TODO find the magnitude
+
+        public static final double sensorToMechanismRatio = 180.0 / 24.0; //TODO: ask joseph
 
         public static final double kP = 0;
         public static final double kI = 0; 
@@ -259,9 +264,9 @@ public class Constants {
     }
 
     public static final class ClimbConstants {
-        // In Constants.TurretConstants or wherever appropriate
+
         public static final double downPosition = 0;
-        public static final double upPosition = 0;  // TODO Your minimum speed
+        public static final double upPosition = 0;  
 
         public static final double kP = 0;
         public static final double kI = 0; 

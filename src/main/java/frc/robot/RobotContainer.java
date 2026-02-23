@@ -231,9 +231,6 @@ public class RobotContainer {
         // joystick.a().onFalse(intakeArmIn);
     }
 
-    
-
-
     private void configureFuelSim() {
         FuelSim instance = FuelSim.getInstance();
         instance.spawnStartingFuel();

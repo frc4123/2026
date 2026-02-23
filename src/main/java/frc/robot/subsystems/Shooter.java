@@ -1,13 +1,16 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.Target;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -27,7 +30,7 @@ public class Shooter extends SubsystemBase{
     );
 
     private final VelocityTorqueCurrentFOC motionMagic =
-        new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED)
+        new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED.in(MetersPerSecond))
             .withAcceleration(ShooterConstants.acceleration
         );
         
@@ -47,6 +50,10 @@ public class Shooter extends SubsystemBase{
             .withKV(ShooterConstants.kV)
             .withKA(ShooterConstants.kA);
 
+        FeedbackConfigs feedbackUnits = new FeedbackConfigs()
+            .withSensorToMechanismRatio(ShooterConstants.sensorToMechanismRatio);
+
+        shooterMotor.getConfigurator().apply(feedbackUnits);
         shooterMotor.getConfigurator().apply(pid);
     }
 
@@ -59,7 +66,8 @@ public class Shooter extends SubsystemBase{
                 3
         );
 
-        double Velo = shot.getExitVelocity().magnitude();
+        double Velo = shot.getExitVelocity().in(MetersPerSecond)
+            / (2 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
 
         shooterMotor.setControl(motionMagic.withVelocity(Velo));
     }
