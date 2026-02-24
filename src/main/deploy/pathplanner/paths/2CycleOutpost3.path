@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5196561135349775,
-        "y": 5.034061533387919
+        "x": 3.815,
+        "y": 0.654
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.623292525481435,
-        "y": 5.085147385512109
+        "x": 3.1772448640046296,
+        "y": 0.8440973668981485
       },
       "isLocked": false,
-      "linkedName": "2Depot3-4"
+      "linkedName": "2Cycle2-3"
     },
     {
       "anchor": {
-        "x": 1.5555561026255003,
-        "y": 4.176706319769204
+        "x": 0.49915415219907455,
+        "y": 0.654
       },
       "prevControl": {
-        "x": 1.9562136059500763,
-        "y": 4.809409514064728
+        "x": 1.0145248842592596,
+        "y": 0.8242173755787041
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "2Cycle3-4"
     }
   ],
   "rotationTargets": [],
@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "2CycleDepot(L)",
+  "folder": "2CycleDepot(R)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

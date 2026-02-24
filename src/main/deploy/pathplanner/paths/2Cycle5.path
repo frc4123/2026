@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.3551150173611113,
-        "y": 0.7008039641203709
+        "x": 1.5596171875000007,
+        "y": 3.4158990162037037
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.614962601273149,
-        "y": 0.6811208043981481
+        "x": 0.8194647714120382,
+        "y": 3.396215856481481
       },
       "isLocked": false,
       "linkedName": "2Cycle4-5"
@@ -62,7 +62,7 @@
   "folder": "2Cycle",
   "idealStartingState": {
     "velocity": 3.0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

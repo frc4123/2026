@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 7.775949052680222,
-        "y": 3.5789328211645106
+        "x": 0.49915415219907455,
+        "y": 0.654
       },
       "prevControl": {
-        "x": 7.82146408560536,
-        "y": 1.083988635050832
+        "x": 0.5446691851242127,
+        "y": -1.8409441861136786
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "2Cycle",

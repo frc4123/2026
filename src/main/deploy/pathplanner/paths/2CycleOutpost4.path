@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": -0.5404222976622934,
-        "y": -2.6056622285120152
+        "x": 1.326502965856482,
+        "y": 0.35385546875000035
       },
       "isLocked": false,
       "linkedName": "2Cycle3-4"
@@ -20,8 +20,8 @@
         "y": 3.4158990162037037
       },
       "prevControl": {
-        "x": 3.7369027054398156,
-        "y": 3.22667824074074
+        "x": 1.8520433304398152,
+        "y": 2.889505714699075
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,10 +31,24 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.6330078124999998,
-      "rotationDegrees": 180.0
+      "rotationDegrees": -90.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7107168812292358,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -50,7 +64,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "2Cycle",
+  "folder": "2CycleDepot(R)",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 0.0
