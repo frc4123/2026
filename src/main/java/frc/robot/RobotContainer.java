@@ -199,8 +199,8 @@ public class RobotContainer {
                 }
                 
                 return faceAngle
-                    .withVelocityX(leftY * MaxSpeed * 0.35)
-                    .withVelocityY(leftX * MaxSpeed * 0.35)
+                    .withVelocityX(leftY * MaxSpeed * 0.6)
+                    .withVelocityY(leftX * MaxSpeed * 0.6)
                     .withTargetDirection(targetDirection);
             })
         );
