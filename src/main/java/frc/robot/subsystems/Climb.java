@@ -40,7 +40,8 @@ public class Climb extends SubsystemBase{
             .withKD(ClimbConstants.kD)
             .withKS(ClimbConstants.kS)
             .withKV(ClimbConstants.kV)
-            .withKA(ClimbConstants.kA);
+            .withKA(ClimbConstants.kA)
+            .withKG(ClimbConstants.kG);
 
         climbMotor.getConfigurator().apply(pid);
     }
