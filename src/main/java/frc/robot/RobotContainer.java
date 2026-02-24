@@ -235,25 +235,32 @@ public class RobotContainer {
         FuelSim instance = FuelSim.getInstance();
         instance.spawnStartingFuel();
         instance.registerRobot(
-                Constants.Sim.fullWidth,
-                Constants.Sim.fullLength,
-                Constants.Sim.fullHeight,
-                () -> drivetrain.getState().Pose,
-                () -> drivetrain.getState().Speeds);
+            Constants.Sim.fullWidth,
+            Constants.Sim.fullLength,
+            Constants.Sim.fullHeight,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
+        // instance.registerIntake(
+        //     -Constants.Sim.fullLength,
+        //     Constants.Sim.fullLength / 2,
+        //     ((-Constants.Sim.fullWidth + 0.5) / 2) + Units.inchesToMeters(7),
+        //     (-Constants.Sim.fullWidth + 0.5) / 2 ,
+        //     () -> turretVisSim.canIntake(),
+        //     () -> turretVisSim.intakeFuel());
+        // instance.registerIntake(
+        //     -Constants.Sim.fullLength / 2,
+        //     Constants.Sim.fullLength / 2,
+        //     Constants.Sim.fullWidth / 2,
+        //     (Constants.Sim.fullWidth / 2) + Units.inchesToMeters(7),
+        //     () -> turretVisSim.canIntake(),
+        //     () -> turretVisSim.intakeFuel());
         instance.registerIntake(
-                -Constants.Sim.fullLength,
-                Constants.Sim.fullLength / 2,
-                ((-Constants.Sim.fullWidth + 0.5) / 2) + Units.inchesToMeters(7),
-                (-Constants.Sim.fullWidth + 0.5) / 2 ,
-                () -> turretVisSim.canIntake(),
-                () -> turretVisSim.intakeFuel());
-        instance.registerIntake(
-                -Constants.Sim.fullLength / 2,
-                Constants.Sim.fullLength / 2,
-                Constants.Sim.fullWidth / 2,
-                (Constants.Sim.fullWidth / 2) + Units.inchesToMeters(7),
-                () -> turretVisSim.canIntake(),
-                () -> turretVisSim.intakeFuel());
+            -Constants.Sim.fullLength / 2,
+            -Constants.Sim.fullLength,
+            -Constants.Sim.fullWidth / 2,
+            Constants.Sim.fullWidth / 2,
+            () -> turretVisSim.canIntake(),
+            () -> turretVisSim.intakeFuel());
 
         instance.start();
 
