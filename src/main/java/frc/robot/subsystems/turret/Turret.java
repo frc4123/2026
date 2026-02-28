@@ -215,7 +215,7 @@ public class Turret extends SubsystemBase {
 
         var easyCrt =
             new EasyCRTConfig(enc1Supplier, enc2Supplier)
-                .withEncoderRatios(TurretConstants.sensorToMechanismRatio, TurretConstants.turretGearTeeth / TurretConstants.encoder2Teeth)
+                .withEncoderRatios(TurretConstants.sensorToMechanismRatio, TurretConstants.encoder2Teeth)
                 .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(0)) // WE ALREADY FLASHED OFFSETS
                 .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange), Rotations.of(TurretConstants.mechanismMaxRange)) // -360 deg to +720 deg
                 .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
