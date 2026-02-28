@@ -146,8 +146,8 @@ public class Constants {
     public static class SevenElevenConstants {
 
         public static final double zeroVelo = 0;
-        public static final double sevenElevenVelo = 30;
-        public static final double sevenElevenAcc = 30;
+        public static final double sevenElevenVelo = 10;
+        public static final double sevenElevenAcc = 20;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -160,8 +160,8 @@ public class Constants {
     public static class UptakeConstants {
 
         public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 70;
-        public static final double uptakeAcc = 150;
+        public static final double uptakeVelo = 20;
+        public static final double uptakeAcc = 40;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -188,18 +188,18 @@ public class Constants {
         public static final int mechanismMaxRange = 1; // +360 degrees
         // this makes total of 720 degrees rotation^^^^
 
-        public static final double motorToTurretRatio = (48.0/9.0) * (180.0/24.0); 
+        public static final double motorToTurretRatio =  (50.0 / 10.0) * (80.0 / 10.0);// (48.0/9.0) * (180.0/24.0); 
 
-        public static final double rotorToEncoder1Ratio = 48.0 / 9.0;
-        public static final double sensorToMechanismRatio = 180.0 / 24.0;
-
+        public static final double rotorToEncoder1Ratio = (50.0 / 10.0); //48.0 / 9.0;
+        public static final double sensorToMechanismRatio = (80.0 / 10.0); //180.0 / 24.0;
         
-        public static final double turretGearTeeth = 180.0;     // Turret gear (drives both encoders)
-        public static final double encoder1Teeth = 24.0;      // Gear on Hex Shaft A that connects to turret
-        public static final double encoder2Teeth = 50.0;      // Gear on Hex Shaft B that connects to turret
+        public static final double turretGearTeeth = 80.0;     // Turret gear (drives both encoders)
+        public static final double encoder1Teeth = 10.0; //24.0;      // Gear on Hex Shaft A that connects to turret
+        public static final double encoder2Teeth = 10.0 / (50.0/22.0); // 22.0;
+        //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.992676;
-        public static final double encoder2Offset = -0.575928;
+        public static final double encoder1Offset = -0.433594; 
+        public static final double encoder2Offset = -0.628174;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
