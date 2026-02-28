@@ -188,14 +188,15 @@ public class Constants {
         public static final int mechanismMaxRange = 1; // +360 degrees
         // this makes total of 720 degrees rotation^^^^
 
-        public static final double motorToTurretRatio =  (50.0 / 10.0) * (80.0 / 10.0);// (48.0/9.0) * (180.0/24.0); 
+        public static final double mechanismGearTeeth = 85.0; // drives botrh encoders
+        public static final double encoder1Teeth = 10.0; //24.0;      // Gear on Hex Shaft A that connects to turret
+        public static final double encoder2Teeth = 22.0; // 10.0 / (50.0/22.0); // 22.0;
+
+        public static final double motorToTurretRatio =  (50.0 / 10.0) * (mechanismGearTeeth / encoder1Teeth);// (48.0/9.0) * (180.0/24.0); 
 
         public static final double rotorToEncoder1Ratio = (50.0 / 10.0); //48.0 / 9.0;
-        public static final double sensorToMechanismRatio = (80.0 / 10.0); //180.0 / 24.0;
-        
-        public static final double turretGearTeeth = 80.0;     // Turret gear (drives both encoders)
-        public static final double encoder1Teeth = 10.0; //24.0;      // Gear on Hex Shaft A that connects to turret
-        public static final double encoder2Teeth = 10.0 / (50.0/22.0); // 22.0;
+        public static final double sensorToMechanismRatio = (mechanismGearTeeth / encoder1Teeth); //180.0 / 24.0;
+    
         //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
         public static final double encoder1Offset = -0.433594; 
@@ -229,7 +230,7 @@ public class Constants {
 
         public static final Distance flywheelRadius = Inches.of(2); //TODO find the magnitude
 
-        public static final double sensorToMechanismRatio = 1 / 1; //TODO: ask joseph
+        public static final double sensorTomechanismGearTeeth = 1 / 1; //TODO: ask joseph
 
         public static final double kP = 0;
         public static final double kI = 0; 
@@ -377,7 +378,7 @@ public class Constants {
         public static final double MAX_ACCEPTABLE_ROLL = 5;
     }
 
-    public static final class Sim{
+    public static final class Sim {
 
         public static enum Mode {Real, Sim, Replay};
         public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.Real : Mode.Sim;
