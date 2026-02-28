@@ -17,7 +17,6 @@ import java.lang.Math;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +43,8 @@ import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
+import frc.robot.Constants.Sim;
+import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
@@ -119,11 +120,14 @@ public class RobotContainer {
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
         initializeAutoChooser();
-        configureFuelSim();
 
-        turret.setDefaultCommand(aim);
-        hood.setDefaultCommand(hoodAim);
-        shooter.setDefaultCommand(setShooterVelocity);
+        if(Sim.CURRENT_MODE == Mode.Sim){
+            configureFuelSim();
+        }
+
+        //turret.setDefaultCommand(aim);
+        //hood.setDefaultCommand(hoodAim);
+        //shooter.setDefaultCommand(setShooterVelocity);
         sevenEleven.setDefaultCommand(roll);
     }
 
