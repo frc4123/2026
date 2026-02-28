@@ -105,7 +105,7 @@ public class Constants {
         //33.75 bumper width
     }
    
-    public static class IntakeArmConstants{
+    public static class IntakeArmConstants {
        
         public static final double stowPosition = 0;
         public static final double outPosition = 8.44;
