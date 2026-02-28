@@ -10,6 +10,7 @@ public class Roll extends Command{
 
     public Roll(SevenEleven sevenEleven) {
         this.sevenEleven = sevenEleven;
+        addRequirements((sevenEleven));
     }
 
     @Override

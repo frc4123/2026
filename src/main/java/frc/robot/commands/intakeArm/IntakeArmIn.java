@@ -10,6 +10,7 @@ public class IntakeArmIn extends Command{
 
     public IntakeArmIn(IntakeArm intakeArm) {
         this.intakeArm = intakeArm;
+        addRequirements(intakeArm);
     }
 
     @Override

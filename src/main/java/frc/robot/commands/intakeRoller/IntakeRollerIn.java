@@ -10,6 +10,7 @@ public class IntakeRollerIn extends Command{
 
     public IntakeRollerIn(IntakeRoller intakeRollers) {
         this.intakeRollers = intakeRollers;
+        addRequirements(intakeRollers);
     }
 
     @Override

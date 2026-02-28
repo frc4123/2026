@@ -10,6 +10,7 @@ public class UptakeStop extends Command{
 
     public UptakeStop(Uptake uptake) {
         this.uptake = uptake;
+        addRequirements(uptake);
     }
 
     @Override
