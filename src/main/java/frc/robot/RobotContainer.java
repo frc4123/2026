@@ -57,9 +57,7 @@ import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
 import frc.robot.commands.sevenEleven.Roll;
 import frc.robot.commands.shooter.SetShooterVelocity;
-import frc.robot.commands.shooter.SetShooterDefaultVelo;
-import frc.robot.commands.shooter.ShooterOpenLoop;
-import frc.robot.commands.shooter.ShooterOpenLoopStop;
+//import frc.robot.commands.shooter.SetShooterDefaultVelo;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 import frc.robot.commands.uptake.UptakeStop;
@@ -114,10 +112,10 @@ public class RobotContainer {
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     private final HoodAim hoodAim = new HoodAim(hood);
-    private final SetShooterDefaultVelo setShooterDefaultVelo = new SetShooterDefaultVelo(shooter);
+    //private final SetShooterDefaultVelo setShooterDefaultVelo = new SetShooterDefaultVelo(shooter);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
-    private final ShooterOpenLoop ShooterOpenLoop = new ShooterOpenLoop(shooter);
-    private final ShooterOpenLoopStop ShooterOpenLoopStop = new ShooterOpenLoopStop(shooter);
+    //private final ShooterOpenLoop ShooterOpenLoop = new ShooterOpenLoop(shooter);
+    //private final ShooterOpenLoopStop ShooterOpenLoopStop = new ShooterOpenLoopStop(shooter);
     private final UptakeUp uptakeUp = new UptakeUp(uptake);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
 
@@ -139,7 +137,7 @@ public class RobotContainer {
 
         //turret.setDefaultCommand(aim);
         //hood.setDefaultCommand(hoodAim);
-        shooter.setDefaultCommand(setShooterDefaultVelo);
+        shooter.setDefaultCommand(setShooterVelocity);
         sevenEleven.setDefaultCommand(roll);
     }
 
