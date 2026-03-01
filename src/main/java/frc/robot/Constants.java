@@ -132,8 +132,8 @@ public class Constants {
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
 
         public static final double zeroVelo = 0;
-        public static final double intakeVelo = 75;
-        public static final double intakeAcc = 180;
+        public static final double intakeVelo = 35;
+        public static final double intakeAcc = 90;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -160,8 +160,8 @@ public class Constants {
     public static class UptakeConstants {
 
         public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 20;
-        public static final double uptakeAcc = 40;
+        public static final double uptakeVelo = 25;
+        public static final double uptakeAcc = uptakeVelo * 2.0;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -177,12 +177,12 @@ public class Constants {
         public static final double velocity = 5; //2.5 // 1.75 working if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 5; // 3 before replacing with 1.1 try lowering kv //1.1
 
-        public static final double kP = 300;
-        public static final double kI = 11;
-        public static final double kD = 10.4123;
-        public static final double kS = 1.25;
-        public static final double kV = 0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
-        public static final double kA = 0.028; //0.05; // 0.367048
+        public static final double kP = 0;//300;
+        public static final double kI = 0;//11;
+        public static final double kD = 0;//10.4123;
+        public static final double kS = 0;// 1.25;
+        public static final double kV = 0;//0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
+        public static final double kA = 0;//0.028; //0.05; // 0.367048
 
         public static final int mechanismMinRange = -1; // -360 degrees
         public static final int mechanismMaxRange = 1; // +360 degrees
@@ -199,8 +199,8 @@ public class Constants {
     
         //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.433594; 
-        public static final double encoder2Offset = -0.628174;
+        public static final double encoder1Offset = -0.910646; 
+        public static final double encoder2Offset = -0.532271;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -232,12 +232,12 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1 / 1; //TODO: ask joseph
 
-        public static final double kP = 0;
-        public static final double kI = 0; 
+        public static final double kP = 6.5; // 6.5;
+        public static final double kI = 0; // was 0.0441
         public static final double kD = 0;
-        public static final double kS = 0; 
-        public static final double kV = 0; 
-        public static final double kA = 0; 
+        public static final double kS = 5; // 0.3
+        public static final double kV = 0.1;  //try this 0;
+        public static final double kA = 0.015; 
         
         public static final double acceleration = 0;
 
