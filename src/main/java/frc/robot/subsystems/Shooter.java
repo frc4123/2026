@@ -8,9 +8,11 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,10 +47,15 @@ public class Shooter extends SubsystemBase{
             .withKV(ShooterConstants.kV)
             .withKA(ShooterConstants.kA);
 
+        MotorOutputConfigs motorOutput = new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive);
+        
         shooterMotor.getConfigurator().apply(pid);
+
+        shooterMotor.getConfigurator().apply(motorOutput);
     }
 
-    public void setShooterVelo() {
+    public void calculateShot() {
 
         ShotData shot = ShotCache.get();
 
@@ -56,6 +63,15 @@ public class Shooter extends SubsystemBase{
             / (2 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
 
         shooterMotor.setControl(motionMagic.withVelocity(Velo));
+    }
+
+    public void shooterMinVelo() {
+        shooterMotor.setControl(motionMagic.withVelocity(ShooterConstants.MIN_SPEED.in(MetersPerSecond)));
+    }
+
+    public void setShooterOpenLoopVelo(double velo) {
+
+        shooterMotor.set(velo);
     }
 
     public double getShooterVelo() {

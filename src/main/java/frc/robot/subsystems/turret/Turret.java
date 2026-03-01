@@ -128,8 +128,6 @@ public class Turret extends SubsystemBase {
             Timer.delay(0.1);
             easyCrtSolver = initCRT();
         }
-
-        
     }
 
     private void configureMotor() {
