@@ -37,6 +37,7 @@ import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.SevenEleven;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Uptake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretCalculator;
@@ -56,8 +57,13 @@ import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
 import frc.robot.commands.sevenEleven.Roll;
 import frc.robot.commands.shooter.SetShooterVelocity;
+import frc.robot.commands.shooter.SetShooterDefaultVelo;
+import frc.robot.commands.shooter.ShooterOpenLoop;
+import frc.robot.commands.shooter.ShooterOpenLoopStop;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
+import frc.robot.commands.uptake.UptakeStop;
+import frc.robot.commands.uptake.UptakeUp;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -97,6 +103,7 @@ public class RobotContainer {
     private final IntakeArm intakeArm = new IntakeArm();
     private final Hood hood = new Hood();
     private final Shooter shooter = new Shooter();
+    private final Uptake uptake = new Uptake();
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
@@ -107,7 +114,12 @@ public class RobotContainer {
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     private final HoodAim hoodAim = new HoodAim(hood);
+    private final SetShooterDefaultVelo setShooterDefaultVelo = new SetShooterDefaultVelo(shooter);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
+    private final ShooterOpenLoop ShooterOpenLoop = new ShooterOpenLoop(shooter);
+    private final ShooterOpenLoopStop ShooterOpenLoopStop = new ShooterOpenLoopStop(shooter);
+    private final UptakeUp uptakeUp = new UptakeUp(uptake);
+    private final UptakeStop uptakeStop = new UptakeStop(uptake);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -127,7 +139,7 @@ public class RobotContainer {
 
         //turret.setDefaultCommand(aim);
         //hood.setDefaultCommand(hoodAim);
-        //shooter.setDefaultCommand(setShooterVelocity);
+        shooter.setDefaultCommand(setShooterDefaultVelo);
         sevenEleven.setDefaultCommand(roll);
     }
 
@@ -159,8 +171,8 @@ public class RobotContainer {
             )
         );
 
-        joystick.leftTrigger().whileTrue(leftDriveToClimb);
-        joystick.rightTrigger().whileTrue(rightDriveToClimb);
+        joystick.leftBumper().whileTrue(leftDriveToClimb);
+        joystick.rightBumper().whileTrue(rightDriveToClimb);
 
         joystick.b().whileTrue(
             drivetrain.applyRequest(() -> faceAngle
@@ -231,8 +243,9 @@ public class RobotContainer {
 
         joystick.a().onTrue(intakeRollersIn);
         joystick.a().onFalse(intakeRollersStop);
+        joystick.rightTrigger().onTrue(uptakeUp);
+        joystick.rightTrigger().onFalse(uptakeStop);
         // joystick.a().onTrue(intakeArmOut);
-        // joystick.a().onFalse(intakeArmIn);
     }
 
     private void configureFuelSim() {
