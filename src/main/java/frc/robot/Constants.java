@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -228,9 +229,11 @@ public class Constants {
 
         public static final LinearVelocity MIN_SPEED = MetersPerSecond.of(6);  // TODO find the minimum speed
 
-        public static final Distance flywheelRadius = Inches.of(2); //TODO find the magnitude
+        public static final Distance flywheelRadius = Inches.of(2.03); //TODO find the magnitude
 
-        public static final double sensorTomechanismGearTeeth = 1 / 1; //TODO: ask joseph
+        public static final double metersPerRotation = 2.0 * Math.PI * flywheelRadius.in(Meters);
+
+        public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; //TODO: ask joseph
 
         public static final double kP = 6.5; // 6.5;
         public static final double kI = 0; // was 0.0441

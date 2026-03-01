@@ -55,13 +55,4 @@ public class IntakeRoller extends SubsystemBase{
     public double getIntakeVelo() {
         return intakeRollerMotor.getVelocity().getValueAsDouble();
     }
-
-
-    @Override
-    public void periodic() {
-        // if (DriverStation.isEnabled()) {
-        //     m_shooter.end(true);
-        // }
-        SmartDashboard.putNumber("Intake Velo", getIntakeVelo());
-    }
 }

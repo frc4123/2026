@@ -54,13 +54,4 @@ public class SevenEleven extends SubsystemBase{
     public double getSevenElevenVelo() {
         return sevenElevenMotor.getVelocity().getValueAsDouble();
     }
-
-
-    @Override
-    public void periodic() {
-        // if (DriverStation.isEnabled()) {
-        //     m_shooter.end(true);
-        // }
-        SmartDashboard.putNumber("7-Eleven Velo", getSevenElevenVelo());
-    }
 }

@@ -82,14 +82,10 @@ public class IntakeArm extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // if (DriverStation.isEnabled()) {
-        //     m_shooter.end(true);
-        // }
+        
         refreshStatusSignals();
         if(isSwitchPressed()) {
             zeroIntake();
         }
-
-        SmartDashboard.putNumber("Intake Position", getIntakePosition());
     }
 }

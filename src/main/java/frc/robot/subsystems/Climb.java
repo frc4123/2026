@@ -54,9 +54,4 @@ public class Climb extends SubsystemBase{
     public double getClimbPosition() {
         return climbMotor.getPosition().getValueAsDouble();
     }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Climb Position", getClimbPosition());
-    }
 }

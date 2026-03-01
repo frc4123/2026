@@ -8,6 +8,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -49,18 +50,20 @@ public class Shooter extends SubsystemBase{
 
         MotorOutputConfigs motorOutput = new MotorOutputConfigs()
             .withInverted(InvertedValue.Clockwise_Positive);
-        
-        shooterMotor.getConfigurator().apply(pid);
 
+        FeedbackConfigs feedback = new FeedbackConfigs()
+            .withSensorToMechanismRatio(ShooterConstants.metersPerRotation);
+
+        shooterMotor.getConfigurator().apply(pid);
         shooterMotor.getConfigurator().apply(motorOutput);
+        shooterMotor.getConfigurator().apply(feedback);
     }
 
     public void calculateShot() {
 
         ShotData shot = ShotCache.get();
 
-        double Velo = shot.getExitVelocity().in(MetersPerSecond)
-            / (2 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
+        double Velo = shot.getExitVelocity().in(MetersPerSecond);
 
         shooterMotor.setControl(motionMagic.withVelocity(Velo));
     }
@@ -76,13 +79,5 @@ public class Shooter extends SubsystemBase{
 
     public double getShooterVelo() {
         return shooterMotor.getVelocity().getValueAsDouble();
-    }
-
-    @Override
-    public void periodic() {
-        // if (DriverStation.isEnabled()) {
-        //     m_shooter.end(true);
-        // }
-        SmartDashboard.putNumber("Shooter Velo", getShooterVelo());
     }
 }

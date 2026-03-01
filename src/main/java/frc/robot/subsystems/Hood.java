@@ -113,7 +113,5 @@ public class Hood extends SubsystemBase{
             zeroHood();
         }
         wasPressed = pressed;
-
-        SmartDashboard.putNumber("Hood Position", getHoodDegrees());
     }
 }
