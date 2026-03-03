@@ -207,7 +207,7 @@ public class Field {
     }
 
     @Getter
-    public static final Distance fuelDiameter = Inches.of(5.91);
+    public static final Distance fuelRadius = Inches.of(5.91 / 2.0);
 
     @Getter
     public static final Translation3d blueHubCenter = BlueHub.topCenter; // new Translation3d(
