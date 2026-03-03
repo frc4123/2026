@@ -258,12 +258,6 @@ public class Turret extends SubsystemBase {
 
         cumulativeAngle = mechAngle.in(Units.Degrees);
 
-        //double encoderRotations = (cumulativeAngle / 360.0) * TurretConstants.sensorToMechanismRatio;;// * ((TurretConstants.sensorToMechanismRatio));
-        //turretEncoder1.setPosition(encoderRotations);
-        // turretEncoder1.setPosition(
-        //     mechAngle.in(Units.Rotations) / TurretConstants.sensorToMechanismRatio
-        // );
-
         // Constrain to -360° to +360°
         while (cumulativeAngle > 360.0) cumulativeAngle -= 360.0;
         while (cumulativeAngle < -360.0) cumulativeAngle += 360.0;

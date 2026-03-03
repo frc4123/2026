@@ -1,14 +1,15 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.utils.Field;
 import frc.robot.utils.ShotCache;
 
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -16,7 +17,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -60,7 +60,7 @@ public class Shooter extends SubsystemBase{
 
         ShotData shot = ShotCache.get();
 
-        double Velo = shot.getExitVelocity().in(MetersPerSecond)
+        double Velo = shot.getExitVelocity().in(MetersPerSecond) * (Field.fuelDiameter.in(Inches) / (ShooterConstants.flywheelRadius.in(Inches) * 2))
             / (2.0 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
 
         shooterMotor.setControl(motionMagic.withVelocity(Velo));
@@ -71,19 +71,10 @@ public class Shooter extends SubsystemBase{
     }
 
     public void setShooterOpenLoopVelo(double velo) {
-
         shooterMotor.set(velo);
     }
 
     public double getShooterVelo() {
         return shooterMotor.getVelocity().getValueAsDouble();
-    }
-
-    @Override
-    public void periodic() {
-        // if (DriverStation.isEnabled()) {
-        //     m_shooter.end(true);
-        // }
-        SmartDashboard.putNumber("Shooter Velo", getShooterVelo());
     }
 }

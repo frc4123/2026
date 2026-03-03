@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeArmConstants;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
@@ -56,12 +55,6 @@ public class IntakeArm extends SubsystemBase{
         intakeArmMotor.getConfigurator().apply(pid);
     }
 
-    private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(
-            s1Signal
-        );
-    }
-
     public void setIntakePosition(double pos){
         intakeArmMotor.setControl(  
             motionMagic.withPosition(pos));
@@ -82,8 +75,7 @@ public class IntakeArm extends SubsystemBase{
     @Override
     public void periodic() {
         
-        refreshStatusSignals();
-        if(isSwitchPressed()) {
+        if(!s1Signal.getValue()) {
             zeroIntake();
         }
     }

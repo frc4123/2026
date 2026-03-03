@@ -6,8 +6,11 @@
 // the root directory of this project.
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lombok.Getter;
@@ -202,6 +205,9 @@ public class Field {
     public static double BlueToRed(double translation) {
         return Field.fieldLength - translation;
     }
+
+    @Getter
+    public static final Distance fuelDiameter = Inches.of(5.91);
 
     @Getter
     public static final Translation3d blueHubCenter = BlueHub.topCenter; // new Translation3d(

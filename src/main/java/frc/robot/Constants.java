@@ -161,8 +161,8 @@ public class Constants {
     public static class UptakeConstants {
 
         public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 25;
-        public static final double uptakeAcc = uptakeVelo * 2.0;
+        public static final double uptakeVelo = 45;
+        public static final double uptakeAcc = uptakeVelo * 3.0;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -242,7 +242,7 @@ public class Constants {
         public static final double kV = 0.1;  //try this 0;
         public static final double kA = 0.015; 
         
-        public static final double acceleration = 0;
+        public static final double acceleration = 60;
 
     }
 
