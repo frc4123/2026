@@ -162,6 +162,7 @@ public class Constants {
 
         public static final double zeroVelo = 0;
         public static final double uptakeVelo = 45;
+        public static final double reverseVelo = -45;
         public static final double uptakeAcc = uptakeVelo * 3.0;
        
         public static final double kP = 0.426;

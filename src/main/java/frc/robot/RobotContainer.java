@@ -57,6 +57,7 @@ import frc.robot.commands.shooter.SetShooterVelocity;
 //import frc.robot.commands.shooter.SetShooterDefaultVelo;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
+import frc.robot.commands.uptake.UptakeReverse;
 import frc.robot.commands.uptake.UptakeStop;
 import frc.robot.commands.uptake.UptakeUp;
 
@@ -115,6 +116,7 @@ public class RobotContainer {
     //private final ShooterOpenLoopStop ShooterOpenLoopStop = new ShooterOpenLoopStop(shooter);
     private final UptakeUp uptakeUp = new UptakeUp(uptake);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
+    private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -234,12 +236,15 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        //  --------- BUTTONBOARD COMMANDS ---------- //
+        //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
         joystick.a().onTrue(intakeRollersIn);
         joystick.a().onFalse(intakeRollersStop);
+
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().onFalse(uptakeStop);
+        joystick.leftTrigger().onTrue(uptakeReverse);
+        joystick.leftTrigger().onFalse(uptakeStop);
         // joystick.a().onTrue(intakeArmOut);
     }
 
