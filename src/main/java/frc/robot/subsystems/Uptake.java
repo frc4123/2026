@@ -61,6 +61,6 @@ public class Uptake extends SubsystemBase{
         // if (DriverStation.isEnabled()) {
         //     m_shooter.end(true);
         // }
-        SmartDashboard.putNumber("Uptake Velo", getUptakeVelo());
+        //SmartDashboard.putNumber("Uptake Velo", getUptakeVelo());
     }
 }
