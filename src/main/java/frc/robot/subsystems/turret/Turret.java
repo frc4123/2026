@@ -237,14 +237,12 @@ public class Turret extends SubsystemBase {
 
     private void tryResolveAbsolute() {
         if (hasAbsoluteZero) return;
-        if (hasAbsoluteZero) return;
     
         // Wait 40 loops (~800ms) before trying to resolve
         if (bootDelayCounter < 40) {
             bootDelayCounter++;
             return;
         }
-
 
         if (!encoder1PositionSignal.getStatus().isOK() || !encoder2PositionSignal.getStatus().isOK()) {
             System.out.println("Waiting for encoder signals...");
@@ -265,8 +263,6 @@ public class Turret extends SubsystemBase {
         // Current encoder reading using THE SAME MATH as updateCumulativeAngle()
         double currentEncoderDegrees = encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio;
         
-        // Calculate offset
-        initOffsetDegrees = cumulativeAngle - currentEncoderDegrees;
         // Calculate offset: 87° - 3° = 84° offset
         initOffsetDegrees = cumulativeAngle - currentEncoderDegrees;
 
