@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2CycleOutpost1"
+            "pathName": "2Cycle1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2CycleOutpost2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "pathName": "2Cycle2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2CycleOutpost3"
+            "pathName": "2Cycle3"
           }
         },
         {
@@ -37,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2CycleOutpost4"
+            "pathName": "2Cycle4"
           }
         }
       ]
