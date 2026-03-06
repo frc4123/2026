@@ -85,8 +85,8 @@ public class Turret extends SubsystemBase {
     private final StatusSignal<Angle> encoder2PositionSignal = turretEncoder2.getPosition();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
-    private final double minCumulativeAngle = -360.0;
-    private final double maxCumulativeAngle = 360.0;
+    private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
+    private final double maxCumulativeAngle = TurretConstants.mechanismMaxRange * 360.0;
 
     // Cumulative turret angle tracking
     private double cumulativeAngle;

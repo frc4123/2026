@@ -186,8 +186,8 @@ public class Constants {
         public static final double kV = 0;//0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
         public static final double kA = 0;//0.028; //0.05; // 0.367048
 
-        public static final int mechanismMinRange = -1; // -360 degrees
-        public static final int mechanismMaxRange = 1; // +360 degrees
+        public static final double mechanismMinRange = -35.0 / 72.0; // -1 is -360 degrees
+        public static final double mechanismMaxRange = 35.0 / 72.0; // 1 is +360 degrees
         // this makes total of 720 degrees rotation^^^^
 
         public static final double mechanismGearTeeth = 85.0; // drives botrh encoders
