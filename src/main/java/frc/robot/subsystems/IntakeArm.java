@@ -1,14 +1,21 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Constants.HoodConstants;
 import frc.robot.Constants.IntakeArmConstants;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,8 +31,6 @@ public class IntakeArm extends SubsystemBase{
         Constants.CanIdCanivore.Intake_CANdi,
         Constants.CanIdCanivore.canivore
     );
-
-    private StatusSignal<Boolean> s1Signal = intakeCANdi.getS1Closed();
 
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
@@ -44,15 +49,30 @@ public class IntakeArm extends SubsystemBase{
     private void configureMotor() {
         intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
 
+        FeedbackConfigs feedbackUnits = new FeedbackConfigs()
+            .withSensorToMechanismRatio(IntakeArmConstants.sensorToMechanismRatio);
+
         Slot0Configs pid = new Slot0Configs()
             .withKP(IntakeArmConstants.kP)
             .withKI(IntakeArmConstants.kI)
             .withKD(IntakeArmConstants.kD)
             .withKS(IntakeArmConstants.kS)
             .withKV(IntakeArmConstants.kV)
-            .withKA(IntakeArmConstants.kA);
+            .withKA(IntakeArmConstants.kA)
+            .withKG(IntakeArmConstants.kG)
+            .withGravityType(GravityTypeValue.Arm_Cosine)
+            .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
+        MotorOutputConfigs motorOutput = new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive);
+        
+        TorqueCurrentConfigs torqueDeadband = new TorqueCurrentConfigs()
+            .withTorqueNeutralDeadband(0.5);
 
         intakeArmMotor.getConfigurator().apply(pid);
+        intakeArmMotor.getConfigurator().apply(feedbackUnits);
+        intakeArmMotor.getConfigurator().apply(motorOutput);
+        intakeArmMotor.getConfigurator().apply(torqueDeadband);
     }
 
     public void setIntakePosition(double pos){
@@ -65,17 +85,17 @@ public class IntakeArm extends SubsystemBase{
     }
 
     public void zeroIntake() {
-        intakeArmMotor.setPosition(0);
+        intakeArmMotor.setPosition(IntakeArmConstants.stowPosition);
     }
 
-    public boolean isSwitchPressed(){
-        return !s1Signal.getValue();
+    public boolean isSwitchPressed() {
+        return !intakeCANdi.getS1Closed().getValue();
     }
 
     @Override
     public void periodic() {
         
-        if(!s1Signal.getValue()) {
+        if(isSwitchPressed()) {
             zeroIntake();
         }
     }

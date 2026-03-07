@@ -8,6 +8,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
@@ -83,8 +84,8 @@ public class Turret extends SubsystemBase {
     private final StatusSignal<Angle> encoder2PositionSignal = turretEncoder2.getPosition();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
-    private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
-    private final double maxCumulativeAngle = TurretConstants.mechanismMaxRange * 360.0;
+    private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0 * 10;
+    private final double maxCumulativeAngle = TurretConstants.mechanismMaxRange * 360.0 * 10;
 
     // Cumulative turret angle tracking
     private double cumulativeAngle;
@@ -129,7 +130,7 @@ public class Turret extends SubsystemBase {
     }
 
     private void configureMotor() {
-        turretMotor.setNeutralMode(NeutralModeValue.Brake);
+        turretMotor.setNeutralMode(NeutralModeValue.Coast);
 
         TalonFXConfiguration feedbackUnits = new TalonFXConfiguration();
 
@@ -143,8 +144,6 @@ public class Turret extends SubsystemBase {
         feedbackUnits.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         feedbackUnits.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        
-
         Slot0Configs pid = new Slot0Configs()
             .withKP(TurretConstants.kP)
             .withKI(TurretConstants.kI)
@@ -153,8 +152,12 @@ public class Turret extends SubsystemBase {
             .withKV(TurretConstants.kV)
             .withKA(TurretConstants.kA);
 
+        MotorOutputConfigs motorOutput = new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive);
+
         turretMotor.getConfigurator().apply(feedbackUnits);
         turretMotor.getConfigurator().apply(pid);
+        turretMotor.getConfigurator().apply(motorOutput);
         //turretMotor.getConfigurator().apply(motionMagic);
     }
 

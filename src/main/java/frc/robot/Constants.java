@@ -108,18 +108,21 @@ public class Constants {
    
     public static class IntakeArmConstants {
        
-        public static final double stowPosition = 0;
-        public static final double outPosition = 8.44;
+        public static final double outPosition = 0;
+        public static final double stowPosition = 0.33;
+
+        public static final double sensorToMechanismRatio = 25.0;
        
-        public static final double kP = 0;
+        public static final double kP = 5000.0;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double kS = 0; 
+        public static final double kS = 2.5; 
         public static final double kV = 0; 
         public static final double kA = 0; 
+        public static final double kG = 6.14123;
 
-        public static final double velocity = 0;
-        public static final double acceleration = 0;
+        public static final double velocity = 2.5;
+        public static final double acceleration = 2.5;
     }
 
     public static class IntakeRollerConstants {
@@ -182,7 +185,7 @@ public class Constants {
         public static final double kP = 0;//300;
         public static final double kI = 0;//11;
         public static final double kD = 0;//10.4123;
-        public static final double kS = 0;// 1.25;
+        public static final double kS = 9;// 1.25;
         public static final double kV = 0;//0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
         public static final double kA = 0;//0.028; //0.05; // 0.367048
 
@@ -202,8 +205,8 @@ public class Constants {
     
         //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.910646; 
-        public static final double encoder2Offset = -0.532271;
+        public static final double encoder1Offset = -0.420400;
+        public static final double encoder2Offset = -0.503418;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;

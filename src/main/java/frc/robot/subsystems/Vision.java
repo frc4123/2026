@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase{
     private final PhotonCamera FLO_camera = new PhotonCamera("Front_Left_Outside_Arducam_OV9281_USB_Camera");
     private final PhotonCamera FLI_camera = new PhotonCamera("Front_Left_Inside_Arducam_OV9281_USB_Camera");
     private final PhotonCamera FR_camera = new PhotonCamera("Front_Right_Arducam_OV9281_USB_Camera");
-    private final PhotonCamera turretCam = new PhotonCamera("Turret_Arducam_OV9281_USB_Camera");
+    private final PhotonCamera turretCam = new PhotonCamera("Turret_Arducam");
 
     private final PhotonPoseEstimator FLO_Estimator;
     private final PhotonPoseEstimator FLI_Estimator;
