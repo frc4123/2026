@@ -16,13 +16,16 @@ import java.lang.Math;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -43,12 +46,14 @@ import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
+import frc.robot.utils.ShiftHelpers;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
+import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.climb.ClimbDown;
 import frc.robot.commands.climb.ClimbUp;
 import frc.robot.commands.hood.HoodAim;
@@ -142,9 +147,9 @@ public class RobotContainer {
         }
 
         //turret.setDefaultCommand(aim);
-        //hood.setDefaultCommand(hoodAim);
-        //shooter.setDefaultCommand(setShooterVelocity);
-        //sevenEleven.setDefaultCommand(roll);
+        hood.setDefaultCommand(hoodAim);
+        shooter.setDefaultCommand(setShooterVelocity);
+        sevenEleven.setDefaultCommand(roll);
 
         NamedCommands.registerCommand("ArmIn", intakeArmIn);
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
@@ -211,27 +216,27 @@ public class RobotContainer {
         // Reset the field-centric heading on button Y press.
         joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick.a().whileTrue(
-            drivetrain.applyRequest(() -> {
-                double leftY = -joystick.getLeftY();
-                double leftX = -joystick.getLeftX();
+        // joystick.a().whileTrue(
+        //     drivetrain.applyRequest(() -> {
+        //         double leftY = -joystick.getLeftY();
+        //         double leftX = -joystick.getLeftX();
                 
-                double magnitude = Math.sqrt(leftX * leftX + leftY * leftY);
-                Rotation2d targetDirection;
+        //         double magnitude = Math.sqrt(leftX * leftX + leftY * leftY);
+        //         Rotation2d targetDirection;
                 
-                if (magnitude > 0.1) { // Only update rotation when stick is moved
-                    targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
-                } else {
-                    // Joystick centered - hold current heading
-                    targetDirection = drivetrain.getState().Pose.getRotation();
-                }
+        //         if (magnitude > 0.1) { // Only update rotation when stick is moved
+        //             targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
+        //         } else {
+        //             // Joystick centered - hold current heading
+        //             targetDirection = drivetrain.getState().Pose.getRotation();
+        //         }
                 
-                return faceAngle
-                    .withVelocityX(leftY * MaxSpeed * 0.6)
-                    .withVelocityY(leftX * MaxSpeed * 0.6)
-                    .withTargetDirection(targetDirection);
-            })
-        );
+        //         return faceAngle
+        //             .withVelocityX(leftY * MaxSpeed * 0.6)
+        //             .withVelocityY(leftX * MaxSpeed * 0.6)
+        //             .withTargetDirection(targetDirection);
+        //     })
+        // );
 
         joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
             .withVelocityY(0.1 * MaxSpeed)
@@ -253,14 +258,29 @@ public class RobotContainer {
 
         //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
+        Trigger shiftWarning = new Trigger(() ->
+            ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
+);
+
         joystick.a().onTrue(new ParallelCommandGroup(intakeArmOut, intakeRollersIn));
-        joystick.a().onFalse(new ParallelCommandGroup(intakeArmIn, intakeRollersStop));
+        joystick.a().onFalse(intakeRollersStop);
+
+        shiftWarning.whileTrue(
+            Commands.run(() ->
+                joystick.setRumble(RumbleType.kBothRumble, 1.0)
+            )
+            
+        );
+        shiftWarning.onFalse(
+            Commands.runOnce(() ->
+                joystick.setRumble(RumbleType.kBothRumble, 0)
+            )
+        );
 
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().onFalse(uptakeStop);
         
-        joystick.leftTrigger().onTrue(uptakeReverse);
-        joystick.leftTrigger().onFalse(uptakeStop);
+        joystick.leftTrigger().onTrue(intakeArmIn);
         // joystick.a().onTrue(intakeArmOut);
     }
 
@@ -335,9 +355,9 @@ public class RobotContainer {
             new SequentialCommandGroup(new mtest().metertest()))
         );
 
-        autoChooser.addOption("2 Cycle Climb Right", new ParallelCommandGroup(
+        autoChooser.addOption("2 Cycle Outpost Climb Right", new ParallelCommandGroup(
             new WaitCommand(0.01),
-            new SequentialCommandGroup(new twoCycle().twoCycleClimb())
+            new SequentialCommandGroup(new twoCycleOutpost().twoCycleOutpostRight())
         ));
 
         autoChooser.addOption("2 Cycle Depot Climb Left", new ParallelCommandGroup(
@@ -345,10 +365,10 @@ public class RobotContainer {
             new SequentialCommandGroup(new twoCycleDepot().twoCycleDepotLeft())
         ));
 
-        autoChooser.addOption("3 Bump Right", new ParallelCommandGroup(
-            new WaitCommand(0.01),
-            new SequentialCommandGroup(new threeBumpRight().threeBumpAuto())
-        ));
+        // autoChooser.addOption("3 Bump Right", new ParallelCommandGroup(
+        //     new WaitCommand(0.01),
+        //     new SequentialCommandGroup(new threeBumpRight().threeBumpAuto())
+        // ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
     }
