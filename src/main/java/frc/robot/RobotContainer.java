@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import java.lang.Math;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakeArm;
@@ -46,6 +49,8 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.threeBumpRight;
 import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
+import frc.robot.commands.climb.ClimbDown;
+import frc.robot.commands.climb.ClimbUp;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmOut;
@@ -98,6 +103,7 @@ public class RobotContainer {
     private final Hood hood = new Hood();
     private final Shooter shooter = new Shooter();
     private final Uptake uptake = new Uptake();
+    private final Climb climb = new Climb();
 
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
@@ -115,6 +121,9 @@ public class RobotContainer {
     private final UptakeUp uptakeUp = new UptakeUp(uptake);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
     private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
+    private final ClimbUp climbUp = new ClimbUp(climb);
+    private final ClimbDown climbDown = new ClimbDown(climb);
+
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
@@ -134,8 +143,16 @@ public class RobotContainer {
 
         //turret.setDefaultCommand(aim);
         //hood.setDefaultCommand(hoodAim);
-        shooter.setDefaultCommand(setShooterVelocity);
-        sevenEleven.setDefaultCommand(roll);
+        //shooter.setDefaultCommand(setShooterVelocity);
+        //sevenEleven.setDefaultCommand(roll);
+
+        NamedCommands.registerCommand("ArmIn", intakeArmIn);
+        NamedCommands.registerCommand("ArmOut", intakeArmOut);
+        NamedCommands.registerCommand("IntakeIn", intakeRollersIn);
+        NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
+        NamedCommands.registerCommand("Uptake", uptakeUp);
+        NamedCommands.registerCommand("ClimbUp", climbUp);
+        NamedCommands.registerCommand("ClimbDown", climbDown);
     }
 
     private void configureBindings() {
@@ -238,6 +255,9 @@ public class RobotContainer {
 
         joystick.a().onTrue(intakeRollersIn);
         joystick.a().onFalse(intakeRollersStop);
+
+        joystick.a().onTrue(intakeArmOut);
+        joystick.a().onFalse(intakeArmIn);
 
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().onFalse(uptakeStop);
