@@ -47,6 +47,10 @@ public class ShiftHelpers {
         return timeLeftInShiftSeconds(currentMatchTime) < 5 ? true : false;
     }
 
+    public static boolean isTwoSecBeforeShiftChange(double currentMatchTime){
+        return timeLeftInShiftSeconds(currentMatchTime) < 2 ? true : false;
+    }
+
     public static boolean currentShiftIsYours() {
         double currentMatchTime = DriverStation.getMatchTime();
         boolean isBlueShift = isCurrentShiftBlue(currentMatchTime);
