@@ -63,7 +63,7 @@ public class Shooter extends SubsystemBase{
         double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
             / (2.0 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
 
-        shooterMotor.setControl(motionMagic.withVelocity(Velo + 1));
+        shooterMotor.setControl(motionMagic.withVelocity(Velo * 1.23));  //1.23
     }
 
     public void shooterMinVelo() {

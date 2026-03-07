@@ -247,13 +247,13 @@ public class Constants {
         public static final double kV = 0.1;  //try this 0;
         public static final double kA = 0.015; 
         
-        public static final double acceleration = 90;
+        public static final double acceleration = 60;
 
     }
 
     public static final class HoodConstants {
 
-        public static final Angle MIN_HOOD_ANGLE = Degrees.of(33.0); // its really 29.359724
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724); // its really 29.359724
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  
 
         public static final double sensorToMechanismRatio = 136.0 / 1; 

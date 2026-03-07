@@ -125,7 +125,7 @@ public class RobotContainer {
     //private final ShooterOpenLoopStop ShooterOpenLoopStop = new ShooterOpenLoopStop(shooter);
     private final UptakeUp uptakeUp = new UptakeUp(uptake);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
-    private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
+    //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
     private final ClimbUp climbUp = new ClimbUp(climb);
     private final ClimbDown climbDown = new ClimbDown(climb);
 
@@ -258,12 +258,12 @@ public class RobotContainer {
 
         //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
-        Trigger shiftWarning = new Trigger(() ->
-            ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
-);
-
         joystick.a().onTrue(new ParallelCommandGroup(intakeArmOut, intakeRollersIn));
         joystick.a().onFalse(intakeRollersStop);
+
+        Trigger shiftWarning = new Trigger(() ->
+            ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
+        );
 
         shiftWarning.whileTrue(
             Commands.run(() ->
@@ -271,6 +271,7 @@ public class RobotContainer {
             )
             
         );
+
         shiftWarning.onFalse(
             Commands.runOnce(() ->
                 joystick.setRumble(RumbleType.kBothRumble, 0)
