@@ -84,8 +84,8 @@ public class Turret extends SubsystemBase {
     private final StatusSignal<Angle> encoder2PositionSignal = turretEncoder2.getPosition();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
-    private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0 * 10;
-    private final double maxCumulativeAngle = TurretConstants.mechanismMaxRange * 360.0 * 10;
+    private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
+    private final double maxCumulativeAngle = TurretConstants.mechanismMaxRange * 360.0;
 
     // Cumulative turret angle tracking
     private double cumulativeAngle;
@@ -121,11 +121,6 @@ public class Turret extends SubsystemBase {
             cumulativeAngle = 0.0;
             simulatedAngle = 0.0;
             initOffsetDegrees = 0.0;
-        } else {
-            // Real robot setup
-            refreshStatusSignals();
-            Timer.delay(0.1);
-            easyCrtSolver = initCRT();
         }
     }
 
@@ -158,7 +153,6 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(feedbackUnits);
         turretMotor.getConfigurator().apply(pid);
         turretMotor.getConfigurator().apply(motorOutput);
-        //turretMotor.getConfigurator().apply(motionMagic);
     }
 
     private void configureCANcoders() {
@@ -207,15 +201,15 @@ public class Turret extends SubsystemBase {
     public EasyCRT initCRT(){
         // Suppose: mechanism : drive gear = 12:1, drive gear = 50T, encoders use 19T and 23T pinions.
 
-        Supplier<Angle> enc1Supplier = () -> Rotations.of(turretEncoder1.getPosition().getValueAsDouble());
-        Supplier<Angle> enc2Supplier = () -> Rotations.of(turretEncoder2.getPosition().getValueAsDouble());
+        Supplier<Angle> enc1Supplier = () -> Rotations.of(encoder1PositionSignal.getValueAsDouble());
+        Supplier<Angle> enc2Supplier = () -> Rotations.of(encoder2PositionSignal.getValueAsDouble());
 
         var easyCrt =
             new EasyCRTConfig(enc1Supplier, enc2Supplier)
                 .withEncoderRatios(TurretConstants.sensorToMechanismRatio, TurretConstants.mechanismGearTeeth / TurretConstants.encoder2Teeth)
                 .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(0)) // WE ALREADY FLASHED OFFSETS
-                .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange), Rotations.of(TurretConstants.mechanismMaxRange)) // -360 deg to +720 deg
-                .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
+                .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange - 0.07), Rotations.of(TurretConstants.mechanismMaxRange + 0.07)) 
+                .withMatchTolerance(Rotations.of(0.03)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
                 .withAbsoluteEncoderInversions(false, false)
                 .withCrtGearRecommendationConstraints(
                     /* coverageMargin */ TurretConstants.coverageMargin,
@@ -240,10 +234,12 @@ public class Turret extends SubsystemBase {
         if (hasAbsoluteZero) return;
     
         // Wait 40 loops (~800ms) before trying to resolve
-        if (bootDelayCounter < 40) {
+        if (bootDelayCounter < 100) {
             bootDelayCounter++;
             return;
         }
+
+        BaseStatusSignal.refreshAll(encoder1PositionSignal, encoder2PositionSignal);
 
         if (!encoder1PositionSignal.getStatus().isOK() || !encoder2PositionSignal.getStatus().isOK()) {
             System.out.println("Waiting for encoder signals...");

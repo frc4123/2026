@@ -253,14 +253,12 @@ public class RobotContainer {
 
         //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
-        joystick.a().onTrue(intakeRollersIn);
-        joystick.a().onFalse(intakeRollersStop);
-
-        joystick.a().onTrue(intakeArmOut);
-        joystick.a().onFalse(intakeArmIn);
+        joystick.a().onTrue(new ParallelCommandGroup(intakeArmOut, intakeRollersIn));
+        joystick.a().onFalse(new ParallelCommandGroup(intakeArmIn, intakeRollersStop));
 
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().onFalse(uptakeStop);
+        
         joystick.leftTrigger().onTrue(uptakeReverse);
         joystick.leftTrigger().onFalse(uptakeStop);
         // joystick.a().onTrue(intakeArmOut);
