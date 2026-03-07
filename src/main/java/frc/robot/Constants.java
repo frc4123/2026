@@ -112,6 +112,7 @@ public class Constants {
         public static final double stowPosition = 0.33;
 
         public static final double sensorToMechanismRatio = 25.0;
+        public static final double currentCancelationThreshold = 30;
        
         public static final double kP = 5000.0;
         public static final double kI = 0;

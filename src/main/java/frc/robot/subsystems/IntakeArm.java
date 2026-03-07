@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
-import frc.robot.Constants.HoodConstants;
 import frc.robot.Constants.IntakeArmConstants;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -17,10 +17,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class IntakeArm extends SubsystemBase{
+public class IntakeArm extends SubsystemBase {
 
     private final TalonFX intakeArmMotor = new TalonFX(
         Constants.CanIdCanivore.Intake_Arm,
@@ -32,6 +33,9 @@ public class IntakeArm extends SubsystemBase{
         Constants.CanIdCanivore.canivore
     );
 
+    private final StatusSignal<Current> current = intakeArmMotor.getStatorCurrent();
+    private final StatusSignal<Boolean> isSwitchNotPressed = intakeCANdi.getS1Closed();
+
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
         new DynamicMotionMagicTorqueCurrentFOC(
@@ -39,7 +43,6 @@ public class IntakeArm extends SubsystemBase{
             IntakeArmConstants.velocity,
             IntakeArmConstants.acceleration
         );
-
         
     public IntakeArm(){
         // τηισ ισ ωερυ ιμπορταντ
@@ -84,17 +87,31 @@ public class IntakeArm extends SubsystemBase{
         return intakeArmMotor.getPosition().getValueAsDouble();
     }
 
+    public double getCurrent(){
+        return current.getValueAsDouble();
+    }
+
     public void zeroIntake() {
         intakeArmMotor.setPosition(IntakeArmConstants.stowPosition);
     }
 
     public boolean isSwitchPressed() {
-        return !intakeCANdi.getS1Closed().getValue();
+        return !isSwitchNotPressed.getValue();
+    }
+
+    public void setBrakeMode() {
+        intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
+    }
+
+    public void setCoastMode() {
+        intakeArmMotor.setNeutralMode(NeutralModeValue.Coast);
     }
 
     @Override
     public void periodic() {
-        
+
+        BaseStatusSignal.refreshAll(current, isSwitchNotPressed);
+
         if(isSwitchPressed()) {
             zeroIntake();
         }

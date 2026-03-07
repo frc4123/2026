@@ -16,6 +16,7 @@ public class IntakeArmOut extends Command{
     @Override
     public void execute() {
         intakeArm.setIntakePosition(IntakeArmConstants.outPosition);
+        intakeArm.setBrakeMode();
     }
     
     @Override
