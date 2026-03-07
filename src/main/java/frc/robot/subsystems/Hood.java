@@ -8,7 +8,7 @@ import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -29,18 +29,16 @@ public class Hood extends SubsystemBase{
         Constants.CanIdCanivore.canivore
     );
     
-    private final CANdi hoodCANdi = new CANdi(Constants.CanIdCanivore.Hood_CANdi, Constants.CanIdCanivore.canivore);
+    private final CANdi hoodCANdi = new CANdi(Constants.CanIdCanivore.Intake_CANdi, Constants.CanIdCanivore.canivore);
 
-    private StatusSignal<Boolean> s1Signal = hoodCANdi.getS1Closed();
-    private StatusSignal<Angle> hoodPosition = hoodMotor.getPosition();
-
+    private boolean s2Signal = hoodCANdi.getS2Closed().getValue();
+    private double hoodPosition = hoodMotor.getPosition().getValueAsDouble();
 
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
         new DynamicMotionMagicTorqueCurrentFOC(
             HoodConstants.stowPosition,
             HoodConstants.velocity,
             HoodConstants.acceleration
-            
         );
 
     public Hood() {
@@ -49,7 +47,7 @@ public class Hood extends SubsystemBase{
    
     private void configureMotor() {
 
-        hoodMotor.setNeutralMode(NeutralModeValue.Brake);
+        hoodMotor.setNeutralMode(NeutralModeValue.Coast);
 
         Slot0Configs pid = new Slot0Configs()
             .withKP(HoodConstants.kP)
@@ -68,18 +66,15 @@ public class Hood extends SubsystemBase{
         FeedbackConfigs feedbackUnits = new FeedbackConfigs()
             .withSensorToMechanismRatio(HoodConstants.sensorToMechanismRatio / 360);
 
+        TorqueCurrentConfigs torqueDeadband = new TorqueCurrentConfigs()
+            .withTorqueNeutralDeadband(1.2);
+
         hoodMotor.getConfigurator().apply(pid);
         hoodMotor.getConfigurator().apply(softLimits);
         hoodMotor.getConfigurator().apply(feedbackUnits);
+        hoodMotor.getConfigurator().apply(torqueDeadband);
 
         zeroHood();   
-    }
-
-    private void refreshStatusSignals() {
-        BaseStatusSignal.refreshAll(
-            s1Signal,
-            hoodPosition
-        );
     }
     
     public void setHoodAngle() {
@@ -92,7 +87,7 @@ public class Hood extends SubsystemBase{
     }
 
     public double getHoodDegrees(){
-        return hoodPosition.getValueAsDouble();
+        return hoodPosition;
     }
 
     public void zeroHood(){
@@ -100,12 +95,13 @@ public class Hood extends SubsystemBase{
     }
 
     public boolean isSwitchPressed(){
-        return !s1Signal.getValue();
+        return !s2Signal;
     }
 
     @Override 
     public void periodic(){
-        refreshStatusSignals();
+        s2Signal = hoodCANdi.getS2Closed().getValue();
+        hoodPosition = hoodMotor.getPosition().getValueAsDouble();
 
         boolean pressed = isSwitchPressed();
         if (pressed && !wasPressed) {

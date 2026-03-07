@@ -63,7 +63,6 @@ public class Constants {
         public static final int Intake_Roller = 20;
 
         public static final int Hood = 21;
-        public static final int Hood_CANdi = 22;
 
         public static final int Shooter = 23;
 
@@ -112,7 +111,7 @@ public class Constants {
         public static final double stowPosition = 0.33;
 
         public static final double sensorToMechanismRatio = 25.0;
-        public static final double currentCancelationThreshold = 30;
+        public static final double currentCancelationThreshold = 80;
        
         public static final double kP = 5000.0;
         public static final double kI = 0;
@@ -206,8 +205,8 @@ public class Constants {
     
         //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.420400;
-        public static final double encoder2Offset = -0.503418;
+        public static final double encoder1Offset = -0.433105;
+        public static final double encoder2Offset = -0.527588;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -259,17 +258,17 @@ public class Constants {
 
         public static final double sensorToMechanismRatio = 136.0 / 1; //TODO confirm joseph is right lmao
 
-        public static final double kP = 0;
-        public static final double kI = 0; 
-        public static final double kD = 0;
-        public static final double kS = 0; 
+        public static final double kP = 13;
+        public static final double kI = 0.051; 
+        public static final double kD = 0.6;
+        public static final double kS = 2.1; 
         public static final double kV = 0; 
         public static final double kA = 0;
 
-        public static final double velocity = 0;
-        public static final double acceleration = 0;
+        public static final double velocity = 120;
+        public static final double acceleration = 120;
 
-        public static final double stowPosition = Math.toDegrees(MIN_HOOD_ANGLE.magnitude());
+        public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
 
     }
 
