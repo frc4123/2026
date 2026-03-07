@@ -60,10 +60,10 @@ public class Shooter extends SubsystemBase{
 
         ShotData shot = ShotCache.get();
 
-        double Velo = shot.getExitVelocity().in(MetersPerSecond) * (Field.fuelRadius.in(Inches) / (ShooterConstants.flywheelRadius.in(Inches)))
+        double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
             / (2.0 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
 
-        shooterMotor.setControl(motionMagic.withVelocity(Velo));
+        shooterMotor.setControl(motionMagic.withVelocity(Velo + 1));
     }
 
     public void shooterMinVelo() {

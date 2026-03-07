@@ -5,6 +5,10 @@
 package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
@@ -43,6 +47,9 @@ public class Robot extends LoggedRobot {
         //m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
         ShotCache.update();
+
+        SmartDashboard.putNumber("Target Hood Angle", ShotCache.get().getHoodAngle().in(Degrees));
+        SmartDashboard.putNumber("Target Shooter Velo", ShotCache.get().getExitVelocity().in(MetersPerSecond));
         SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
         SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
         SmartDashboard.putNumber("Match Data/TimeLeftInShift", ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));

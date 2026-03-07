@@ -55,7 +55,7 @@ public class Vision extends SubsystemBase{
     
     private final PhotonCamera FLO_camera = new PhotonCamera("Front_Left_Outside_Arducam_OV9281_USB_Camera");
     private final PhotonCamera FLI_camera = new PhotonCamera("Front_Left_Inside_Arducam_OV9281_USB_Camera");
-    private final PhotonCamera FR_camera = new PhotonCamera("Front_Right_Arducam_OV9281_USB_Camera");
+    private final PhotonCamera FR_camera = new PhotonCamera("Front_Right");
     private final PhotonCamera turretCam = new PhotonCamera("Turret_Arducam");
 
     private final PhotonPoseEstimator FLO_Estimator;
@@ -170,7 +170,7 @@ public class Vision extends SubsystemBase{
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
             
             // Add vision measurement to pose estimator
-            if(result.getBestTarget().getPoseAmbiguity() < 0.1){
+            if(result.getBestTarget().getPoseAmbiguity() < 0.07){
                 swerve.addVisionMeasurement(
                     est.estimatedPose.toPose2d(),
                     est.timestampSeconds,
@@ -186,27 +186,28 @@ public class Vision extends SubsystemBase{
     }
     
     private boolean shouldAcceptPhotonUpdate() {
-        // Check 1: Robot pitch/roll (are we tilted like going over bump?)
-        Rotation3d rotation = swerve.getRotation3d();
-        double pitchDeg = Math.toDegrees(rotation.getY());
-        double rollDeg = Math.toDegrees(rotation.getX());
+        return true;
+        // // Check 1: Robot pitch/roll (are we tilted like going over bump?)
+        // Rotation3d rotation = swerve.getRotation3d();
+        // double pitchDeg = Math.toDegrees(rotation.getY());
+        // double rollDeg = Math.toDegrees(rotation.getX());
         
-        if (Math.abs(pitchDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH || 
-            Math.abs(rollDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH) {
-            return false; // Robot is tilted - probably on bump or climb
-        }
-        
-        // Check 2: Z-axis acceleration (are we bouncing/airborne?)
-        // If you have an IMU with 3-axis accel:
-        // double zAccel = navX.getRawAccelZ(); // or pigeon.getAccelZ()
-        // if (Math.abs(zAccel - 9.81) > MAX_ACCEPTABLE_Z_ACCEL) {
-        //     return false; // Experiencing high vertical acceleration
+        // if (Math.abs(pitchDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH || 
+        //     Math.abs(rollDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH) {
+        //     return false; // Robot is tilted - probably on bump or climb
         // }
         
-        // Check 3: Large pose jumps (vision suddenly disagrees with odometry)
-        // Add standard deviation checking here if needed
+        // // Check 2: Z-axis acceleration (are we bouncing/airborne?)
+        // // If you have an IMU with 3-axis accel:
+        // // double zAccel = navX.getRawAccelZ(); // or pigeon.getAccelZ()
+        // // if (Math.abs(zAccel - 9.81) > MAX_ACCEPTABLE_Z_ACCEL) {
+        // //     return false; // Experiencing high vertical acceleration
+        // // }
         
-        return true; // Accept the update
+        // // Check 3: Large pose jumps (vision suddenly disagrees with odometry)
+        // // Add standard deviation checking here if needed
+        
+        // return true; // Accept the update
     }
 
     public double getTurretCamOffset() {
