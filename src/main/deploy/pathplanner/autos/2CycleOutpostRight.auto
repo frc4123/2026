@@ -5,21 +5,78 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2Cycle1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2Cycle1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmOut"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2Cycle2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2Cycle2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmIn"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2Cycle3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2Cycle3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Uptake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ClimbUp"
+                }
+              }
+            ]
           }
         },
         {
@@ -32,6 +89,12 @@
           "type": "path",
           "data": {
             "pathName": "2Cycle4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ClimbDown"
           }
         }
       ]
