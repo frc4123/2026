@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Telemetry {
 
@@ -24,7 +25,7 @@ public class Telemetry {
     }
 
     public void telemeterize(SwerveDriveState state) {
-        drivePose.set(state.Pose);
-        m_field.setRobotPose(state.Pose);
+        drivePose.set(CommandSwerveDrivetrain.getInstance().getState().Pose);
+        m_field.setRobotPose(CommandSwerveDrivetrain.getInstance().getState().Pose);
     }
 }

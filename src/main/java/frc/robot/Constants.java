@@ -232,13 +232,13 @@ public class Constants {
 
     public static final class ShooterConstants {
 
-        public static final LinearVelocity MIN_SPEED = MetersPerSecond.of(6);  // TODO find the minimum speed
+        public static final LinearVelocity MIN_SPEED = MetersPerSecond.of(6); 
 
-        public static final Distance flywheelRadius = Inches.of(2.03); //TODO find the magnitude
+        public static final Distance flywheelRadius = Inches.of(2.03); 
 
         public static final double metersPerRotation = 2.0 * Math.PI * flywheelRadius.in(Meters);
 
-        public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; //TODO: ask joseph
+        public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
         public static final double kP = 6.5; // 6.5;
         public static final double kI = 0; // was 0.0441
@@ -247,16 +247,16 @@ public class Constants {
         public static final double kV = 0.1;  //try this 0;
         public static final double kA = 0.015; 
         
-        public static final double acceleration = 60;
+        public static final double acceleration = 90;
 
     }
 
     public static final class HoodConstants {
 
-        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724);  // Your minimum angle
-        public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  // Your maximum angle
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(33.0); // its really 29.359724
+        public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  
 
-        public static final double sensorToMechanismRatio = 136.0 / 1; //TODO confirm joseph is right lmao
+        public static final double sensorToMechanismRatio = 136.0 / 1; 
 
         public static final double kP = 13;
         public static final double kI = 0.051; 
@@ -265,11 +265,10 @@ public class Constants {
         public static final double kV = 0; 
         public static final double kA = 0;
 
-        public static final double velocity = 120;
-        public static final double acceleration = 120;
+        public static final double velocity = 170;
+        public static final double acceleration = 170;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
-
     }
 
     public static final class ClimbConstants {
@@ -293,9 +292,9 @@ public class Constants {
     public static final class Quest {
 
         //Front Forward Camera Translation and Angle
-        public static final double frontX = Units.inchesToMeters(11.5); // 7.495 7.176364 -7.176364
-        public static final double frontY = Units.inchesToMeters(-4.5);
-        public static final double frontZ = Units.inchesToMeters(6.75); // 7.02
+        public static final double frontX = Units.inchesToMeters(12.5); // 7.495 7.176364 -7.176364
+        public static final double frontY = Units.inchesToMeters(-9);
+        public static final double frontZ = Units.inchesToMeters(10); // 7.02
 
         public static final double frontRoll = Math.toRadians(0);
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
