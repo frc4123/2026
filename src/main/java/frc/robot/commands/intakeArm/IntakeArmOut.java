@@ -21,6 +21,6 @@ public class IntakeArmOut extends Command{
     
     @Override
     public void end(boolean interrupted) {
-        intakeArm.setIntakePosition(IntakeArmConstants.stowPosition);
+        //intakeArm.setIntakePosition(IntakeArmConstants.stowPosition);
     }
 }

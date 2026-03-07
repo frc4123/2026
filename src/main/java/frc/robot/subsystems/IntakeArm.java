@@ -70,7 +70,7 @@ public class IntakeArm extends SubsystemBase {
             .withInverted(InvertedValue.Clockwise_Positive);
         
         TorqueCurrentConfigs torqueDeadband = new TorqueCurrentConfigs()
-            .withTorqueNeutralDeadband(0.5);
+            .withTorqueNeutralDeadband(6.5);
 
         intakeArmMotor.getConfigurator().apply(pid);
         intakeArmMotor.getConfigurator().apply(feedbackUnits);
