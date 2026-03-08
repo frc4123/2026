@@ -199,11 +199,14 @@ public class Constants {
         public static final double mechanismGearTeeth = 85.0; // drives botrh encoders
         public static final double encoder1Teeth = 10.0; //24.0;      // Gear on Hex Shaft A that connects to turret
         public static final double encoder2Teeth = 22.0; // 10.0 / (50.0/22.0); // 22.0;
+        public static final double turretDrivingGear = 10.0;
+        public static final double fiftyTGear = 50.0;
 
-        public static final double motorToTurretRatio =  (50.0 / 10.0) * (mechanismGearTeeth / encoder1Teeth);// (48.0/9.0) * (180.0/24.0); 
+        public static final double motorToTurretRatio =  (fiftyTGear / turretDrivingGear) * (mechanismGearTeeth / encoder1Teeth);// (48.0/9.0) * (180.0/24.0); 
 
-        public static final double rotorToEncoder1Ratio = (50.0 / 10.0); //48.0 / 9.0;
+        public static final double rotorToEncoder1Ratio = (fiftyTGear / turretDrivingGear); //48.0 / 9.0;
         public static final double sensorToMechanismRatio = (mechanismGearTeeth / encoder1Teeth); //180.0 / 24.0;
+        public static final double sensor2ToMechanismRatio = ((mechanismGearTeeth / encoder1Teeth) * (fiftyTGear / encoder2Teeth)); 
     
         //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
