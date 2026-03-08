@@ -14,6 +14,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
@@ -82,6 +83,7 @@ public class Hood extends SubsystemBase{
         ShotData shot = ShotCache.get();
 
         double desiredAngle = shot.getHoodAngle().in(Degrees);
+        //desiredAngle *= 0.98;
 
         hoodMotor.setControl(motionMagic.withPosition(desiredAngle));
     }
@@ -102,6 +104,8 @@ public class Hood extends SubsystemBase{
     public void periodic(){
         s2Signal = hoodCANdi.getS2Closed().getValue();
         hoodPosition = hoodMotor.getPosition().getValueAsDouble();
+
+        SmartDashboard.putNumber("Real Hood Angle", getHoodDegrees());
 
         boolean pressed = isSwitchPressed();
         if (pressed && !wasPressed) {

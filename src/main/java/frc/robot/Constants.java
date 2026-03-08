@@ -256,7 +256,7 @@ public class Constants {
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724); // its really 29.359724
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  
 
-        public static final double sensorToMechanismRatio = 136.0 / 1; 
+        public static final double sensorToMechanismRatio = 136.0 / 1.0; 
 
         public static final double kP = 13;
         public static final double kI = 0.051; 
@@ -265,8 +265,8 @@ public class Constants {
         public static final double kV = 0; 
         public static final double kA = 0;
 
-        public static final double velocity = 170;
-        public static final double acceleration = 170;
+        public static final double velocity = 120;
+        public static final double acceleration = 120;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
     }
@@ -336,7 +336,7 @@ public class Constants {
         public static final double FR_frontYaw = Math.toRadians(-131.987);
 
         //blueHub translations
-        public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.4304264, new Rotation3d());
+        public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.828/*1.4304264*/, new Rotation3d());
         public static final Translation2d blueHubTranslation2d = blueHub.getTranslation().toTranslation2d();
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
@@ -353,7 +353,7 @@ public class Constants {
         public static final Pose3d blueAimThreshold = new Pose3d (0.7, 2.080, 1, new Rotation3d());
 
         //redHub translations
-        public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264, new Rotation3d());
+        public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.828/*1.4304264*/, new Rotation3d());
         public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
