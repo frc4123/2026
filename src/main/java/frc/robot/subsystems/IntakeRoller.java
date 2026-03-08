@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeRollerConstants;
 
+import static frc.robot.Constants.IntakeRollerConstants.intakeVelo;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -49,6 +51,10 @@ public class IntakeRoller extends SubsystemBase{
     public void setIntakeVelo(double velo){
         intakeRollerMotor.setControl(  
             motionMagic.withVelocity(velo));
+    }
+
+    public boolean isIntaking() {
+        return intakeRollerMotor.getVelocity().getValueAsDouble() > intakeVelo * 0.75;
     }
 
     public double getIntakeVelo() {

@@ -122,7 +122,7 @@ public class Constants {
         public static final double kG = 6.14123;
 
         public static final double velocity = 2.5;
-        public static final double acceleration = 2.5;
+        public static final double acceleration = 3.5;
     }
 
     public static class IntakeRollerConstants {
@@ -216,10 +216,9 @@ public class Constants {
         public static final int maxTeeth = 1;
         public static final int maxIterations = 30;
 
-
-        public static final double offsetX = Units.inchesToMeters(8);
-        public static final double offsetY = Units.inchesToMeters(-8);
-        public static final double offsetZ = Units.inchesToMeters(8);
+        public static final double offsetX = Units.inchesToMeters(3);
+        public static final double offsetY = Units.inchesToMeters(0);
+        public static final double offsetZ = Units.inchesToMeters(22);
 
         public static final double tagOffset = Units.inchesToMeters(47/2);
         public static final double[] validTurretTagsBlue = {21, 26, 18};
@@ -239,6 +238,8 @@ public class Constants {
         public static final Distance flywheelRadius = Inches.of(2.03); 
 
         public static final double metersPerRotation = 2.0 * Math.PI * flywheelRadius.in(Meters);
+        
+        public static final Distance compression = Inches.of(0.25);
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
@@ -249,7 +250,7 @@ public class Constants {
         public static final double kV = 0.1;  //try this 0;
         public static final double kA = 0.015; 
         
-        public static final double acceleration = 60;
+        public static final double acceleration = 90;
 
     }
 
@@ -267,8 +268,8 @@ public class Constants {
         public static final double kV = 0; 
         public static final double kA = 0;
 
-        public static final double velocity = 120;
-        public static final double acceleration = 120;
+        public static final double velocity = 140;
+        public static final double acceleration = 160;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
     }
