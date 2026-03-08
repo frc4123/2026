@@ -59,6 +59,7 @@ import frc.robot.commands.climb.ClimbUp;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmOut;
+import frc.robot.commands.intakeArm.IntakeShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
 import frc.robot.commands.sevenEleven.Roll;
@@ -118,6 +119,7 @@ public class RobotContainer {
     private final Roll roll = new Roll(sevenEleven);
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
+    private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
     private final HoodAim hoodAim = new HoodAim(hood);
     //private final SetShooterDefaultVelo setShooterDefaultVelo = new SetShooterDefaultVelo(shooter);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
@@ -279,6 +281,7 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
+        joystick.rightTrigger().whileTrue(new WaitCommand(3).andThen(intakeShimmy));
         joystick.rightTrigger().onFalse(uptakeStop);
         
         joystick.leftTrigger().onTrue(intakeArmIn);
