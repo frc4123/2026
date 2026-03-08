@@ -219,10 +219,10 @@ public class Turret extends SubsystemBase {
                 
 
         // you can inspect:
-        easyCrt.getUniqueCoverage();          // Optional<Angle> coverage from prime counts and common scale
-        easyCrt.coverageSatisfiesRange();     // Does coverage exceed maxMechanismAngle?
-        easyCrt.getRecommendedCrtGearPair(); // Suggested pair within constraints
-        easyCrt.getUniqueCoverage();
+        // easyCrt.getUniqueCoverage();          // Optional<Angle> coverage from prime counts and common scale
+        // easyCrt.coverageSatisfiesRange();     // Does coverage exceed maxMechanismAngle?
+        // easyCrt.getRecommendedCrtGearPair(); // Suggested pair within constraints
+        // easyCrt.getUniqueCoverage();
 
         // Create the solver:
         var easyCrtSolver = new EasyCRT(easyCrt);
