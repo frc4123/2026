@@ -182,6 +182,8 @@ public class Constants {
         public static final double velocity = 5; //2.5 // 1.75 working if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
         public static final double acceleration = 5; // 3 before replacing with 1.1 try lowering kv //1.1
 
+        public  static final double dragCoeff = 1.14123;
+
         public static final double kP = 0;//300;
         public static final double kI = 0;//11;
         public static final double kD = 0;//10.4123;

@@ -83,7 +83,7 @@ public class Hood extends SubsystemBase{
         ShotData shot = ShotCache.get();
 
         double desiredAngle = shot.getHoodAngle().in(Degrees);
-        //desiredAngle *= 0.98;
+        desiredAngle *= 0.99;
 
         hoodMotor.setControl(motionMagic.withPosition(desiredAngle));
     }
