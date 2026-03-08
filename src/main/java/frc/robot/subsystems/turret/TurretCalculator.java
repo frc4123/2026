@@ -169,7 +169,7 @@ public class TurretCalculator {
         }
         
         // ShotData constructor expects: (double exitVelocity_in/s, double hoodAngle_radians, Translation3d target)
-        return new ShotData(InchesPerSecond.of(finalV0 * TurretConstants.dragCoeff).in(MetersPerSecond), calculatedAngle.in(Radians), predictedTarget);
+        return new ShotData(InchesPerSecond.of(finalV0).in(MetersPerSecond), calculatedAngle.in(Radians), predictedTarget);
     }
 
     public static ShotData calculatePass(Pose2d robot, Translation3d target) {

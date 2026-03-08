@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.Field;
 import frc.robot.utils.ShotCache;
@@ -62,9 +63,9 @@ public class Shooter extends SubsystemBase{
         ShotData shot = ShotCache.get();
 
         double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
-            / (2.0 * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
+            / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters)));
 
-        shooterMotor.setControl(motionMagic.withVelocity(Velo /*1.14123*/));  //1.23
+        shooterMotor.setControl(motionMagic.withVelocity(1 + (Velo * 1)));  //1.23
     }
 
     public void shooterMinVelo() {
