@@ -142,7 +142,7 @@ public class Constants {
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
         public static final double kD = 0;
-        public static final double kS = 0; 
+        public static final double kS = 0;          
         public static final double kV = 0.118;  //try this 0;
         public static final double kA = 0; 
     }

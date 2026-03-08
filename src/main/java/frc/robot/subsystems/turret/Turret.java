@@ -199,7 +199,6 @@ public class Turret extends SubsystemBase {
     }
 
     public EasyCRT initCRT(){
-        // Suppose: mechanism : drive gear = 12:1, drive gear = 50T, encoders use 19T and 23T pinions.
 
         Supplier<Angle> enc1Supplier = () -> Rotations.of(encoder1PositionSignal.getValueAsDouble());
         Supplier<Angle> enc2Supplier = () -> Rotations.of(encoder2PositionSignal.getValueAsDouble());
@@ -210,12 +209,12 @@ public class Turret extends SubsystemBase {
                 .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(0)) // WE ALREADY FLASHED OFFSETS
                 .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange - 0.07), Rotations.of(TurretConstants.mechanismMaxRange + 0.07)) 
                 .withMatchTolerance(Rotations.of(0.03)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
-                .withAbsoluteEncoderInversions(false, false)
-                .withCrtGearRecommendationConstraints(
-                    /* coverageMargin */ TurretConstants.coverageMargin,
-                    /* minTeeth */ TurretConstants.minTeeth,
-                    /* maxTeeth */ TurretConstants.maxTeeth,
-                    /* maxIterations */ TurretConstants.maxIterations);
+                .withAbsoluteEncoderInversions(false, false);
+                // .withCrtGearRecommendationConstraints(
+                //     /* coverageMargin */ TurretConstants.coverageMargin,
+                //     /* minTeeth */ TurretConstants.minTeeth,
+                //     /* maxTeeth */ TurretConstants.maxTeeth,
+                //     /* maxIterations */ TurretConstants.maxIterations);
                 
 
         // you can inspect:
