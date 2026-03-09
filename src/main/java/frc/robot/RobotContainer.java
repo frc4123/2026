@@ -14,7 +14,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import java.lang.Math;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -50,8 +49,6 @@ import frc.robot.utils.ShiftHelpers;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
-import frc.robot.commands.autos.threeBumpRight;
-import frc.robot.commands.autos.twoCycle;
 import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.climb.ClimbDown;
@@ -66,7 +63,6 @@ import frc.robot.commands.sevenEleven.Roll;
 import frc.robot.commands.shooter.SetShooterVelocity;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
-import frc.robot.commands.uptake.UptakeReverse;
 import frc.robot.commands.uptake.UptakeStop;
 import frc.robot.commands.uptake.UptakeUp;
 

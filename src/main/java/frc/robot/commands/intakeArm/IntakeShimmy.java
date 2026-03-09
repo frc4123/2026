@@ -39,13 +39,16 @@ public class IntakeShimmy extends Command {
                     cycle = null;
                 }
             }
-        } else if (isIntaking) {
-            intakeArm.setIntakePosition(IntakeArmConstants.outPosition);
-
         } else {
-            if (cycle != null && cycle.isScheduled()) {
-                cycle.cancel();
-            }
+            intakeArm.setIntakePosition(IntakeArmConstants.outPosition);
+        }
+
+        if (cycle != null && !cycle.isScheduled()) {
+            cycle = null;
+
+        } else if (cycle != null && cycle.isScheduled()) {
+            cycle.cancel();
+            cycle = null;
         }
     }
 
