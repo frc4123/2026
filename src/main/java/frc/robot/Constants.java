@@ -210,8 +210,11 @@ public class Constants {
     
         //public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth) * (50.0 / encoder2Teeth);      // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = -0.575684;
-        public static final double encoder2Offset = -0.481281;
+        public static final double encoder1Offset = 0; // -0.575684;
+        public static final double encoder2Offset = 0;
+
+        public static final double encoder1CRTOffset = -0.568359; // -0.575684;
+        public static final double encoder2CRTOffset = -0.469238; // -0.481281;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;

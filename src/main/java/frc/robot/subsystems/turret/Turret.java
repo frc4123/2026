@@ -81,7 +81,9 @@ public class Turret extends SubsystemBase {
     // private final StatusSignal<Voltage> voltageSignal = turretMotor.getMotorVoltage();
 
     private final StatusSignal<Angle> encoder1PositionSignal = turretEncoder1.getPosition();
-    private final StatusSignal<Angle> encoder2PositionSignal = turretEncoder2.getPosition();
+
+    private final StatusSignal<Angle> encoder1AbsolutePositionSignal = turretEncoder1.getAbsolutePosition();
+    private final StatusSignal<Angle> encoder2AbsolutePositionSignal = turretEncoder2.getAbsolutePosition();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
     private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
@@ -130,7 +132,8 @@ public class Turret extends SubsystemBase {
         TalonFXConfiguration feedbackUnits = new TalonFXConfiguration();
 
         feedbackUnits.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        feedbackUnits.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1; // ID of CANcoder
+        feedbackUnits.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1;
+        feedbackUnits.Feedback.FeedbackRotorOffset = 0; 
 
         feedbackUnits.Feedback.RotorToSensorRatio = TurretConstants.rotorToEncoder1Ratio;    
         feedbackUnits.Feedback.SensorToMechanismRatio = TurretConstants.sensorToMechanismRatio;
@@ -185,8 +188,9 @@ public class Turret extends SubsystemBase {
         //     motorPositionSignal, 
         //     motorVelocitySignal,
         //     voltageSignal,
-            encoder1PositionSignal,
-            encoder2PositionSignal//,
+            encoder1AbsolutePositionSignal,
+            encoder2AbsolutePositionSignal,
+            encoder1PositionSignal//,
         //     encoderVelocitySignal
         );
     }
@@ -200,15 +204,15 @@ public class Turret extends SubsystemBase {
 
     public EasyCRT initCRT(){
 
-        Supplier<Angle> enc1Supplier = () -> Rotations.of(encoder1PositionSignal.getValueAsDouble());
-        Supplier<Angle> enc2Supplier = () -> Rotations.of(encoder2PositionSignal.getValueAsDouble());
+        Supplier<Angle> enc1Supplier = () -> Rotations.of(encoder1AbsolutePositionSignal.getValueAsDouble());
+        Supplier<Angle> enc2Supplier = () -> Rotations.of(encoder2AbsolutePositionSignal.getValueAsDouble());
 
         var easyCrt =
             new EasyCRTConfig(enc1Supplier, enc2Supplier)
                 .withEncoderRatios(TurretConstants.sensorToMechanismRatio, TurretConstants.sensor2ToMechanismRatio)
-                .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(0)) // WE ALREADY FLASHED OFFSETS
+                .withAbsoluteEncoderOffsets(Rotations.of(TurretConstants.encoder1CRTOffset), Rotations.of(TurretConstants.encoder2CRTOffset)) // WE ALREADY FLASHED OFFSETS
                 .withMechanismRange(Rotations.of(TurretConstants.mechanismMinRange - 0.07), Rotations.of(TurretConstants.mechanismMaxRange + 0.07)) 
-                .withMatchTolerance(Rotations.of(0.03)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
+                .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure about this so prolly js keep tts as it is or research //TODO: research
                 .withAbsoluteEncoderInversions(false, false);
                 // .withCrtGearRecommendationConstraints(
                 //     /* coverageMargin */ TurretConstants.coverageMargin,
@@ -238,9 +242,9 @@ public class Turret extends SubsystemBase {
             return;
         }
 
-        BaseStatusSignal.refreshAll(encoder1PositionSignal, encoder2PositionSignal);
+        BaseStatusSignal.refreshAll(encoder1AbsolutePositionSignal, encoder2AbsolutePositionSignal, encoder1PositionSignal);
 
-        if (!encoder1PositionSignal.getStatus().isOK() || !encoder2PositionSignal.getStatus().isOK()) {
+        if (!encoder1AbsolutePositionSignal.getStatus().isOK() || !encoder2AbsolutePositionSignal.getStatus().isOK()) {
             System.out.println("Waiting for encoder signals...");
             return;
         }
@@ -262,7 +266,6 @@ public class Turret extends SubsystemBase {
         // Calculate offset: 87° - 3° = 84° offset
         initOffsetDegrees = cumulativeAngle - currentEncoderDegrees;
 
-
         hasAbsoluteZero = true;
     }
 
@@ -276,7 +279,7 @@ public class Turret extends SubsystemBase {
         cumulativeAngle = initOffsetDegrees + (encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
         //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
-        // cumulativeAngle = encoder1PositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
+        // cumulativeAngle = encoder1AbsolutePositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
@@ -451,10 +454,11 @@ public class Turret extends SubsystemBase {
         
 
         SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
-    //     SmartDashboard.putNumber("Encoder1 Position", encoder1PositionSignal.getValueAsDouble());
-    //     SmartDashboard.putNumber("Encoder2 Position", encoder2PositionSignal.getValueAsDouble());
-    //     SmartDashboard.putNumber("Motor Pos (rot)", motorPositionSignal.getValueAsDouble());
-    //     SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
+        SmartDashboard.putNumber("Encoder1 Position", encoder1AbsolutePositionSignal.getValueAsDouble());
+        SmartDashboard.putNumber("Encoder2 Position", encoder2AbsolutePositionSignal.getValueAsDouble());
+        SmartDashboard.putNumber("Motor Pos (rot)", turretMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("initoffset", initOffsetDegrees);
+        SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
 
     }
 

@@ -256,7 +256,10 @@ public class RobotContainer {
 
         //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
-        joystick.a().onTrue(new ParallelCommandGroup(intakeArmOut, intakeRollersIn));
+        joystick.a().onTrue(intakeRollersIn);
+        joystick.a().onFalse(intakeRollersStop);
+        
+        joystick.a().onTrue(intakeArmOut);
         joystick.a().onFalse(intakeRollersStop);
 
         Trigger shiftWarning = new Trigger(() ->
