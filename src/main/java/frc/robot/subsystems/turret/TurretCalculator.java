@@ -28,7 +28,6 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */

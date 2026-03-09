@@ -342,7 +342,7 @@ public class Constants {
         public static final double FR_frontYaw = Math.toRadians(-131.987);
 
         //blueHub translations
-        public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.828/*1.4304264*/, new Rotation3d());
+        public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.4304264/*1.828*/, new Rotation3d());
         public static final Translation2d blueHubTranslation2d = blueHub.getTranslation().toTranslation2d();
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
@@ -359,7 +359,7 @@ public class Constants {
         public static final Pose3d blueAimThreshold = new Pose3d (0.7, 2.080, 1, new Rotation3d());
 
         //redHub translations
-        public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.828/*1.4304264*/, new Rotation3d());
+        public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264/*1.828*/, new Rotation3d());
         public static final Translation2d redHubTranslation2d = redHub.getTranslation().toTranslation2d();
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 

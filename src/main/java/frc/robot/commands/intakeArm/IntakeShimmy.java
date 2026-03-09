@@ -29,9 +29,9 @@ public class IntakeShimmy extends Command {
             if (cycle == null || !cycle.isScheduled()) {
                 cycle = new SequentialCommandGroup(
                     new InstantCommand(() -> intakeArm.setIntakePosition(IntakeArmConstants.stowPosition), intakeArm),
-                    new WaitCommand(0.9),
+                    new WaitCommand(0.7),
                     new InstantCommand(() -> intakeArm.setIntakePosition(IntakeArmConstants.outPosition), intakeArm),
-                    new WaitCommand(0.9)
+                    new WaitCommand(0.7)
                 );
                 CommandScheduler.getInstance().schedule(cycle);
 
