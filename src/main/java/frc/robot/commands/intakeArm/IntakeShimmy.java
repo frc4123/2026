@@ -34,6 +34,10 @@ public class IntakeShimmy extends Command {
                     new WaitCommand(0.9)
                 );
                 CommandScheduler.getInstance().schedule(cycle);
+
+                if (cycle != null && !cycle.isScheduled()) {
+                    cycle = null;
+                }
             }
         } else if (isIntaking) {
             intakeArm.setIntakePosition(IntakeArmConstants.outPosition);
