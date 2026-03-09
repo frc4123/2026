@@ -159,7 +159,7 @@ public class Turret extends SubsystemBase {
         // Configure CANcoder 1
         MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
             .withAbsoluteSensorDiscontinuityPoint(1.0)
-            .withSensorDirection(SensorDirectionValue.Clockwise_Positive) //TODO: check which is which
+            .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) //TODO: check which is which
             .withMagnetOffset(TurretConstants.encoder1Offset); // Set the offset here
         
         CANcoderConfiguration config1 = new CANcoderConfiguration()
@@ -170,7 +170,7 @@ public class Turret extends SubsystemBase {
         // Configure CANcoder 2
         MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
         .withAbsoluteSensorDiscontinuityPoint(1.0)
-        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) //TODO: check which is which
+        .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) //TODO: check which is which
         .withMagnetOffset(TurretConstants.encoder2Offset); // Set the offset here
     
         CANcoderConfiguration config2 = new CANcoderConfiguration()
