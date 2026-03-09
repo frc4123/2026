@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
-import frc.robot.utils.Field;
 import frc.robot.utils.ShotCache;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
