@@ -49,7 +49,7 @@ public class Robot extends LoggedRobot {
         ShotCache.update();
 
         SmartDashboard.putNumber("Target Hood Angle", ShotCache.get().getHoodAngle().in(Degrees));
-        SmartDashboard.putNumber("Target Shooter Velo", ShotCache.get().getExitVelocity().in(MetersPerSecond));
+        SmartDashboard.putNumber("Target Exit Velocity", ShotCache.get().getExitVelocity().in(MetersPerSecond));
         SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
         SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
         SmartDashboard.putNumber("Match Data/TimeLeftInShift", ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
