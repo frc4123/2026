@@ -62,6 +62,9 @@ public class Shooter extends SubsystemBase{
         double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
             / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters)));
 
+            // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
+            // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
+
         shooterMotor.setControl(motionMagic.withVelocity(1 + (Velo * 1)));  //1.23
     }
 
@@ -80,6 +83,10 @@ public class Shooter extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Real Shooter Velocity", getShooterVelo() * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
+        SmartDashboard.putNumber("Predicted Projectile Velocity",
+            getShooterVelo() *
+            Math.PI *
+            (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters)));
         //rps * (Math.PI * wheelDiameterMeters)
     }
 }
