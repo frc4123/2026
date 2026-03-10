@@ -151,7 +151,7 @@ public class Turret extends SubsystemBase {
             .withKA(TurretConstants.kA);
 
         MotorOutputConfigs motorOutput = new MotorOutputConfigs()
-            .withInverted(InvertedValue.Clockwise_Positive);
+            .withInverted(InvertedValue.CounterClockwise_Positive);
 
         turretMotor.getConfigurator().apply(feedbackUnits);
         turretMotor.getConfigurator().apply(pid);
