@@ -187,7 +187,7 @@ public class Constants {
         public static final double kP = 0;//300;
         public static final double kI = 0;//11;
         public static final double kD = 0;//10.4123;
-        public static final double kS = 9;// 1.25;
+        public static final double kS = 4.148;// 1.25; //9;
         public static final double kV = 0;//0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
         public static final double kA = 0;//0.028; //0.05; // 0.367048
 
@@ -222,9 +222,9 @@ public class Constants {
         public static final int maxTeeth = 1;
         public static final int maxIterations = 30;
 
-        public static final double offsetX = Units.inchesToMeters(3);
+        public static final double offsetX = Units.inchesToMeters(7);
         public static final double offsetY = Units.inchesToMeters(0);
-        public static final double offsetZ = Units.inchesToMeters(22);
+        public static final double offsetZ = Units.inchesToMeters(21);
 
         public static final double tagOffset = Units.inchesToMeters(47/2);
         public static final double[] validTurretTagsBlue = {21, 26, 18};
@@ -249,12 +249,14 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double kP = 6.5; // 6.5;
+        public static final double shootingTestErrorRatio = 1.2355;
+
+        public static final double kP = 9.8; // 6.5;
         public static final double kI = 0; // was 0.0441
         public static final double kD = 0;
-        public static final double kS = 5; // 0.3
-        public static final double kV = 0.1;  //try this 0;
-        public static final double kA = 0.015; 
+        public static final double kS = 4; // 0.3
+        public static final double kV = 1;  //try this 0;
+        public static final double kA = 0.015; //54 to 52 falloff // 15'3'' and 1/8 inch
         
         public static final double acceleration = 90;
 
