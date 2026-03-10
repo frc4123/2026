@@ -277,9 +277,8 @@ public class Turret extends SubsystemBase {
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
         cumulativeAngle = initOffsetDegrees + (encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio);
-        //cumulativeAngle = encoderDegrees / (TurretConstants.sensorToMechanismRatio);
-        //cumulativeAngle = motorPositionSignal.getValueAsDouble() * 360;
-        // cumulativeAngle = encoder1AbsolutePositionSignal.getValueAsDouble() * 360; // original line which had ~~ 7.11 error
+        while (cumulativeAngle > maxCumulativeAngle) cumulativeAngle -= 360.0;
+        while (cumulativeAngle < minCumulativeAngle) cumulativeAngle += 360.0;
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {
@@ -393,14 +392,12 @@ public class Turret extends SubsystemBase {
 
         // Clamp to physical limits 
         if (targetCumulative > maxCumulativeAngle) {
-            targetCumulative -= 360.0;  // Wrap from 361° to -359°
+            targetCumulative -= 360.0;  // Wrap from max° to max - 360°
         } else if (targetCumulative < minCumulativeAngle) {
-            targetCumulative += 360.0;  // Wrap from -361° to 359°
+            targetCumulative += 360.0;  // Wrap from min° to min - 360°
         }
         targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
 
-        targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
-        //clamp in case
 
         // Convert position target to motor rotations
         double targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;

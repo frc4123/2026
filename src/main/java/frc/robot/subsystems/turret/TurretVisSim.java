@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.FuelSim;
@@ -265,6 +266,18 @@ public class TurretVisSim extends SubsystemBase{
         double dx = target.getX() - turretPos.getX();
         double dy = target.getY() - turretPos.getY();
         double azimuthToTarget = Math.atan2(dy, dx);
+
+
+            // Wrap azimuth angle relative to ±360° of turret limits
+        double azimuthDeg = Math.toDegrees(azimuthToTarget);
+        while (azimuthDeg > TurretConstants.mechanismMaxRange * 360.0) azimuthDeg -= 360.0;
+        while (azimuthDeg < TurretConstants.mechanismMinRange * 360.0) azimuthDeg += 360.0;
+
+        // Clamp to physical limits
+        azimuthDeg = Math.max(TurretConstants.mechanismMinRange * 360.0,
+                            Math.min(TurretConstants.mechanismMaxRange * 360.0, azimuthDeg));
+
+        azimuthToTarget = Math.toRadians(azimuthDeg);
         
         // Update trajectory using the CALCULATED direction to target
         updateFuelWithAzimuth(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle(), azimuthToTarget);
