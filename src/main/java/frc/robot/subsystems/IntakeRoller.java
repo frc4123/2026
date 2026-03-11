@@ -35,7 +35,7 @@ public class IntakeRoller extends SubsystemBase{
     }
 
     private void configureMotor() {
-        intakeRollerMotor.setNeutralMode(NeutralModeValue.Coast);
+        intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
 
         Slot0Configs pid = new Slot0Configs()
             .withKP(IntakeRollerConstants.kP)
