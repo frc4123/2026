@@ -65,7 +65,7 @@ public class Shooter extends SubsystemBase{
             // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
             // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
 
-        shooterMotor.setControl(motionMagic.withVelocity(1 + (Velo * 1)));  //1.23
+        shooterMotor.setControl(motionMagic.withVelocity(1 + (Velo * ShooterConstants.shootingTestErrorRatio)));  //1.23
     }
 
     public void shooterMinVelo() {
