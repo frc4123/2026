@@ -264,7 +264,7 @@ public class RobotContainer {
         joystick.a().onTrue(intakeArmOut);
         joystick.a().onFalse(intakeRollersStop);
 
-        joystick.leftStick().whileTrue(avoidDecapitation);
+        joystick.b().whileTrue(avoidDecapitation);
 
         Trigger shiftWarning = new Trigger(() ->
             ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())

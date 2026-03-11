@@ -2,6 +2,7 @@ package frc.robot.commands.hood;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Hood;
+import frc.robot.utils.DecapitationHelper;
 
 
 public class HoodAim extends Command {
@@ -20,6 +21,11 @@ public class HoodAim extends Command {
     
     @Override
     public void execute(){
+        if(DecapitationHelper.closeToTrench()) {
+            hood.lowerHood();
+            return;
+        }
+        
         hood.setHoodAngle();
     }
 }
