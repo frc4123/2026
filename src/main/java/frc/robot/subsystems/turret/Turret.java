@@ -277,8 +277,7 @@ public class Turret extends SubsystemBase {
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
         cumulativeAngle = initOffsetDegrees + (encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio);
-        while (cumulativeAngle > maxCumulativeAngle) cumulativeAngle -= 360.0;
-        while (cumulativeAngle < minCumulativeAngle) cumulativeAngle += 360.0;
+
     }
 
     public Rotation2d targetAngle(Pose2d robotPose) {

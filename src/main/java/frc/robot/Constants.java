@@ -184,12 +184,12 @@ public class Constants {
 
         public  static final double dragCoeff = 1.14123;
 
-        public static final double kP = 0;//300;
-        public static final double kI = 0;//11;
-        public static final double kD = 0;//10.4123;
-        public static final double kS = 4.148;// 1.25; //9;
-        public static final double kV = 0;//0.01; // 0.5 // 4.4 0.64 / 0.15 according to calculation but was innacurate by a little bit irl
-        public static final double kA = 0;//0.028; //0.05; // 0.367048
+        public static final double kP = 20;
+        public static final double kI = 0;
+        public static final double kD = 12;
+        public static final double kS = 4.1484123;
+        public static final double kV = 5.75;
+        public static final double kA = 1.4123;
 
                                     // IN ROTATIONS //
         public static final double mechanismMinRange = -37.0 / 72.0; // -1 is -360 degrees
@@ -213,8 +213,8 @@ public class Constants {
         public static final double encoder1Offset = 0; // -0.575684;
         public static final double encoder2Offset = 0;
 
-        public static final double encoder1CRTOffset = -0.568359; // -0.575684;
-        public static final double encoder2CRTOffset = -0.469238; // -0.481281;
+        public static final double encoder1CRTOffset = -0.101074; // -0.575684;
+        public static final double encoder2CRTOffset = -0.022461; // -0.481281;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -251,12 +251,12 @@ public class Constants {
 
         public static final double shootingTestErrorRatio = 1.2355;
 
-        public static final double kP = 9.8; // 6.5;
+        public static final double kP = 4; // 6.5;
         public static final double kI = 0; // was 0.0441
         public static final double kD = 0;
-        public static final double kS = 4; // 0.3
-        public static final double kV = 1;  //try this 0;
-        public static final double kA = 0.015; //54 to 52 falloff // 15'3'' and 1/8 inch
+        public static final double kS = 4.00025; // 0.3
+        public static final double kV = 0.114123;  //try this 0;
+        public static final double kA = 0; //54 to 52 falloff // 15'3'' and 1/8 inch
         
         public static final double acceleration = 90;
 
