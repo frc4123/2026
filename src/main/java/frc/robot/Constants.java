@@ -113,7 +113,7 @@ public class Constants {
         public static final double sensorToMechanismRatio = 25.0;
         public static final double currentCancelationThreshold = 80;
        
-        public static final double kP = 5000.0;
+        public static final double kP = 1000.0;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kS = 2.5; 
@@ -179,8 +179,8 @@ public class Constants {
     public static final class TurretConstants {
 
         public static final double stowPosition = 0;
-        public static final double velocity = 5; //2.5 // 1.75 working if bad 1 was working before but its slow.. when your confident that the pid always reaches setpoint then jack ts up
-        public static final double acceleration = 5; // 3 before replacing with 1.1 try lowering kv //1.1
+        public static final double velocity = 3; //3
+        public static final double acceleration = 6; //6
 
         public  static final double dragCoeff = 1.14123;
 
@@ -277,7 +277,7 @@ public class Constants {
         public static final double kA = 0;
 
         public static final double velocity = 140;
-        public static final double acceleration = 160;
+        public static final double acceleration = 200;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
     }
