@@ -144,7 +144,7 @@ public class RobotContainer {
             configureFuelSim();
         }
 
-        //turret.setDefaultCommand(aim);
+        turret.setDefaultCommand(aim);
         hood.setDefaultCommand(hoodAim);
         shooter.setDefaultCommand(setShooterVelocity);
         sevenEleven.setDefaultCommand(roll);
