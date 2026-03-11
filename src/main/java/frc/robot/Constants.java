@@ -277,7 +277,7 @@ public class Constants {
         public static final double kA = 0;
 
         public static final double velocity = 140;
-        public static final double acceleration = 200;
+        public static final double acceleration = 250;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
     }

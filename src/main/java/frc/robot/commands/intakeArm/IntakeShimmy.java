@@ -50,8 +50,8 @@ public class IntakeShimmy extends Command {
         }
     }
 
-    @Override
-    public boolean isFinished() {
-        return false; // Never finishes on its own
+    @Override 
+    public void end(boolean interrupted){
+        cycle.cancel();
     }
 }

@@ -17,6 +17,7 @@ public class HoodAim extends Command {
     public boolean isFinished() {
         return false;
     }
+    
     @Override
     public void execute(){
         hood.setHoodAngle();
