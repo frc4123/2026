@@ -40,7 +40,7 @@ public class IntakeShimmy extends Command {
         if (cycle == null || !cycle.isScheduled()) {
             cycle = new RepeatCommand(
                 new SequentialCommandGroup(
-                    new InstantCommand(() -> intakeArm.setIntakePosition(IntakeArmConstants.stowPosition), intakeArm),
+                    new InstantCommand(() -> intakeArm.setIntakePosition(IntakeArmConstants.midPosition), intakeArm),
                     new WaitCommand(0.7),
                     new InstantCommand(() -> intakeArm.setIntakePosition(IntakeArmConstants.outPosition), intakeArm),
                     new WaitCommand(0.7)
