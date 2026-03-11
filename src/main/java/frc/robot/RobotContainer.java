@@ -53,6 +53,7 @@ import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.climb.ClimbDown;
 import frc.robot.commands.climb.ClimbUp;
+import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmOut;
@@ -117,6 +118,7 @@ public class RobotContainer {
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
     private final HoodAim hoodAim = new HoodAim(hood);
+    private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
     //private final SetShooterDefaultVelo setShooterDefaultVelo = new SetShooterDefaultVelo(shooter);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
     //private final ShooterOpenLoop ShooterOpenLoop = new ShooterOpenLoop(shooter);
@@ -262,6 +264,8 @@ public class RobotContainer {
         joystick.a().onTrue(intakeArmOut);
         joystick.a().onFalse(intakeRollersStop);
 
+        joystick.leftStick().whileTrue(avoidDecapitation);
+
         Trigger shiftWarning = new Trigger(() ->
             ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
         );
@@ -280,7 +284,9 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().whileTrue(new WaitCommand(1.25).andThen(intakeShimmy));
+        joystick.rightTrigger().whileTrue(new WaitCommand(1).andThen(intakeShimmy));
+        // joystick.rightTrigger().onFalse(intakeShimmy); command not ending
+    
         joystick.rightTrigger().onFalse(uptakeStop);
         
         joystick.leftTrigger().onTrue(intakeArmIn);

@@ -10,13 +10,13 @@ public class AvoidDecapitation extends Command {
     public AvoidDecapitation(Hood hood){
         this.hood = hood;
         addRequirements(hood);
-
     }
 
     @Override
     public boolean isFinished() {
         return false;
     }
+
     @Override
     public void execute(){
         hood.lowerHood();

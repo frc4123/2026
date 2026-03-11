@@ -86,7 +86,7 @@ public class Hood extends SubsystemBase{
     }
 
     public void lowerHood() {
-        hoodMotor.setControl(motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE));
+        hoodMotor.setControl(motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees)));
     }
 
     public double getHoodDegrees(){
