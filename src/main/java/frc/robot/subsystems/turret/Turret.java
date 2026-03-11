@@ -450,11 +450,11 @@ public class Turret extends SubsystemBase {
         
 
         SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
-        SmartDashboard.putNumber("Encoder1 Position", encoder1AbsolutePositionSignal.getValueAsDouble());
-        SmartDashboard.putNumber("Encoder2 Position", encoder2AbsolutePositionSignal.getValueAsDouble());
-        SmartDashboard.putNumber("Motor Pos (rot)", turretMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("initoffset", initOffsetDegrees);
-        SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
+        // SmartDashboard.putNumber("Encoder1 Position", encoder1AbsolutePositionSignal.getValueAsDouble());
+        // SmartDashboard.putNumber("Encoder2 Position", encoder2AbsolutePositionSignal.getValueAsDouble());
+        // SmartDashboard.putNumber("Motor Pos (rot)", turretMotor.getPosition().getValueAsDouble());
+        // SmartDashboard.putNumber("initoffset", initOffsetDegrees);
+        // SmartDashboard.putNumber("CRT Angle", easyCrtSolver.getAngleOptional().orElse(Rotations.of(0)).in(Units.Degrees));
 
     }
 
