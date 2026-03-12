@@ -24,6 +24,8 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.FuelSim;
+import frc.robot.utils.ShotCache;
+
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -202,18 +204,6 @@ public class TurretVisSim extends SubsystemBase{
     
         return Constants.VisionConstants.blueHubTranslation3d;
     }
-        
-    private boolean isPassingShot() {
-        double robotX = poseSupplier.get().getX();
-        
-        if(vision.isBlue()) {
-            return robotX > Constants.VisionConstants.blueHub.getX();
-        } else if(vision.isRed()) {
-            return robotX < Constants.VisionConstants.redHub.getX();
-        }
-        
-        return false;
-    }
 
     public void updateFuelWithAzimuth(LinearVelocity vel, Angle elevationAngle, double azimuthRadians) {
     double elevationRad = elevationAngle.in(Radians);
@@ -245,7 +235,7 @@ public class TurretVisSim extends SubsystemBase{
         Translation3d target = getTurretTarget();
         ShotData calculatedShot;
         
-        if (isPassingShot()) {
+        if (ShotCache.isPassingShot()) {
             calculatedShot = TurretCalculator.calculatePass(
                 poseSupplier.get().toPose2d(), 
                 target

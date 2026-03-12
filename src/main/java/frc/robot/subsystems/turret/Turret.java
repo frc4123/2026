@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
+import frc.robot.utils.ShotCache;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.TurretConstants;
 
@@ -297,54 +298,50 @@ public class Turret extends SubsystemBase {
 
         if (isBlue) {
             if(x < VisionConstants.blueHub.getX()){
-                return getAngleToTarget(robotPose, VisionConstants.blueHub.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             // Check Y zones from top to bottom
             }else if (y >= 5.029) {
                 // Top zone - face depot
-                return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             } else if (y > 4.044) {
                 // Upper middle zone - face left bump corner
-                return getAngleToTarget(robotPose, VisionConstants.blueLeftBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             } else if (y > 3.059) {
                 // Lower middle zone - face right bump corner
-                return getAngleToTarget(robotPose, VisionConstants.blueRightBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             } else {
                 // Bottom zone - face aim threshold
-                return getAngleToTarget(robotPose, VisionConstants.blueAimThreshold.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             }
 
         } else if (isRed) {
             // Check Y zones from top to bottom
             if(x > VisionConstants.redHub.getX()){
-                return getAngleToTarget(robotPose, VisionConstants.redHub.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             // Check Y zones from top to bottom
             } else if (y >= 5.029) {
                 // Top zone - face aim threshold
-                return getAngleToTarget(robotPose, VisionConstants.redAimThreshold.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             } else if (y > 4.044) {
                 // Upper middle zone - face right bump corner
-                return getAngleToTarget(robotPose, VisionConstants.redRightBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             } else if (y > 3.059) {
                 // Lower middle zone - face left bump corner
-                return getAngleToTarget(robotPose, VisionConstants.redLeftBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             } else {
                 // Bottom zone - face depot
-                return getAngleToTarget(robotPose, VisionConstants.redDepot.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
             }
         }
         
         return new Rotation2d(0);
     }
 
-    // Helper method to calculate angle
     private Rotation2d getAngleToTarget(Pose2d robotPose, Translation2d target) {
         Translation2d delta = target.minus(robotPose.getTranslation());
         return delta.getAngle();
     }
 
-    /**
-     * Field-relative turret control with yaw velocity feedforward.
-     */
     public void setFieldAngle(Rotation2d targetFieldAngle, double cameraOffset) {
 
         // Clamp vision offset

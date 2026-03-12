@@ -244,4 +244,34 @@ public class TurretCalculator {
             return this.target;
         }
     }
+
+    public static ShotData iterativeMovingPass(
+        Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations) {
+
+        ShotData shot = calculatePass(robot, target);
+
+        Distance distance = getDistanceToTarget(robot, target);
+        Time timeOfFlight = calculateTimeOfFlight(
+            shot.getExitVelocity(),
+            shot.getHoodAngle(),
+            distance
+        );
+
+        Translation3d predictedTarget = target;
+
+        for (int i = 0; i < iterations; i++) {
+
+            predictedTarget = predictTargetPos(target, fieldSpeeds, timeOfFlight);
+
+            shot = calculatePass(robot, predictedTarget);
+
+            timeOfFlight = calculateTimeOfFlight(
+                shot.getExitVelocity(),
+                shot.getHoodAngle(),
+                getDistanceToTarget(robot, predictedTarget)
+            );
+        }
+
+        return shot;
+    }
 }
