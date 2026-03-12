@@ -214,8 +214,8 @@ public class Constants {
         public static final double encoder1Offset = 0; // -0.575684;
         public static final double encoder2Offset = 0;
 
-        public static final double encoder1CRTOffset = -0.101074; // -0.575684;
-        public static final double encoder2CRTOffset = -0.022461; // -0.481281;
+        public static final double encoder1CRTOffset = -0.068359; // -0.575684;
+        public static final double encoder2CRTOffset = -0.540283; // -0.481281;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -250,7 +250,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.1225; // 1.2 1.25 
+        public static final double shootingTestErrorRatio = 1.2355 + 0.12; // 1.2 1.25 
 
         public static final double kP = 4; 
         public static final double kI = 0; 

@@ -136,7 +136,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        faceAngle.HeadingController.setP(2);   //was 5
+        faceAngle.HeadingController.setP(3.4123);//was 2, 5
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -259,7 +259,7 @@ public class RobotContainer {
 
         //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
-        joystick.a().onTrue(intakeRollersIn);
+        joystick.a().onTrue(new WaitCommand(0.2).andThen(intakeRollersIn));
         joystick.a().onFalse(intakeRollersStop);
         
         joystick.a().onTrue(intakeArmOut);
