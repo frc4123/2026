@@ -285,7 +285,7 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().whileTrue(new WaitCommand(2.75).andThen(intakeShimmy));
+        joystick.rightTrigger().whileTrue(new WaitCommand(2).andThen(intakeShimmy));
         //joystick.rightTrigger().onFalse(intakeArmIn);
     
         joystick.rightTrigger().onFalse(uptakeStop);

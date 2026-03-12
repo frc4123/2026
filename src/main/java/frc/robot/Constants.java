@@ -259,7 +259,7 @@ public class Constants {
         public static final double kV = 0.114123;  
         public static final double kA = 0; 
         
-        public static final double acceleration = 90;
+        public static final double acceleration = 200;
 
     }
 
