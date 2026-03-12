@@ -214,8 +214,8 @@ public class Constants {
         public static final double encoder1Offset = 0; // -0.575684;
         public static final double encoder2Offset = 0;
 
-        public static final double encoder1CRTOffset = -0.068359; // -0.575684;
-        public static final double encoder2CRTOffset = -0.540283; // -0.481281;
+        public static final double encoder1CRTOffset = -0.092285; // -0.575684;
+        public static final double encoder2CRTOffset = -0.169189; // -0.481281;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -286,18 +286,18 @@ public class Constants {
     public static final class ClimbConstants {
 
         public static final double downPosition = 0;
-        public static final double upPosition = 0;  
+        public static final double upPosition = 60;  
 
-        public static final double kP = 0;
+        public static final double kP = 65;
         public static final double kI = 0; 
-        public static final double kD = 0;
-        public static final double kS = 0; 
-        public static final double kV = 0; 
+        public static final double kD = 1.5;
+        public static final double kS = 2; 
+        public static final double kV = 0.5; 
         public static final double kA = 0; 
         public static final double kG = 0;
         
-        public static final double velocity = 0;
-        public static final double acceleration = 0;
+        public static final double velocity = 100;
+        public static final double acceleration = 200;
     }
 
 

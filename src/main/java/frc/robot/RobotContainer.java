@@ -136,7 +136,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        faceAngle.HeadingController.setP(3.4123);//was 2, 5
+        faceAngle.HeadingController.setP(4.123);//3.4123
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -285,7 +285,7 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().whileTrue(new WaitCommand(2).andThen(intakeShimmy));
+        joystick.rightTrigger().whileTrue(new WaitCommand(1.8).andThen(intakeShimmy));
         //joystick.rightTrigger().onFalse(intakeArmIn);
     
         joystick.rightTrigger().onFalse(uptakeStop);
