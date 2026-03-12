@@ -21,6 +21,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -338,7 +339,10 @@ public class Turret extends SubsystemBase {
     }
 
     private Rotation2d getAngleToTarget(Pose2d robotPose, Translation2d target) {
-        Translation2d delta = target.minus(robotPose.getTranslation());
+
+        Pose2d turretPose = robotPose.plus(TurretConstants.robotToTurretTransform);
+
+        Translation2d delta = target.minus(turretPose.getTranslation());
         return delta.getAngle();
     }
 

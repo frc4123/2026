@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -234,6 +235,12 @@ public class Constants {
         public static final Translation2d turretOffset = new Translation2d(offsetX, offsetY);
         public static final Pose3d robotToTurret = new Pose3d(offsetX, offsetY, offsetZ, new Rotation3d());
         public static final Transform3d transform3D = new Transform3d(robotToTurret, new Pose3d());
+
+        public static final Transform2d robotToTurretTransform =
+            new Transform2d(
+                TurretConstants.robotToTurret.getTranslation().toTranslation2d(),
+                TurretConstants.robotToTurret.getRotation().toRotation2d()
+            );
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
     }
