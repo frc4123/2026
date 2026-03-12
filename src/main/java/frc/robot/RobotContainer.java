@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -57,9 +58,11 @@ import frc.robot.commands.climb.ClimbUp;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
+import frc.robot.commands.intakeArm.IntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmOut;
-import frc.robot.commands.intakeArm.IntakeShimmy;
+//import frc.robot.commands.intakeArm.IntakeShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
+import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
 import frc.robot.commands.sevenEleven.Roll;
 import frc.robot.commands.shooter.SetShooterVelocity;
@@ -114,16 +117,15 @@ public class RobotContainer {
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
+    private final IntakeRollerShimmy intakeRollerShimmy = new IntakeRollerShimmy(intakeRollers, intakeArm);
     private final Roll roll = new Roll(sevenEleven);
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
-    private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
+    private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm);
+    //private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
-    //private final SetShooterDefaultVelo setShooterDefaultVelo = new SetShooterDefaultVelo(shooter);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
-    //private final ShooterOpenLoop ShooterOpenLoop = new ShooterOpenLoop(shooter);
-    //private final ShooterOpenLoopStop ShooterOpenLoopStop = new ShooterOpenLoopStop(shooter);
     private final UptakeUp uptakeUp = new UptakeUp(uptake);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
     //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
@@ -285,7 +287,14 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().whileTrue(new WaitCommand(1.8).andThen(intakeShimmy));
+        joystick.rightTrigger().whileTrue(new WaitCommand(1.8).andThen(
+            new RepeatCommand(
+                intakeArmMid
+                .andThen(new WaitCommand(0.7))
+                .andThen(new ParallelCommandGroup(intakeArmOut, intakeRollerShimmy)
+                .andThen(new WaitCommand(0.7)))
+            )
+        ));
         //joystick.rightTrigger().onFalse(intakeArmIn);
     
         joystick.rightTrigger().onFalse(uptakeStop);

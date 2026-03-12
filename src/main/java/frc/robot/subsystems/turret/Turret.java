@@ -351,8 +351,6 @@ public class Turret extends SubsystemBase {
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();
         double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond / Math.PI * 180.0;
 
-        // Convert field target into robot-relative turret target
-        SmartDashboard.putNumber("Field relative turret target", targetFieldAngle.getDegrees());
         //double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
         double predictionTime = 0.12; // 200ms - tune this!
         
