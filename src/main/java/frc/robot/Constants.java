@@ -250,14 +250,14 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355;
+        public static final double shootingTestErrorRatio = 1.2355 + 0.1225; // 1.2 1.25 
 
-        public static final double kP = 4; // 6.5;
-        public static final double kI = 0; // was 0.0441
+        public static final double kP = 4; 
+        public static final double kI = 0; 
         public static final double kD = 0;
-        public static final double kS = 4.00025; // 0.3
-        public static final double kV = 0.114123;  //try this 0;
-        public static final double kA = 0; //54 to 52 falloff // 15'3'' and 1/8 inch
+        public static final double kS = 4.00025; 
+        public static final double kV = 0.114123;  
+        public static final double kA = 0; 
         
         public static final double acceleration = 90;
 

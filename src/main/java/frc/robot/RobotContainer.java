@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import java.lang.Math;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -135,7 +136,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        faceAngle.HeadingController.setP(5);  
+        faceAngle.HeadingController.setP(2);   //was 5
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -216,27 +217,27 @@ public class RobotContainer {
         // Reset the field-centric heading on button Y press.
         joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        // joystick.a().whileTrue(
-        //     drivetrain.applyRequest(() -> {
-        //         double leftY = -joystick.getLeftY();
-        //         double leftX = -joystick.getLeftX();
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() -> {
+                double leftY = -joystick.getLeftY();
+                double leftX = -joystick.getLeftX();
                 
-        //         double magnitude = Math.sqrt(leftX * leftX + leftY * leftY);
-        //         Rotation2d targetDirection;
+                double magnitude = Math.sqrt(leftX * leftX + leftY * leftY);
+                Rotation2d targetDirection;
                 
-        //         if (magnitude > 0.1) { // Only update rotation when stick is moved
-        //             targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
-        //         } else {
-        //             // Joystick centered - hold current heading
-        //             targetDirection = drivetrain.getState().Pose.getRotation();
-        //         }
+                if (magnitude > 0.1) { // Only update rotation when stick is moved
+                    targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
+                } else {
+                    // Joystick centered - hold current heading
+                    targetDirection = drivetrain.getState().Pose.getRotation();
+                }
                 
-        //         return faceAngle
-        //             .withVelocityX(leftY * MaxSpeed * 0.6)
-        //             .withVelocityY(leftX * MaxSpeed * 0.6)
-        //             .withTargetDirection(targetDirection);
-        //     })
-        // );
+                return faceAngle
+                    .withVelocityX(leftY * MaxSpeed * 0.6)
+                    .withVelocityY(leftX * MaxSpeed * 0.6)
+                    .withTargetDirection(targetDirection);
+            })
+        );
 
         joystick.povLeft().whileTrue(drivetrain.applyRequest(() -> robotStrafe
             .withVelocityY(0.1 * MaxSpeed)
@@ -284,8 +285,8 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().whileTrue(new WaitCommand(1.25).andThen(intakeShimmy));
-        joystick.rightTrigger().onFalse(intakeArmIn);
+        joystick.rightTrigger().whileTrue(new WaitCommand(2.75).andThen(intakeShimmy));
+        //joystick.rightTrigger().onFalse(intakeArmIn);
     
         joystick.rightTrigger().onFalse(uptakeStop);
         
