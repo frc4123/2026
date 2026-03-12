@@ -250,7 +250,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.12; // 1.2 1.25 
+        public static final double shootingTestErrorRatio = 1.2355 + 0.1225; // 1.2, 1.25 
 
         public static final double kP = 4; 
         public static final double kI = 0; 
