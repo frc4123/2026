@@ -59,6 +59,7 @@ public class Turret extends SubsystemBase {
     // get alliance color
 
     private boolean hasAbsoluteZero = false;
+    private double targetRotations = 0;
 
     private double initOffsetDegrees = 0.0; // Encoder rotations from zero at boot
 
@@ -347,7 +348,7 @@ public class Turret extends SubsystemBase {
     public void setFieldAngle(Rotation2d targetFieldAngle, double cameraOffset) {
 
         // Clamp vision offset
-        cameraOffset = Math.max(-3.0, Math.min(3.0, cameraOffset));
+        cameraOffset = Math.max(-2.0, Math.min(2.0, cameraOffset));
 
         // Robot heading and yaw rate
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();
@@ -369,10 +370,10 @@ public class Turret extends SubsystemBase {
         //     )
         // );
 
-        Rotation2d predictedRobotHeading = robotHeading.plus(
-            Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime)
-        );
-        //Rotation2d predictedRobotHeading = robotHeading;
+        //  TODO LAST WORKING ONERotation2d predictedRobotHeading = robotHeading.plus(
+        //     Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime)
+        // );
+        Rotation2d predictedRobotHeading = robotHeading;
 
         /* REPLACE LINES 387-396 WITH THIS IF IT JITTERS TMR
         Rotation2d predictedRobotHeading = robotHeading.plus(
@@ -385,14 +386,13 @@ public class Turret extends SubsystemBase {
         previousYawRate = robotYawRateDegPerSec;
     
         double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
-        SmartDashboard.putNumber("Robot Relative Turret Target Rot", targetTurretAngle);
 
         // Compute shortest delta to target
         double current = cumulativeAngle;
         double delta = normalizeAngle(targetTurretAngle - current);
 
         // Compute new cumulative setpoint
-        double targetCumulative = cumulativeAngle + delta + cameraOffset;
+        double targetCumulative = cumulativeAngle + delta; // + cameraOffset;
 
         // Clamp to physical limits 
         if (targetCumulative > maxCumulativeAngle) {
@@ -404,10 +404,10 @@ public class Turret extends SubsystemBase {
 
 
         // Convert position target to motor rotations
-        double targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;
+        targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;
 
         // Command Motion Magic with combined velocity feedforward
-        SmartDashboard.putNumber("TargetRotations", targetRotations);
+        SmartDashboard.putNumber("TargetAngle", targetRotations * 360);
         turretMotor.setControl(
                 motionMagic
                         .withPosition(targetRotations)
@@ -455,6 +455,8 @@ public class Turret extends SubsystemBase {
         
 
         SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
+        SmartDashboard.putNumber("Turret Target Angle ", (targetRotations + (initOffsetDegrees/360)) * 360);
+
         // SmartDashboard.putNumber("Encoder1 Position", encoder1AbsolutePositionSignal.getValueAsDouble());
         // SmartDashboard.putNumber("Encoder2 Position", encoder2AbsolutePositionSignal.getValueAsDouble());
         // SmartDashboard.putNumber("Motor Pos (rot)", turretMotor.getPosition().getValueAsDouble());

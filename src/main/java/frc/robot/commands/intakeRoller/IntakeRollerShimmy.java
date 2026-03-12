@@ -5,12 +5,12 @@ import frc.robot.Constants.IntakeRollerConstants;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeRoller;
 
-public class IntakeRollerIn extends Command{
+public class IntakeRollerShimmy extends Command{
 
     IntakeRoller intakeRollers;
     IntakeArm intakeArm;
 
-    public IntakeRollerIn(IntakeRoller intakeRollers, IntakeArm intakeArm) {
+    public IntakeRollerShimmy(IntakeRoller intakeRollers, IntakeArm intakeArm) {
         this.intakeRollers = intakeRollers;
         this.intakeArm = intakeArm;
         addRequirements(intakeRollers);
@@ -19,7 +19,7 @@ public class IntakeRollerIn extends Command{
     @Override
     public void execute() {
         if(intakeArm.getIntakePosition() <= 0.115) {
-            intakeRollers.setIntakeVelo(IntakeRollerConstants.intakeVelo);
+            intakeRollers.setIntakeVelo(IntakeRollerConstants.intakeVelo / 2);
         }
     }
     

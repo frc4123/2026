@@ -112,7 +112,7 @@ public class RobotContainer {
     private final Aim aim = new Aim(turret, drivetrain, vision);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
-    private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers);
+    private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
     private final Roll roll = new Roll(sevenEleven);
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
@@ -259,7 +259,7 @@ public class RobotContainer {
 
         //  --------- Subsystem COMMANDS ---------- // (non swerve subsystem)
 
-        joystick.a().onTrue(new WaitCommand(0.2).andThen(intakeRollersIn));
+        joystick.a().onTrue(intakeRollersIn);
         joystick.a().onFalse(intakeRollersStop);
         
         joystick.a().onTrue(intakeArmOut);
