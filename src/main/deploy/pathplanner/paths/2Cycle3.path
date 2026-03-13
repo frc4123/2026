@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.815,
-        "y": 0.654
+        "x": 3.3276242042824076,
+        "y": 0.6558607494212969
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.565,
-        "y": 0.654
+        "x": 3.0776242042824076,
+        "y": 0.6558607494212969
       },
       "isLocked": false,
       "linkedName": "2Cycle2-3"
@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "2Cycle",
+  "folder": "2OutposeCycle(R)",
   "idealStartingState": {
     "velocity": 3.0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

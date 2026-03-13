@@ -7,37 +7,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Cycle1"
+            "pathName": "2FullCycle1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2Cycle2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
+            "pathName": "2FullCycle2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2Cycle3"
+            "pathName": "2FullCycle3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2Cycle4recycles"
+            "pathName": "2FullCycle4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2Cycle4"
+            "pathName": "2FullCycle5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2FullCycle6"
           }
         }
       ]

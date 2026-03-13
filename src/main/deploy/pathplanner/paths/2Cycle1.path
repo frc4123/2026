@@ -64,7 +64,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "2Cycle",
+  "folder": "2OutposeCycle(R)",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -179.6530427984917
