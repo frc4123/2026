@@ -5,33 +5,84 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2CycleDepot1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2CycleDepot1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmOut"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2CycleDepot2"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2CycleDepot2"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 2.5
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "2CycleDepot3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2CycleDepot3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeShimmy"
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.0
+            "waitTime": 2.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeStop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmIn"
           }
         },
         {

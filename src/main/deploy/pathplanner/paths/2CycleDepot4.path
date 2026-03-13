@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.623292525481435,
-        "y": 5.085147385512109
+        "x": 0.6449664550832611,
+        "y": 5.776457604631358
       },
       "isLocked": false,
       "linkedName": "2Depot3-4"
     },
     {
       "anchor": {
-        "x": 1.5555561026255003,
-        "y": 4.176706319769204
+        "x": 0.822625904460424,
+        "y": 4.680154260716079
       },
       "prevControl": {
-        "x": 1.9562136059500763,
-        "y": 4.809409514064728
+        "x": 1.1819442457955163,
+        "y": 5.162508085654195
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.5852107558139535,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {

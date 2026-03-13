@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.858656920942503,
-        "y": 5.2745144764374094
+        "x": 8.31454955150463,
+        "y": 4.973952329282408
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.900494336788251,
-        "y": 9.138865538579092
+        "x": 8.360018207547144,
+        "y": 9.173706203179982
       },
       "isLocked": false,
       "linkedName": "2Depot1-2"
@@ -20,8 +20,8 @@
         "y": 7.027347616449727
       },
       "prevControl": {
-        "x": 0.7920231759461427,
-        "y": 6.609821176764921
+        "x": 1.4724864004629636,
+        "y": 6.666769675925926
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,9 +38,30 @@
       "rotationDegrees": 0.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8588429194352158,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.25,
+        "maxAcceleration": 1.25,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Uptake",
+      "waypointRelativePos": 0.5123286960132891,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

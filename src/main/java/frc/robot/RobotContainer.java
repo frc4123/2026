@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.EventMarker;
 
 import java.lang.Math;
 
@@ -65,6 +66,9 @@ import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
 import frc.robot.commands.sevenEleven.Roll;
+import frc.robot.commands.sevenEleven.RollHigh;
+import frc.robot.commands.sevenEleven.RollLow;
+import frc.robot.commands.sevenEleven.RollMid;
 import frc.robot.commands.shooter.SetShooterVelocity;
 import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
@@ -118,7 +122,15 @@ public class RobotContainer {
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
     private final IntakeRollerShimmy intakeRollerShimmy = new IntakeRollerShimmy(intakeRollers, intakeArm);
-    private final Roll roll = new Roll(sevenEleven);
+    //private final Roll roll = new Roll(sevenEleven);
+    private final RollLow rollLow = new RollLow(sevenEleven);
+    private final RollMid rollMid = new RollMid(sevenEleven);
+    private final RollHigh rollHigh = new RollHigh(sevenEleven);
+    private final Command rollerPulse = 
+        rollLow.andThen(new WaitCommand(0.5).andThen(
+        rollMid.andThen(new WaitCommand(0.5).andThen(
+        rollHigh.andThen(new WaitCommand(0.5)))))
+    );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm);
@@ -152,10 +164,19 @@ public class RobotContainer {
         turret.setDefaultCommand(aim);
         hood.setDefaultCommand(hoodAim);
         shooter.setDefaultCommand(setShooterVelocity);
-        sevenEleven.setDefaultCommand(roll);
+        sevenEleven.setDefaultCommand(rollerPulse);
 
         NamedCommands.registerCommand("ArmIn", intakeArmIn);
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
+        NamedCommands.registerCommand("IntakeShimmy", new WaitCommand(1.8).andThen(
+            new RepeatCommand(
+                intakeArmMid
+                .andThen(new WaitCommand(0.7))
+                .andThen(new ParallelCommandGroup(intakeArmOut, intakeRollerShimmy)
+                .andThen(new WaitCommand(0.7)))
+            )
+        ));
+        NamedCommands.registerCommand("Aim", aim);
         NamedCommands.registerCommand("IntakeIn", intakeRollersIn);
         NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
         NamedCommands.registerCommand("Uptake", uptakeUp);
@@ -268,6 +289,9 @@ public class RobotContainer {
         joystick.a().onFalse(intakeRollersStop);
 
         joystick.b().whileTrue(avoidDecapitation);
+
+        joystick.leftStick().onTrue(climbDown);
+        joystick.rightStick().onTrue(climbUp);
 
         Trigger shiftWarning = new Trigger(() ->
             ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
