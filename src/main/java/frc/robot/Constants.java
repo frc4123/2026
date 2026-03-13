@@ -152,8 +152,11 @@ public class Constants {
     public static class SevenElevenConstants {
 
         public static final double zeroVelo = 0;
+        public static final double sevenElevenLowVelo = 1;
+        public static final double sevenElevenMidVelo = 3;
+        public static final double sevenElevenHighVelo = 6;
         public static final double sevenElevenVelo = 10;
-        public static final double sevenElevenAcc = 20;
+        public static final double sevenElevenAcc = 30;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
