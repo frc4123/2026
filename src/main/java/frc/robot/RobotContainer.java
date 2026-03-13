@@ -55,6 +55,7 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.climb.ClimbDown;
+import frc.robot.commands.climb.ClimbTest;
 import frc.robot.commands.climb.ClimbUp;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
@@ -143,6 +144,7 @@ public class RobotContainer {
     //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
     private final ClimbUp climbUp = new ClimbUp(climb);
     private final ClimbDown climbDown = new ClimbDown(climb);
+    private final ClimbTest climbTest = new ClimbTest(climb);
 
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
@@ -155,24 +157,22 @@ public class RobotContainer {
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
-        initializeAutoChooser();
-
         if(Sim.CURRENT_MODE == Mode.Sim){
             configureFuelSim();
         }
 
-        turret.setDefaultCommand(aim);
-        hood.setDefaultCommand(hoodAim);
-        shooter.setDefaultCommand(setShooterVelocity);
-        sevenEleven.setDefaultCommand(rollerPulse);
+        // turret.setDefaultCommand(aim);
+        // hood.setDefaultCommand(hoodAim);
+        // shooter.setDefaultCommand(setShooterVelocity);
+        // sevenEleven.setDefaultCommand(rollerPulse);
 
         NamedCommands.registerCommand("ArmIn", intakeArmIn);
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
         NamedCommands.registerCommand("IntakeShimmy", new WaitCommand(1.8).andThen(
             new RepeatCommand(
-                intakeArmMid
+                new IntakeArmMid(intakeArm)
                 .andThen(new WaitCommand(0.7))
-                .andThen(new ParallelCommandGroup(intakeArmOut, intakeRollerShimmy)
+                .andThen(new ParallelCommandGroup(new IntakeArmOut(intakeArm), new IntakeRollerShimmy(intakeRollers, intakeArm))
                 .andThen(new WaitCommand(0.7)))
             )
         ));
@@ -182,6 +182,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Uptake", uptakeUp);
         NamedCommands.registerCommand("ClimbUp", climbUp);
         NamedCommands.registerCommand("ClimbDown", climbDown);
+
+        initializeAutoChooser();
     }
 
     private void configureBindings() {
@@ -290,7 +292,7 @@ public class RobotContainer {
 
         joystick.b().whileTrue(avoidDecapitation);
 
-        joystick.leftStick().onTrue(climbDown);
+        joystick.leftStick().onTrue(climbTest);
         joystick.rightStick().onTrue(climbUp);
 
         Trigger shiftWarning = new Trigger(() ->
@@ -313,9 +315,9 @@ public class RobotContainer {
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().whileTrue(new WaitCommand(1.8).andThen(
             new RepeatCommand(
-                intakeArmMid
+                new IntakeArmMid(intakeArm)
                 .andThen(new WaitCommand(0.7))
-                .andThen(new ParallelCommandGroup(intakeArmOut, intakeRollerShimmy)
+                .andThen(new ParallelCommandGroup(new IntakeArmOut(intakeArm), new IntakeRollerShimmy(intakeRollers, intakeArm))
                 .andThen(new WaitCommand(0.7)))
             )
         ));
