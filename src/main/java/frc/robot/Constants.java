@@ -288,7 +288,7 @@ public class Constants {
         public static final double kA = 0;
 
         public static final double velocity = 140;
-        public static final double acceleration = 250;
+        public static final double acceleration = 280;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
     }
@@ -296,7 +296,8 @@ public class Constants {
     public static final class ClimbConstants {
 
         public static final double downPosition = 0;
-        public static final double upPosition = 60;  
+        public static final double upPosition = 50;  
+        public static final double testPosition = upPosition * 0.4;
 
         public static final double kP = 65;
         public static final double kI = 0; 

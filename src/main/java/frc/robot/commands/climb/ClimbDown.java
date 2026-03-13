@@ -10,6 +10,7 @@ public class ClimbDown extends Command{
 
     public ClimbDown(Climb climb) {
         this.climb = climb;
+        addRequirements(climb);
     }
 
     @Override
