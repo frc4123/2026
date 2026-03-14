@@ -255,7 +255,7 @@ public class Constants {
                 TurretConstants.robotToTurret.getRotation().toRotation2d()
             );
 
-        public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(20);
+        public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(6); // was 20
     }
 
     public static final class ShooterConstants {
@@ -270,7 +270,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.2; // 0.15
+        public static final double shootingTestErrorRatio = 1.2355 + 0.21; //0.225 0.275, 0.2,  0.15
 
         public static final double kP = 4; 
         public static final double kI = 0; 
@@ -298,7 +298,7 @@ public class Constants {
         public static final double kA = 0;
 
         public static final double velocity = 140;
-        public static final double acceleration = 280;
+        public static final double acceleration = 300;
 
         public static final double stowPosition = MAX_HOOD_ANGLE.in(Degrees);
     }
