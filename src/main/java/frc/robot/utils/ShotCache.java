@@ -28,14 +28,14 @@ public class ShotCache {
                 swerve.getState().Pose,
                 swerve.getState().Speeds,
                 Target.getTarget(),
-                7 //was 3
+                6 //was 7, 3
             );
         } else {
             cachedShot = TurretCalculator.iterativeMovingPass(
                 swerve.getState().Pose,
                 swerve.getState().Speeds,
                 Target.getTarget(),
-                7 // was 3
+                6 // was 7, 3
             );
         }
         
