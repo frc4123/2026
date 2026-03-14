@@ -18,6 +18,7 @@ import static frc.robot.Constants.IntakeRollerConstants.VEL_MULTIPLIER;
 import static frc.robot.Constants.IntakeRollerConstants.VEL_POWER;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -28,10 +29,13 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
 public class TurretCalculator {
+
+    private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
         Translation2d turretPos =
@@ -91,7 +95,11 @@ public class TurretCalculator {
     }
 
     // Move a target a set time in the future along a velocity defined by fieldSpeeds
-    public static Translation3d predictTargetPos(Translation3d target, ChassisSpeeds fieldSpeeds, Time timeOfFlight) {
+    public static Translation3d predictTargetPos(Translation3d target, ChassisSpeeds fieldSpeeds, Rotation2d rotation2d, Time timeOfFlight) {
+        fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+            fieldSpeeds, 
+            rotation2d
+        );
         double predictedX = target.getX() - fieldSpeeds.vxMetersPerSecond * timeOfFlight.in(Seconds);
         double predictedY = target.getY() - fieldSpeeds.vyMetersPerSecond * timeOfFlight.in(Seconds);
 
@@ -109,7 +117,7 @@ public class TurretCalculator {
     public static ShotData calculateShotFromFunnelClearance(
             Pose2d robot, Translation3d actualTarget, Translation3d predictedTarget) {
         double x_dist = getDistanceToTarget(robot, predictedTarget).in(Inches);
-        double y_dist = predictedTarget
+        double y_dist = predictedTarget //TODO TURRET ANTICIPATOIN TARGET WROG HERE MAYBE
                 .getMeasureZ()
                 .minus(Meters.of(Constants.TurretConstants.offsetZ))
                 .in(Inches);
@@ -218,7 +226,7 @@ public class TurretCalculator {
 
         // Iterate the process, getting better time of flight estimations and updating the predicted target accordingly
         for (int i = 0; i < iterations; i++) {
-            predictedTarget = predictTargetPos(target, fieldSpeeds, timeOfFlight);
+            predictedTarget = predictTargetPos(target, fieldSpeeds, robot.getRotation(), timeOfFlight);
             shot = calculateShotFromFunnelClearance(robot, target, predictedTarget);
             timeOfFlight = calculateTimeOfFlight(
                     shot.getExitVelocity(), shot.getHoodAngle(), getDistanceToTarget(robot, predictedTarget));
@@ -261,7 +269,7 @@ public class TurretCalculator {
 
         for (int i = 0; i < iterations; i++) {
 
-            predictedTarget = predictTargetPos(target, fieldSpeeds, timeOfFlight);
+            predictedTarget = predictTargetPos(target, fieldSpeeds, robot.getRotation(), timeOfFlight);
 
             shot = calculatePass(robot, predictedTarget);
 
