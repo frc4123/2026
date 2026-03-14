@@ -475,7 +475,7 @@ public class Vision extends SubsystemBase{
         if( y >= VisionConstants.topBumpTrenchEdge ||
             y <= VisionConstants.bottomBumpTrenchEdge) {
 
-            double closest = 90 * Math.round(rotation.getDegrees() / 90.0);
+            double closest = 180 * Math.round(rotation.getDegrees() / 180);
             return new Rotation2d(Math.toRadians(closest));
         } else {
             
