@@ -356,10 +356,21 @@ public class Turret extends SubsystemBase {
 
         // Robot heading and yaw rate
         Rotation2d robotHeading = drivetrain.getState().Pose.getRotation();
-        double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
+        // TODO THIS IS WHAT I JS TOOK OUT double targetTurretAngle = normalizeAngle(targetFieldAngle.minus(robotHeading).getDegrees());
 
         // Compute shortest delta to target
         double current = cumulativeAngle;
+        
+
+        double robotYawRateDegPerSec = drivetrain.getState().Speeds.omegaRadiansPerSecond * 180.0 / Math.PI;
+        double predictionTime = 0.15;
+        Rotation2d predictedRobotHeading =
+            robotHeading.plus(
+                Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime)
+            );
+        double targetTurretAngle =
+            normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
+
         double delta = normalizeAngle(targetTurretAngle - current);
 
         // Compute new cumulative setpoint
@@ -369,7 +380,6 @@ public class Turret extends SubsystemBase {
         while (targetCumulative > maxCumulativeAngle) {targetCumulative -= 360.0;} 
         while (targetCumulative < minCumulativeAngle) {targetCumulative += 360.0;}
         //targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
-
 
         // Convert position target to motor rotations
         targetRotations = (targetCumulative - initOffsetDegrees) / 360.0;
