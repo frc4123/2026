@@ -53,13 +53,4 @@ public class Uptake extends SubsystemBase{
     public double getUptakeVelo() {
         return uptakeMotor.getVelocity().getValueAsDouble();
     }
-
-
-    @Override
-    public void periodic() {
-        // if (DriverStation.isEnabled()) {
-        //     m_shooter.end(true);
-        // }
-        //SmartDashboard.putNumber("Uptake Velo", getUptakeVelo());
-    }
 }
