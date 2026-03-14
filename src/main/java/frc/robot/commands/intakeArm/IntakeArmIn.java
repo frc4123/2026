@@ -18,23 +18,8 @@ public class IntakeArmIn extends Command{
     }
 
     @Override
-    public boolean isFinished(){
-        stalled = intakeArm.getCurrent() > IntakeArmConstants.currentCancelationThreshold;
-        return stalled;
-    }
-
-    @Override
     public void execute() {
         if (intakeRoller.isIntaking()) {return;}
         intakeArm.setIntakePosition(IntakeArmConstants.stowPosition);
-    }
-
-     @Override
-    public void end(boolean interrupted) {
-        if (stalled) {
-            intakeArm.setBrakeMode();
-        } else {
-           intakeArm.setCoastMode();
-        }
     }
 }

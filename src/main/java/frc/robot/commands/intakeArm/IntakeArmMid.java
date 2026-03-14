@@ -16,7 +16,6 @@ public class IntakeArmMid extends Command{
     @Override
     public void execute() {
         intakeArm.setIntakePosition(IntakeArmConstants.midPosition);
-        intakeArm.setBrakeMode();
     }
     
     @Override
