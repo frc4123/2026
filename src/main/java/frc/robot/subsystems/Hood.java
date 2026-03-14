@@ -5,16 +5,17 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
+import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
@@ -27,10 +28,9 @@ public class Hood extends SubsystemBase{
         Constants.CanIdCanivore.canivore
     );
     
-    private final CANdi hoodCANdi = new CANdi(Constants.CanIdCanivore.Intake_CANdi, Constants.CanIdCanivore.canivore);
+    private final CANdi hoodCANdi = IntakeArmConstants.intakeCANdi;
 
-    private boolean s2Signal = hoodCANdi.getS2Closed().getValue();
-    private double hoodPosition = hoodMotor.getPosition().getValueAsDouble();
+    private StatusSignal<Boolean> s2Signal = hoodCANdi.getS2Closed();
 
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
         new DynamicMotionMagicTorqueCurrentFOC(
@@ -41,6 +41,7 @@ public class Hood extends SubsystemBase{
 
     public Hood() {
         configureMotor();
+        hoodCANdi.optimizeBusUtilization();
     }
    
     private void configureMotor() {
@@ -89,24 +90,23 @@ public class Hood extends SubsystemBase{
         hoodMotor.setControl(motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees)));
     }
 
-    public double getHoodDegrees(){
-        return hoodPosition;
-    }
+    // public double getHoodDegrees(){
+    //     return hoodPosition.getValueAsDouble();
+    // }
 
     public void zeroHood(){
         hoodMotor.setPosition(HoodConstants.stowPosition);
     }
 
     public boolean isSwitchPressed(){
-        return !s2Signal;
+        return !s2Signal.getValue();
     }
 
     @Override 
     public void periodic(){
-        s2Signal = hoodCANdi.getS2Closed().getValue();
-        hoodPosition = hoodMotor.getPosition().getValueAsDouble();
+        StatusSignal.refreshAll(s2Signal);
 
-        SmartDashboard.putNumber("Real Hood Angle", getHoodDegrees());
+        //SmartDashboard.putNumber("Real Hood Angle", getHoodDegrees());
 
         boolean pressed = isSwitchPressed();
         if (pressed && !wasPressed) {

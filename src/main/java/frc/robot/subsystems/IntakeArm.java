@@ -17,7 +17,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -28,13 +27,11 @@ public class IntakeArm extends SubsystemBase {
         Constants.CanIdCanivore.canivore
     );
 
-    private final CANdi intakeCANdi = new CANdi(
-        Constants.CanIdCanivore.Intake_CANdi,
-        Constants.CanIdCanivore.canivore
-    );
+    private final CANdi intakeCANdi = IntakeArmConstants.intakeCANdi;
 
-    private final StatusSignal<Current> current = intakeArmMotor.getStatorCurrent();
     private final StatusSignal<Boolean> isSwitchNotPressed = intakeCANdi.getS1Closed();
+
+    private boolean hasZeroed = false;
 
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
@@ -87,10 +84,6 @@ public class IntakeArm extends SubsystemBase {
         return intakeArmMotor.getPosition().getValueAsDouble();
     }
 
-    public double getCurrent(){
-        return current.getValueAsDouble();
-    }
-
     public void zeroIntake() {
         intakeArmMotor.setPosition(IntakeArmConstants.stowPosition);
     }
@@ -109,11 +102,15 @@ public class IntakeArm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        BaseStatusSignal.refreshAll(isSwitchNotPressed);
 
-        BaseStatusSignal.refreshAll(current, isSwitchNotPressed);
-
-        if(isSwitchPressed()) {
+        if(isSwitchPressed() && !hasZeroed) {
             zeroIntake();
+            hasZeroed = true;
+        }
+
+        if(!isSwitchPressed()) {
+            hasZeroed = false;
         }
     }
 }
