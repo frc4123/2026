@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -154,9 +155,13 @@ public class Turret extends SubsystemBase {
         MotorOutputConfigs motorOutput = new MotorOutputConfigs()
             .withInverted(InvertedValue.CounterClockwise_Positive);
 
+        TorqueCurrentConfigs torqueDeadband = new TorqueCurrentConfigs()
+            .withTorqueNeutralDeadband(4);
+
         turretMotor.getConfigurator().apply(feedbackUnits);
         turretMotor.getConfigurator().apply(pid);
         turretMotor.getConfigurator().apply(motorOutput);
+        turretMotor.getConfigurator().apply(torqueDeadband);
     }
 
     private void configureCANcoders() {

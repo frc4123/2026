@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -46,6 +47,7 @@ import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
+import frc.robot.Constants.InputConstants;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
@@ -94,8 +96,8 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-    private final CommandXboxController joystick = new CommandXboxController(Constants.InputConstants.kDriverControllerPort0);
-    //private final CommandGenericHID m_buttonBoard = new CommandGenericHID(Constants.InputConstants.kDriverControllerPort1);
+    private final CommandXboxController joystick = new CommandXboxController(InputConstants.kDriverControllerPort0);
+    private final CommandGenericHID m_buttonBoard = new CommandGenericHID(InputConstants.kDriverControllerPort1);
 
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus();
@@ -154,10 +156,10 @@ public class RobotContainer {
             configureFuelSim();
         }
 
-        // turret.setDefaultCommand(aim);
-        // hood.setDefaultCommand(hoodAim);
-        // shooter.setDefaultCommand(setShooterVelocity);
-        // sevenEleven.setDefaultCommand(rollerPulse);
+        turret.setDefaultCommand(aim);
+        hood.setDefaultCommand(hoodAim);
+        shooter.setDefaultCommand(setShooterVelocity);
+        sevenEleven.setDefaultCommand(rollerPulse);
 
         NamedCommands.registerCommand("ArmIn", intakeArmIn);
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
@@ -287,6 +289,30 @@ public class RobotContainer {
         // joystick.button(8).onTrue(climbDown);
         // joystick.rightStick().onTrue(climbUp);
 
+        
+
+        m_buttonBoard.button(4).onTrue(uptakeUp);
+        m_buttonBoard.button(4).onTrue(uptakeUp);
+
+        m_buttonBoard.button(4).whileTrue(
+            new WaitCommand(1.8).andThen(
+                new RepeatCommand(
+                    new SequentialCommandGroup(
+                        new IntakeArmMid(intakeArm).withTimeout(0.3),
+
+                        new ParallelCommandGroup(
+                            new IntakeArmOut(intakeArm).withTimeout(0.3),
+                            new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
+                        )
+                    )
+                )
+            )
+        );
+        //m_buttonBoard.button(4).onFalse(intakeArmIn);
+        m_buttonBoard.button(4).onFalse(uptakeStop);
+        m_buttonBoard.button(3).onTrue(intakeArmIn);
+        joystick.leftTrigger().onTrue(intakeArmIn);
+
         Trigger shiftWarning = new Trigger(() ->
             ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
         );
@@ -303,30 +329,6 @@ public class RobotContainer {
                 joystick.setRumble(RumbleType.kBothRumble, 0)
             )
         );
-
-        joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().onTrue(uptakeUp);
-
-        joystick.rightTrigger().whileTrue(
-            new WaitCommand(1.8).andThen(
-                new RepeatCommand(
-                    new SequentialCommandGroup(
-                        new IntakeArmMid(intakeArm).withTimeout(0.3),
-
-                        new ParallelCommandGroup(
-                            new IntakeArmOut(intakeArm).withTimeout(0.3),
-                            new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
-                        )
-                    )
-                )
-            )
-        );
-        //joystick.rightTrigger().onFalse(intakeArmIn);
-    
-        joystick.rightTrigger().onFalse(uptakeStop);
-        
-        joystick.leftTrigger().onTrue(intakeArmIn);
-        // joystick.a().onTrue(intakeArmOut);
     }
 
     private void configureFuelSim() {

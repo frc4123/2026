@@ -162,9 +162,9 @@ public class Constants {
     public static class SevenElevenConstants {
 
         public static final double zeroVelo = 0;
-        public static final double sevenElevenLowVelo = 15; //9
-        public static final double sevenElevenMidVelo = 20; //12
-        public static final double sevenElevenHighVelo = 25; //20
+        public static final double sevenElevenLowVelo = 20; //9
+        public static final double sevenElevenMidVelo = 27; //12
+        public static final double sevenElevenHighVelo = 35; //20
         public static final double sevenElevenVelo = 10;
         public static final double sevenElevenAcc = 30;
        
@@ -199,12 +199,12 @@ public class Constants {
 
         public  static final double dragCoeff = 1.14123;
 
-        public static final double kP = 0;//20; //20 //either p is too low
-        public static final double kI = 0;//1.5; //or I is too  high
-        public static final double kD = 0;//12; // or D is too high? lower d and increase i first thing tmr
-        public static final double kS = 2;//2.75; //3 // its not overshooting so can't be this
-        public static final double kV = 0;//6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
-        public static final double kA = 0;//1.4123;
+        public static final double kP = 20; //20 //either p is too low
+        public static final double kI = 1.5; //or I is too  high
+        public static final double kD = 20; // or D is too high? lower d and increase i first thing tmr
+        public static final double kS = 3;// 2.0, //4.2, //2.75; //3 // its not overshooting so can't be this
+        public static final double kV = 5.5;//6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
+        public static final double kA = 1;//1.4123;
 
                                     // IN ROTATIONS //
         public static final double mechanismMinRange = -37.0 / 72.0; // -1 is -360 degrees
