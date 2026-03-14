@@ -15,7 +15,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -79,15 +78,5 @@ public class Shooter extends SubsystemBase{
 
     public double getShooterVelo() {
         return shooterMotor.getVelocity().getValueAsDouble();
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Real Shooter Velocity", getShooterVelo() * Math.PI * ShooterConstants.flywheelRadius.in(Meters));
-        SmartDashboard.putNumber("Predicted Projectile Velocity",
-            getShooterVelo() *
-            Math.PI *
-            (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters)));
-        //rps * (Math.PI * wheelDiameterMeters)
     }
 }
