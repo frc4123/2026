@@ -147,7 +147,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        faceAngle.HeadingController.setP(3.1);//3.4123
+        faceAngle.HeadingController.setP(3.54123);//3.1, 3.4123
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -251,8 +251,8 @@ public class RobotContainer {
                 }
                 
                 return faceAngle
-                    .withVelocityX(leftY * MaxSpeed * 0.6)
-                    .withVelocityY(leftX * MaxSpeed * 0.6)
+                    .withVelocityX(leftY * MaxSpeed * 0.35) // was 0.6
+                    .withVelocityY(leftX * MaxSpeed * 0.35) //was 0.6
                     .withTargetDirection(targetDirection);
             })
         );
@@ -294,20 +294,19 @@ public class RobotContainer {
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onTrue(uptakeUp);
 
-        m_buttonBoard.button(4).whileTrue(
-            new WaitCommand(1.8).andThen(
-                new RepeatCommand(
-                    new SequentialCommandGroup(
-                        new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
-
-                        new ParallelCommandGroup(
-                            new IntakeArmOut(intakeArm).withTimeout(0.3),
-                            new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
-                        )
-                    )
-                )
-            )
-        );
+        // m_buttonBoard.button(4).whileTrue(
+        //     new WaitCommand(1.8).andThen(
+        //         new RepeatCommand(
+        //             new SequentialCommandGroup(
+        //                 new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
+        //                 new ParallelCommandGroup(
+        //                     new IntakeArmOut(intakeArm).withTimeout(0.3),
+        //                     new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
+        //                 )
+        //             )
+        //         )
+        //     )
+        // );
         //m_buttonBoard.button(4).onFalse(intakeArmIn);
         m_buttonBoard.button(4).onFalse(uptakeStop);
         m_buttonBoard.button(3).onTrue(
