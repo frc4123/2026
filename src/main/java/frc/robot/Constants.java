@@ -166,7 +166,7 @@ public class Constants {
         public static final double sevenElevenMidVelo = 27; //12
         public static final double sevenElevenHighVelo = 35; //20
         public static final double sevenElevenVelo = 10;
-        public static final double sevenElevenAcc = 30;
+        public static final double sevenElevenAcc = 6; //30
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -270,7 +270,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.15; // 0.145, 1.225, 1.2, 1.25 
+        public static final double shootingTestErrorRatio = 1.2355 + 0.2; // 0.15
 
         public static final double kP = 4; 
         public static final double kI = 0; 
