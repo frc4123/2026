@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.hardware.CANdi;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -107,10 +108,19 @@ public class Constants {
     }
    
     public static class IntakeArmConstants {
+
+        public static final CANdi intakeCANdi = new CANdi(
+            Constants.CanIdCanivore.Intake_CANdi,
+            Constants.CanIdCanivore.canivore
+        );
+
+        static {
+            intakeCANdi.optimizeBusUtilization();
+        }
        
         public static final double outPosition = 0;
         public static final double stowPosition = 0.33;
-        public static final double midPosition = stowPosition / 2.0;
+        public static final double midPosition = stowPosition / 1.7;
 
         public static final double sensorToMechanismRatio = 25.0;
         public static final double currentCancelationThreshold = 80;
@@ -152,16 +162,16 @@ public class Constants {
     public static class SevenElevenConstants {
 
         public static final double zeroVelo = 0;
-        public static final double sevenElevenLowVelo = 1;
-        public static final double sevenElevenMidVelo = 3;
-        public static final double sevenElevenHighVelo = 6;
+        public static final double sevenElevenLowVelo = 15; //9
+        public static final double sevenElevenMidVelo = 20; //12
+        public static final double sevenElevenHighVelo = 25; //20
         public static final double sevenElevenVelo = 10;
         public static final double sevenElevenAcc = 30;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
         public static final double kD = 0;
-        public static final double kS = 0; 
+        public static final double kS = 0.05; 
         public static final double kV = 0.118;  //try this 0;
         public static final double kA = 0; 
     }
@@ -184,17 +194,17 @@ public class Constants {
     public static final class TurretConstants {
 
         public static final double stowPosition = 0;
-        public static final double velocity = 3; //3
+        public static final double velocity = 4; //3
         public static final double acceleration = 6; //6
 
         public  static final double dragCoeff = 1.14123;
 
-        public static final double kP = 20;
-        public static final double kI = 0;
-        public static final double kD = 12;
-        public static final double kS = 4.1484123;
-        public static final double kV = 5.75;
-        public static final double kA = 1.4123;
+        public static final double kP = 0;//20; //20 //either p is too low
+        public static final double kI = 0;//1.5; //or I is too  high
+        public static final double kD = 0;//12; // or D is too high? lower d and increase i first thing tmr
+        public static final double kS = 2;//2.75; //3 // its not overshooting so can't be this
+        public static final double kV = 0;//6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
+        public static final double kA = 0;//1.4123;
 
                                     // IN ROTATIONS //
         public static final double mechanismMinRange = -37.0 / 72.0; // -1 is -360 degrees
@@ -218,8 +228,8 @@ public class Constants {
         public static final double encoder1Offset = 0; // -0.575684;
         public static final double encoder2Offset = 0;
 
-        public static final double encoder1CRTOffset = -0.092285; // -0.575684;
-        public static final double encoder2CRTOffset = -0.169189; // -0.481281;
+        public static final double encoder1CRTOffset = -0.09668; // -0.575684;
+        public static final double encoder2CRTOffset = -0.165283; // -0.481281;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
@@ -260,7 +270,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.1225; // 1.2, 1.25 
+        public static final double shootingTestErrorRatio = 1.2355 + 0.15; // 0.145, 1.225, 1.2, 1.25 
 
         public static final double kP = 4; 
         public static final double kI = 0; 
@@ -269,7 +279,7 @@ public class Constants {
         public static final double kV = 0.114123;  
         public static final double kA = 0; 
         
-        public static final double acceleration = 200;
+        public static final double acceleration = 350;
 
     }
 
@@ -297,7 +307,7 @@ public class Constants {
 
         public static final double downPosition = 0;
         public static final double upPosition = 50;  
-        public static final double testPosition = upPosition * 0.4;
+        public static final double testPosition = upPosition * 0.1;
 
         public static final double kP = 65;
         public static final double kI = 0; 
@@ -330,6 +340,8 @@ public class Constants {
     }   
 
     public static final class VisionConstants {
+
+        public static final double ambiguityThreshold = 0.05;
 
         //FLO = Front_Left_Outside camera
         public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364

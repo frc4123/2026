@@ -133,16 +133,19 @@ public class Vision extends SubsystemBase{
 
 
     public static PhotonPipelineResult getLatestResults(PhotonCamera camera) {
-        List<PhotonPipelineResult> currentResultList = camera.getAllUnreadResults();
-        
-        // Search from newest (end of list) to oldest (start of list)
-        for (int i = currentResultList.size() - 1; i >= 0; i--) {
-            PhotonPipelineResult result = currentResultList.get(i);
-            if (result.hasTargets()) {
-                return result;  // Return first valid result with targets
-            }
+        List<PhotonPipelineResult> results = camera.getAllUnreadResults();
+
+        if (results.isEmpty()) {
+            return null;
         }
-        return null;  // No valid results found
+
+        PhotonPipelineResult latest = results.get(results.size() - 1);
+
+        if (!latest.hasTargets()) {
+            return null;
+        }
+
+        return latest;
     }
 
     private void processVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
@@ -170,7 +173,7 @@ public class Vision extends SubsystemBase{
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
             
             // Add vision measurement to pose estimator
-            if(result.getBestTarget().getPoseAmbiguity() < 0.07){
+            if(result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold){
                 swerve.addVisionMeasurement(
                     est.estimatedPose.toPose2d(),
                     est.timestampSeconds,
