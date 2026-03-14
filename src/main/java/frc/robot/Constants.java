@@ -195,7 +195,7 @@ public class Constants {
 
         public static final double stowPosition = 0;
         public static final double velocity = 4; //3
-        public static final double acceleration = 6; //6
+        public static final double acceleration = 8; //6
 
         public  static final double dragCoeff = 1.14123;
 
@@ -270,7 +270,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.21; //0.225 0.275, 0.2,  0.15
+        public static final double shootingTestErrorRatio = 1.2355 + 0.15; //0.21 0.225 0.275, 0.2,  0.15
 
         public static final double kP = 4; 
         public static final double kI = 0; 
@@ -279,7 +279,7 @@ public class Constants {
         public static final double kV = 0.114123;  
         public static final double kA = 0; 
         
-        public static final double acceleration = 350;
+        public static final double acceleration = 400;
 
     }
 
