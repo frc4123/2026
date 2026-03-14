@@ -6,9 +6,6 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
@@ -24,9 +21,11 @@ import frc.robot.utils.ShiftHelpers;
 import frc.robot.utils.ShotCache;
 
 public class Robot extends LoggedRobot {
-    private Command m_autonomousCommand;
 
+    private Command m_autonomousCommand;
     private final RobotContainer m_robotContainer;
+
+    private int dashboardCounter = 0;
 
     // /* log and replay timestamp and joystick data */
     // private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -48,11 +47,16 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run(); 
         ShotCache.update();
 
-        SmartDashboard.putNumber("Target Hood Angle", ShotCache.get().getHoodAngle().in(Degrees));
-        SmartDashboard.putNumber("Target Exit Velocity", ShotCache.get().getExitVelocity().in(MetersPerSecond));
-        SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
-        SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
-        SmartDashboard.putNumber("Match Data/TimeLeftInShift", ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
+        // SmartDashboard.putNumber("Target Hood Angle", ShotCache.get().getHoodAngle().in(Degrees));
+        // SmartDashboard.putNumber("Target Exit Velocity", ShotCache.get().getExitVelocity().in(MetersPerSecond));
+        if (++dashboardCounter >= 50) {
+            dashboardCounter = 0;
+
+            SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
+            SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
+            SmartDashboard.putNumber("Match Data/TimeLeftInShift",
+                    ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
+        }
     }
 
     @Override

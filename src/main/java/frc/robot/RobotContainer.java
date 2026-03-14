@@ -10,7 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.EventMarker;
 
 import java.lang.Math;
 
@@ -25,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -33,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakeArm;
@@ -54,9 +51,6 @@ import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.autos.twoCycleOutpost;
-import frc.robot.commands.climb.ClimbDown;
-import frc.robot.commands.climb.ClimbTest;
-import frc.robot.commands.climb.ClimbUp;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
@@ -66,7 +60,6 @@ import frc.robot.commands.intakeArm.IntakeArmOut;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
-import frc.robot.commands.sevenEleven.Roll;
 import frc.robot.commands.sevenEleven.RollHigh;
 import frc.robot.commands.sevenEleven.RollLow;
 import frc.robot.commands.sevenEleven.RollMid;
@@ -107,7 +100,7 @@ public class RobotContainer {
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Oculus oculus = new Oculus();
     private final Vision vision = new Vision(oculus);
-    private final Turret turret = new Turret(drivetrain, vision);
+    private final Turret turret = new Turret(drivetrain);
     private final TurretVisSim turretVisSim = new TurretVisSim( () -> new Pose3d(drivetrain.getState().Pose), () -> drivetrain.getState().Speeds, vision, turret);
     private final IntakeRoller intakeRollers = new IntakeRoller();
     private final SevenEleven sevenEleven = new SevenEleven();
@@ -115,9 +108,9 @@ public class RobotContainer {
     private final Hood hood = new Hood();
     private final Shooter shooter = new Shooter();
     private final Uptake uptake = new Uptake();
-    private final Climb climb = new Climb();
+    // private final Climb climb = new Climb();
 
-    private final Aim aim = new Aim(turret, drivetrain, vision);
+    private final Aim aim = new Aim(turret, drivetrain);
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
@@ -127,10 +120,10 @@ public class RobotContainer {
     private final RollLow rollLow = new RollLow(sevenEleven);
     private final RollMid rollMid = new RollMid(sevenEleven);
     private final RollHigh rollHigh = new RollHigh(sevenEleven);
-    private final Command rollerPulse = 
-        rollLow.andThen(new WaitCommand(0.5).andThen(
-        rollMid.andThen(new WaitCommand(0.5).andThen(
-        rollHigh.andThen(new WaitCommand(0.5)))))
+    private final Command rollerPulse =
+        rollLow.withTimeout(0.2)
+        .andThen(rollMid.withTimeout(0.45))
+        .andThen(rollHigh.withTimeout(0.6)
     );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
@@ -142,9 +135,9 @@ public class RobotContainer {
     private final UptakeUp uptakeUp = new UptakeUp(uptake);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
     //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
-    private final ClimbUp climbUp = new ClimbUp(climb);
-    private final ClimbDown climbDown = new ClimbDown(climb);
-    private final ClimbTest climbTest = new ClimbTest(climb);
+    // private final ClimbUp climbUp = new ClimbUp(climb);
+    // private final ClimbDown climbDown = new ClimbDown(climb);
+    // private final ClimbTest climbTest = new ClimbTest(climb);
 
 
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
@@ -152,7 +145,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        faceAngle.HeadingController.setP(4.123);//3.4123
+        faceAngle.HeadingController.setP(3.1);//3.4123
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -180,8 +173,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeIn", intakeRollersIn);
         NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
         NamedCommands.registerCommand("Uptake", uptakeUp);
-        NamedCommands.registerCommand("ClimbUp", climbUp);
-        NamedCommands.registerCommand("ClimbDown", climbDown);
+        // NamedCommands.registerCommand("ClimbUp", climbUp);
+        // NamedCommands.registerCommand("ClimbDown", climbDown);
 
         initializeAutoChooser();
     }
@@ -201,10 +194,10 @@ public class RobotContainer {
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
-        final var idle = new SwerveRequest.Idle();
-        RobotModeTriggers.disabled().whileTrue(
-            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-        );
+        // final var idle = new SwerveRequest.Idle();
+        // RobotModeTriggers.disabled().whileTrue(
+        //     drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        // );
 
         joystick.x().whileTrue(
             drivetrain.applyRequest(() ->
@@ -232,8 +225,6 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        // joystick.leftTrigger().whileTrue(Commands.runOnce(SignalLogger::start));
-        // joystick.rightTrigger().whileTrue(Commands.runOnce(SignalLogger::stop));
         // joystick.povUp().whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         // joystick.povRight().whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         // joystick.povDown().whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
@@ -292,8 +283,9 @@ public class RobotContainer {
 
         joystick.b().whileTrue(avoidDecapitation);
 
-        joystick.leftStick().onTrue(climbTest);
-        joystick.rightStick().onTrue(climbUp);
+        // joystick.leftStick().onTrue(climbTest);
+        // joystick.button(8).onTrue(climbDown);
+        // joystick.rightStick().onTrue(climbUp);
 
         Trigger shiftWarning = new Trigger(() ->
             ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
@@ -313,14 +305,22 @@ public class RobotContainer {
         );
 
         joystick.rightTrigger().onTrue(uptakeUp);
-        joystick.rightTrigger().whileTrue(new WaitCommand(1.8).andThen(
-            new RepeatCommand(
-                new IntakeArmMid(intakeArm)
-                .andThen(new WaitCommand(0.7))
-                .andThen(new ParallelCommandGroup(new IntakeArmOut(intakeArm), new IntakeRollerShimmy(intakeRollers, intakeArm))
-                .andThen(new WaitCommand(0.7)))
+        joystick.rightTrigger().onTrue(uptakeUp);
+
+        joystick.rightTrigger().whileTrue(
+            new WaitCommand(1.8).andThen(
+                new RepeatCommand(
+                    new SequentialCommandGroup(
+                        new IntakeArmMid(intakeArm).withTimeout(0.3),
+
+                        new ParallelCommandGroup(
+                            new IntakeArmOut(intakeArm).withTimeout(0.3),
+                            new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
+                        )
+                    )
+                )
             )
-        ));
+        );
         //joystick.rightTrigger().onFalse(intakeArmIn);
     
         joystick.rightTrigger().onFalse(uptakeStop);
