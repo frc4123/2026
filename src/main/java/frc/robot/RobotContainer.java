@@ -129,7 +129,7 @@ public class RobotContainer {
     );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
-    private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm);
+    private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
     //private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
@@ -165,7 +165,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
         NamedCommands.registerCommand("IntakeShimmy", new WaitCommand(1.8).andThen(
             new RepeatCommand(
-                new IntakeArmMid(intakeArm)
+                new IntakeArmMid(intakeArm, intakeRollers)
                 .andThen(new WaitCommand(0.7))
                 .andThen(new ParallelCommandGroup(new IntakeArmOut(intakeArm), new IntakeRollerShimmy(intakeRollers, intakeArm))
                 .andThen(new WaitCommand(0.7)))
@@ -298,7 +298,7 @@ public class RobotContainer {
             new WaitCommand(1.8).andThen(
                 new RepeatCommand(
                     new SequentialCommandGroup(
-                        new IntakeArmMid(intakeArm).withTimeout(0.3),
+                        new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
 
                         new ParallelCommandGroup(
                             new IntakeArmOut(intakeArm).withTimeout(0.3),
@@ -310,7 +310,17 @@ public class RobotContainer {
         );
         //m_buttonBoard.button(4).onFalse(intakeArmIn);
         m_buttonBoard.button(4).onFalse(uptakeStop);
-        m_buttonBoard.button(3).onTrue(intakeArmIn);
+        m_buttonBoard.button(3).onTrue(
+            new RepeatCommand(
+                new SequentialCommandGroup(
+                    new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
+                    new ParallelCommandGroup(
+                        new IntakeArmOut(intakeArm).withTimeout(0.3),
+                        new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
+                    )
+                )
+            )
+        );
         joystick.leftTrigger().onTrue(intakeArmIn);
 
         Trigger shiftWarning = new Trigger(() ->
