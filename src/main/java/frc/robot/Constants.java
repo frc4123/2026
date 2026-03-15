@@ -148,7 +148,7 @@ public class Constants {
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
 
         public static final double zeroVelo = 0;
-        public static final double intakeVelo = 35;
+        public static final double intakeVelo = 31; //was 35
         public static final double intakeAcc = 90;
        
         public static final double kP = 0.426;

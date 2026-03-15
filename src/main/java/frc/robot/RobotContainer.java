@@ -123,9 +123,9 @@ public class RobotContainer {
     private final RollMid rollMid = new RollMid(sevenEleven);
     private final RollHigh rollHigh = new RollHigh(sevenEleven);
     private final Command rollerPulse =
-        rollLow.withTimeout(0.2)
-        .andThen(rollMid.withTimeout(0.45))
-        .andThen(rollHigh.withTimeout(0.6)
+        rollLow.withTimeout(0.5)
+        .andThen(rollMid.withTimeout(0.5))
+        .andThen(rollHigh.withTimeout(1)
     );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
@@ -292,23 +292,27 @@ public class RobotContainer {
         
 
         m_buttonBoard.button(4).onTrue(uptakeUp);
-        m_buttonBoard.button(4).onTrue(uptakeUp);
-
-        // m_buttonBoard.button(4).whileTrue(
-        //     new WaitCommand(1.8).andThen(
-        //         new RepeatCommand(
-        //             new SequentialCommandGroup(
-        //                 new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
-        //                 new ParallelCommandGroup(
-        //                     new IntakeArmOut(intakeArm).withTimeout(0.3),
-        //                     new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
-        //                 )
-        //             )
-        //         )
-        //     )
-        // );
-        //m_buttonBoard.button(4).onFalse(intakeArmIn);
         m_buttonBoard.button(4).onFalse(uptakeStop);
+
+        m_buttonBoard.button(4).whileTrue(
+            new WaitCommand(1.8).andThen(
+                new RepeatCommand(
+                    new SequentialCommandGroup(
+                        new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
+                        new ParallelCommandGroup(
+                            new IntakeArmOut(intakeArm).withTimeout(0.3),
+                            new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
+                        )
+                    )
+                )
+            )
+        );
+
+        
+        m_buttonBoard.button(4).onFalse(intakeArmIn);
+        
+
+        m_buttonBoard.button(3).onTrue(uptakeUp);
         m_buttonBoard.button(3).onTrue(
             new RepeatCommand(
                 new SequentialCommandGroup(

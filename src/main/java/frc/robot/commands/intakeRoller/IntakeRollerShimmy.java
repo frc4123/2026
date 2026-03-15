@@ -13,12 +13,12 @@ public class IntakeRollerShimmy extends Command{
     public IntakeRollerShimmy(IntakeRoller intakeRollers, IntakeArm intakeArm) {
         this.intakeRollers = intakeRollers;
         this.intakeArm = intakeArm;
-        addRequirements(intakeRollers);
     }// TODO MAKE CHECK THE STATE OF THE ARM BEFORE ROLLING
 
     @Override
     public void execute() {
-        if(intakeArm.getIntakePosition() <= 0.115) {
+        if (intakeRollers.isIntaking()) return; // full speed command is running, don't interfere
+        if (intakeArm.getIntakePosition() <= 0.115) {
             intakeRollers.setIntakeVelo(IntakeRollerConstants.intakeVelo / 2);
         }
     }
