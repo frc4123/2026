@@ -87,6 +87,7 @@ public class Turret extends SubsystemBase {
 
     private final StatusSignal<Angle> encoder1AbsolutePositionSignal = turretEncoder1.getAbsolutePosition();
     private final StatusSignal<Angle> encoder2AbsolutePositionSignal = turretEncoder2.getAbsolutePosition();
+    private final StatusSignal<Double> turretClosedLoopError = turretMotor.getClosedLoopError();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
     private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
@@ -196,7 +197,8 @@ public class Turret extends SubsystemBase {
         //     voltageSignal,
             encoder1AbsolutePositionSignal,
             encoder2AbsolutePositionSignal,
-            encoder1PositionSignal//,
+            encoder1PositionSignal,
+            turretClosedLoopError//,
         //     encoderVelocitySignal
         );
     }
@@ -206,6 +208,10 @@ public class Turret extends SubsystemBase {
         if (deg > 180) deg -= 360;
         if (deg < -180) deg += 360;
         return deg;
+    }
+
+    public boolean isWrapping(){
+        return turretClosedLoopError.getValueAsDouble() > 0.07 ? true : false;
     }
 
     public EasyCRT initCRT(){
