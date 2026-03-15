@@ -1,0 +1,63 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.26593214699074,
+        "y": 3.8163857060185187
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.339970703125,
+        "y": 5.6134581886574075
+      },
+      "isLocked": false,
+      "linkedName": "Orbit 1-2"
+    },
+    {
+      "anchor": {
+        "x": 7.287810329861111,
+        "y": 2.333718894675926
+      },
+      "prevControl": {
+        "x": 7.089076027199074,
+        "y": 3.159427445023149
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Orbit 2-3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.04215666118421051,
+      "rotationDegrees": -59.99999999999999
+    },
+    {
+      "waypointRelativePos": 0.515491365131579,
+      "rotationDegrees": 69.58615067111873
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 93.56653144400379
+  },
+  "reversed": false,
+  "folder": "OrbitAuto (R)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Orbit 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Orbit 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Orbit 3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Orbit 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Orbit 5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Orbit 6"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
