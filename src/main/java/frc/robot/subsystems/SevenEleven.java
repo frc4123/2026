@@ -22,7 +22,7 @@ public class SevenEleven extends SubsystemBase{
 
     private final MotionMagicVelocityVoltage motionMagic =
         new MotionMagicVelocityVoltage(SevenElevenConstants.zeroVelo)
-           .withVelocity(SevenElevenConstants.sevenElevenVelo)
+           .withVelocity(SevenElevenConstants.sevenElevenMidVelo)
            .withAcceleration(SevenElevenConstants.sevenElevenAcc
         );
 

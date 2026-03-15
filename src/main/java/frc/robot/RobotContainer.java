@@ -134,7 +134,7 @@ public class RobotContainer {
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
-    private final UptakeUp uptakeUp = new UptakeUp(uptake);
+    private final UptakeUp uptakeUp = new UptakeUp(uptake, turret);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
     //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
     // private final ClimbUp climbUp = new ClimbUp(climb);
