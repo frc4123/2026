@@ -174,10 +174,10 @@ public class TurretVisSim extends SubsystemBase{
                 return Constants.VisionConstants.blueDepot.getTranslation(); // Convert Pose2d to Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
-                return Constants.VisionConstants.blueLeftBumpCorner.getTranslation();
+                return Constants.VisionConstants.blueDepot.getTranslation();
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
-                return Constants.VisionConstants.blueRightBumpCorner.getTranslation();
+                return Constants.VisionConstants.blueAimThreshold.getTranslation();
             } else {
                 // Bottom zone - aim threshold
                 return Constants.VisionConstants.blueAimThreshold.getTranslation();
@@ -192,10 +192,10 @@ public class TurretVisSim extends SubsystemBase{
                 return Constants.VisionConstants.redAimThreshold.getTranslation();
             } else if (y > 4.044) {
                 // Upper middle zone - right bump corner
-                return Constants.VisionConstants.redRightBumpCorner.getTranslation();
+                return Constants.VisionConstants.redAimThreshold.getTranslation();
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
-                return Constants.VisionConstants.redLeftBumpCorner.getTranslation();
+                return Constants.VisionConstants.redDepot.getTranslation();
             } else {
                 // Bottom zone - depot
                 return Constants.VisionConstants.redDepot.getTranslation();
