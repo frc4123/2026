@@ -311,7 +311,7 @@ public class RobotContainer {
         m_buttonBoard.button(2).onFalse(uptakeStop);
 
         m_buttonBoard.button(3).onTrue(uptakeUp);
-        m_buttonBoard.button(3).onFalse(intakeArmMid);
+        m_buttonBoard.button(3).onFalse(intakeArmOut);
         m_buttonBoard.button(3).onTrue(
             new RepeatCommand(
                 new SequentialCommandGroup(
@@ -326,7 +326,7 @@ public class RobotContainer {
 
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onFalse(uptakeStop);
-        m_buttonBoard.button(4).onFalse(intakeArmIn);
+        m_buttonBoard.button(4).onFalse(intakeArmOut);
         m_buttonBoard.button(4).whileTrue(
             new WaitCommand(1.8).andThen(
                 new RepeatCommand(
