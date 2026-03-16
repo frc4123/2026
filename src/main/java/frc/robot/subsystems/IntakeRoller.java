@@ -54,7 +54,7 @@ public class IntakeRoller extends SubsystemBase{
     }
 
     public boolean isIntaking() {
-        return intakeRollerMotor.getVelocity().getValueAsDouble() > intakeVelo * 0.75;
+        return intakeRollerMotor.getVelocity().getValueAsDouble() > intakeVelo * 0.3;
     }
 
     public double getIntakeVelo() {

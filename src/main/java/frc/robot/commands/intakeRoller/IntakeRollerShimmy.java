@@ -19,7 +19,7 @@ public class IntakeRollerShimmy extends Command{
     public void execute() {
         if (intakeRollers.isIntaking()) return; // full speed command is running, don't interfere
         if (intakeArm.getIntakePosition() <= 0.115) {
-            intakeRollers.setIntakeVelo(IntakeRollerConstants.intakeVelo / 2);
+            intakeRollers.setIntakeVelo(IntakeRollerConstants.intakeVelo * 0.2);
         }
     }
     
