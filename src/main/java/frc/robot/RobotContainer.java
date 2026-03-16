@@ -423,10 +423,7 @@ public class RobotContainer {
     }
 
     public void initializeAutoChooser() {
-        autoChooser.setDefaultOption("super secret auto", new ParallelCommandGroup(
-            new WaitCommand(0.01),
-            new SequentialCommandGroup(new mtest().metertest()))
-        );
+        autoChooser.setDefaultOption("super secret auto", new WaitCommand(1));
 
         autoChooser.addOption("2 Cycle Outpost Climb Right", new ParallelCommandGroup(
             new WaitCommand(0.01),
