@@ -342,7 +342,7 @@ public class RobotContainer {
         );
         
         Trigger shiftWarning = new Trigger(() ->
-            ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
+            ShiftHelpers.isFiveSecBeforeShiftChange(Timer.getMatchTime())
         );
 
         shiftWarning.whileTrue(

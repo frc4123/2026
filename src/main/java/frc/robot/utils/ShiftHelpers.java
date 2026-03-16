@@ -44,10 +44,12 @@ public class ShiftHelpers {
     }
 
     public static boolean isFiveSecBeforeShiftChange(double currentMatchTime){
-        return timeLeftInShiftSeconds(currentMatchTime) < 5 ? true : false;
+        if (DriverStation.isAutonomous()) {return false;}
+        return timeLeftInShiftSeconds(currentMatchTime) == 5 ? true : false;
     }
 
     public static boolean isTwoSecBeforeShiftChange(double currentMatchTime){
+        if (DriverStation.isAutonomous()) {return false;}
         return timeLeftInShiftSeconds(currentMatchTime) < 2 ? true : false;
     }
 
