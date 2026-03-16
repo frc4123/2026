@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -51,5 +52,37 @@ public class Target {
         }
     
         return Constants.VisionConstants.blueHubTranslation3d;
+    }
+
+    public static Rotation2d getTrenchAngle(double x) {
+        if (Field.isBlue()) {
+            if (x > 4.63){
+                return new Rotation2d(Math.toRadians(0));
+            } else {
+                return new Rotation2d(Math.toRadians(180));
+            }
+        } else {
+            if (x > 11.91){
+                return new Rotation2d(Math.toRadians(180));
+            } else {
+                return new Rotation2d(Math.toRadians(0));
+            }
+        }
+    }
+
+    public static Rotation2d getBumpAngle(double x) {
+        if (Field.isBlue()) {
+            if (x > 4.63){
+                return new Rotation2d(Math.toRadians(135));
+            } else {
+                return new Rotation2d(Math.toRadians(45));
+            }
+        } else {
+            if (x > 11.91){
+                return new Rotation2d(Math.toRadians(45));
+            } else {
+                return new Rotation2d(Math.toRadians(135));
+            }
+        }
     }
 }

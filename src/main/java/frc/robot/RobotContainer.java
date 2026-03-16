@@ -47,6 +47,7 @@ import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
+import frc.robot.utils.Target;
 import frc.robot.Constants.InputConstants;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.SwerveConstants;
@@ -226,13 +227,29 @@ public class RobotContainer {
 
         joystick.b().onTrue(
             Commands.runOnce(() -> {
-                snappedAngle[0] = vision.getTrenchAngle(
+                snappedAngle[0] = Target.getTrenchAngle(
                     drivetrain.getState().Pose.getTranslation().getX()
                 );
             })
         );
 
         joystick.b().whileTrue(
+            drivetrain.applyRequest(() -> faceAngle
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2)
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2)
+                .withTargetDirection(snappedAngle[0])
+            )
+        );
+
+        joystick.y().onTrue(
+            Commands.runOnce(() -> {
+                snappedAngle[0] = Target.getBumpAngle(
+                    drivetrain.getState().Pose.getTranslation().getX()
+                );
+            })
+        );
+
+        joystick.y().whileTrue(
             drivetrain.applyRequest(() -> faceAngle
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2)
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2)

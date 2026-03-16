@@ -36,7 +36,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.Field;
-import frc.robot.utils.Target;
 
 public class Vision extends SubsystemBase{
 
@@ -389,12 +388,6 @@ public class Vision extends SubsystemBase{
                 return new Rotation2d(Math.toRadians(0));
             }
         }
-    }
-
-    // Helper method to calculate angle
-    private Rotation2d getAngleToTarget(Pose2d robotPose, Translation2d target) {
-        Translation2d delta = target.minus(robotPose.getTranslation());
-        return delta.getAngle();
     }
 
     public double targetFF(Pose2d robotPose, Translation2d targetPosition, ChassisSpeeds robotVelocity) {
