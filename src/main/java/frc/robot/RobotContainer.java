@@ -52,6 +52,7 @@ import frc.robot.Constants.Sim;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
+import frc.robot.commands.autos.orbit;
 import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.hood.AvoidDecapitation;
@@ -435,6 +436,10 @@ public class RobotContainer {
             new SequentialCommandGroup(new twoCycleDepot().twoCycleDepotLeft())
         ));
 
+        autoChooser.addOption("Orbit Right", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new orbit().orbitRight())
+        ));
         // autoChooser.addOption("3 Bump Right", new ParallelCommandGroup(
         //     new WaitCommand(0.01),
         //     new SequentialCommandGroup(new threeBumpRight().threeBumpAuto())

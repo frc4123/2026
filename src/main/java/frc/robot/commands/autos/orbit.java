@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class orbit extends SubsystemBase{
-    public Command metertest(){
+    public Command orbitRight(){
         return AutoBuilder.buildAuto("Orbit");
     }
 }
