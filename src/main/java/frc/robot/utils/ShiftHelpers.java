@@ -1,6 +1,7 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShiftHelpers {
 
@@ -15,6 +16,7 @@ public class ShiftHelpers {
 
     public static int timeLeftInShiftSeconds(double currentMatchTime) {
         if (currentMatchTime >= 130) {
+            SmartDashboard.putBoolean("Won Auto?", didWeWinAuto());
             return (int)(currentMatchTime - 130);
         } else if (currentMatchTime >= 105 && currentMatchTime <= 130) {
             return (int)(currentMatchTime - 105);
@@ -55,6 +57,14 @@ public class ShiftHelpers {
     public static boolean isTwoSecBeforeShiftChange(double currentMatchTime){
         if (DriverStation.isAutonomous()) {return false;}
         return timeLeftInShiftSeconds(currentMatchTime) < 2 ? true : false;
+    }
+
+    public static boolean didWeWinAuto(){
+        if ((blueWonAuto() && Field.isBlue()) || (!blueWonAuto() && Field.isRed())){
+            return true;
+        } else{
+            return false;
+        }
     }
 
     public static boolean currentShiftIsYours() {
