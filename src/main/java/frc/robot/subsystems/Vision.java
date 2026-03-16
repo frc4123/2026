@@ -432,10 +432,10 @@ public class Vision extends SubsystemBase{
                 return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
             } else if (y > 4.044) {
                 // Upper middle zone - face left bump corner
-                return getAngleToTarget(robotPose, VisionConstants.blueLeftBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
             } else if (y > 3.059) {
                 // Lower middle zone - face right bump corner
-                return getAngleToTarget(robotPose, VisionConstants.blueRightBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, VisionConstants.blueAimThreshold.getTranslation().toTranslation2d());
             } else {
                 // Bottom zone - face aim threshold
                 return getAngleToTarget(robotPose, VisionConstants.blueAimThreshold.getTranslation().toTranslation2d());
@@ -458,10 +458,10 @@ public class Vision extends SubsystemBase{
                 return getAngleToTarget(robotPose, VisionConstants.redAimThreshold.getTranslation().toTranslation2d());
             } else if (y > 4.044) {
                 // Upper middle zone - face right bump corner
-                return getAngleToTarget(robotPose, VisionConstants.redRightBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, VisionConstants.redAimThreshold.getTranslation().toTranslation2d());
             } else if (y > 3.059) {
                 // Lower middle zone - face left bump corner
-                return getAngleToTarget(robotPose, VisionConstants.redLeftBumpCorner.getTranslation().toTranslation2d());
+                return getAngleToTarget(robotPose, VisionConstants.redDepot.getTranslation().toTranslation2d());
             } else {
                 // Bottom zone - face depot
                 return getAngleToTarget(robotPose, VisionConstants.redDepot.getTranslation().toTranslation2d());
