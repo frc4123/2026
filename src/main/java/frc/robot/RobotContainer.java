@@ -49,6 +49,7 @@ import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
 import frc.robot.Constants.InputConstants;
 import frc.robot.Constants.Sim;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.twoCycleDepot;
@@ -75,10 +76,13 @@ public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+    final Rotation2d[] snappedAngle = {new Rotation2d()};
+
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+            .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+             // Use open-loop control for drive motors
     //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -181,15 +185,19 @@ public class RobotContainer {
         initializeAutoChooser();
     }
 
+    private double applyDeadband(double value, double deadband) {
+        if (Math.abs(value) < deadband) return 0.0;
+        return value;
+    }
+
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-applyDeadband(joystick.getLeftY(), SwerveConstants.driverDeadband) * MaxSpeed)
+                    .withVelocityY(-applyDeadband(joystick.getLeftX(), SwerveConstants.driverDeadband) * MaxSpeed)
+                    .withRotationalRate(-applyDeadband(joystick.getRightX(), SwerveConstants.driverDeadband) * MaxAngularRate)
             )
         );
 
@@ -209,18 +217,25 @@ public class RobotContainer {
             )
         );
 
-        joystick.leftBumper().whileTrue(leftDriveToClimb);
-        joystick.rightBumper().whileTrue(rightDriveToClimb);
+        // joystick.leftBumper().whileTrue(leftDriveToClimb);
+        // joystick.rightBumper().whileTrue(rightDriveToClimb);
+
+        // Snapshot angle on press, store it
+        
+
+        joystick.b().onTrue(
+            Commands.runOnce(() -> {
+                snappedAngle[0] = vision.getTrenchAngle(
+                    drivetrain.getState().Pose.getTranslation().getX()
+                );
+            })
+        );
 
         joystick.b().whileTrue(
             drivetrain.applyRequest(() -> faceAngle
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2) 
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2) 
-                .withTargetDirection(vision.angleToFace(drivetrain.getState().Pose))
-                // .withTargetRateFeedforward(
-                //     vision.targetFF(drivetrain.getState().Pose, 
-                //     vision.getHub(),
-                //     drivetrain.getState().Speeds))
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2)
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2)
+                .withTargetDirection(snappedAngle[0])
             )
         );
         //face desired angle of robot towards the Hub when B is held
@@ -285,15 +300,32 @@ public class RobotContainer {
 
         joystick.b().whileTrue(avoidDecapitation);
 
-        // joystick.leftStick().onTrue(climbTest);
-        // joystick.button(8).onTrue(climbDown);
-        // joystick.rightStick().onTrue(climbUp);
-
+        joystick.leftTrigger().onTrue(intakeArmMid);
         
+        // ---------- Buttonboard Commands ------------ //
+
+        m_buttonBoard.button(1).onTrue(intakeArmIn);
+
+        m_buttonBoard.button(2).onTrue(uptakeUp);
+        m_buttonBoard.button(2).onFalse(uptakeStop);
+
+        m_buttonBoard.button(3).onTrue(uptakeUp);
+        m_buttonBoard.button(3).onFalse(intakeArmMid);
+        m_buttonBoard.button(3).onTrue(
+            new RepeatCommand(
+                new SequentialCommandGroup(
+                    new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
+                    new ParallelCommandGroup(
+                        new IntakeArmOut(intakeArm).withTimeout(0.3),
+                        new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
+                    )
+                )
+            )
+        );
 
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onFalse(uptakeStop);
-
+        m_buttonBoard.button(4).onFalse(intakeArmIn);
         m_buttonBoard.button(4).whileTrue(
             new WaitCommand(1.8).andThen(
                 new RepeatCommand(
@@ -307,25 +339,7 @@ public class RobotContainer {
                 )
             )
         );
-
         
-        m_buttonBoard.button(4).onFalse(intakeArmIn);
-        
-
-        m_buttonBoard.button(3).onTrue(uptakeUp);
-        m_buttonBoard.button(3).onTrue(
-            new RepeatCommand(
-                new SequentialCommandGroup(
-                    new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
-                    new ParallelCommandGroup(
-                        new IntakeArmOut(intakeArm).withTimeout(0.3),
-                        new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
-                    )
-                )
-            )
-        );
-        joystick.leftTrigger().onTrue(intakeArmIn);
-
         Trigger shiftWarning = new Trigger(() ->
             ShiftHelpers.isTwoSecBeforeShiftChange(Timer.getMatchTime())
         );
@@ -334,7 +348,6 @@ public class RobotContainer {
             Commands.run(() ->
                 joystick.setRumble(RumbleType.kBothRumble, 1.0)
             )
-            
         );
 
         shiftWarning.onFalse(
