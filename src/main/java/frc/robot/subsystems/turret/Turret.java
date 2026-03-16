@@ -26,6 +26,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -35,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.utils.ShotCache;
+import frc.robot.utils.ShotHelper;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.TurretConstants;
 
@@ -87,7 +90,7 @@ public class Turret extends SubsystemBase {
 
     private final StatusSignal<Angle> encoder1AbsolutePositionSignal = turretEncoder1.getAbsolutePosition();
     private final StatusSignal<Angle> encoder2AbsolutePositionSignal = turretEncoder2.getAbsolutePosition();
-    private final StatusSignal<Double> turretClosedLoopError = turretMotor.getClosedLoopError();
+    private final StatusSignal<AngularVelocity> turretVelocity = turretMotor.getVelocity();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal = turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
     private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
@@ -198,7 +201,7 @@ public class Turret extends SubsystemBase {
             encoder1AbsolutePositionSignal,
             encoder2AbsolutePositionSignal,
             encoder1PositionSignal,
-            turretClosedLoopError//,
+            turretVelocity//,
         //     encoderVelocitySignal
         );
     }
@@ -208,10 +211,6 @@ public class Turret extends SubsystemBase {
         if (deg > 180) deg -= 360;
         if (deg < -180) deg += 360;
         return deg;
-    }
-
-    public boolean isWrapping(){
-        return turretClosedLoopError.getValueAsDouble() > 0.07 ? true : false;
     }
 
     public EasyCRT initCRT(){
@@ -383,8 +382,14 @@ public class Turret extends SubsystemBase {
         targetCumulative = cumulativeAngle + delta; // + cameraOffset;
 
         // Clamp to physical limits 
-        while (targetCumulative > maxCumulativeAngle) {targetCumulative -= 360.0;} 
-        while (targetCumulative < minCumulativeAngle) {targetCumulative += 360.0;}
+        while (targetCumulative > maxCumulativeAngle) {
+            targetCumulative -= 360.0;
+            ShotHelper.isWrapping(true);
+        } 
+        while (targetCumulative < minCumulativeAngle) {
+            targetCumulative += 360.0;
+            ShotHelper.isWrapping(true);
+        }
         //targetCumulative = Math.max(minCumulativeAngle, Math.min(maxCumulativeAngle, targetCumulative));
 
         // Convert position target to motor rotations
@@ -437,6 +442,10 @@ public class Turret extends SubsystemBase {
             turretMotor.stopMotor();
             return;
         }
+
+        if(ShotHelper.getIsWrapping() && turretVelocity.getValueAsDouble() < 0.5) {
+            ShotHelper.isWrapping(false);
+        } //TODO PLOT VELOCITY WHEN SPINNING AND FIND THE SWEET SPOT
 
         SmartDashboard.putNumber("Turret CumulativeAngle", getCumulativeAngle());
         SmartDashboard.putNumber("Turret Target Angle ", targetCumulative);

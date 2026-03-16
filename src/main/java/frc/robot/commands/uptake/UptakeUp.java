@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.subsystems.Uptake;
 import frc.robot.subsystems.turret.Turret;
+import frc.robot.utils.ShotHelper;
 
 public class UptakeUp extends Command{
 
@@ -18,7 +19,7 @@ public class UptakeUp extends Command{
 
     @Override
     public void execute() {
-        if (turret.isWrapping()){
+        if (ShotHelper.getIsWrapping()){
             uptake.setUptakeVelo(UptakeConstants.zeroVelo);
             return;
         }
