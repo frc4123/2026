@@ -331,6 +331,7 @@ public class RobotContainer {
 
         m_buttonBoard.button(3).onTrue(uptakeUp);
         m_buttonBoard.button(3).onFalse(intakeArmOut);
+        m_buttonBoard.button(3).onFalse(uptakeUp);
         m_buttonBoard.button(3).onTrue(
             new RepeatCommand(
                 new SequentialCommandGroup(
