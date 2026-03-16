@@ -94,6 +94,8 @@ public class Constants {
         public static final double CLOSE_ROTATION_PP_KI = 0.0;
         public static final double CLOSE_ROTATION_PP_KD = 0.0;
 
+        public static final double driverDeadband = 0.05;
+
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
         
@@ -202,7 +204,7 @@ public class Constants {
         public static final double kP = 20; //20 //either p is too low
         public static final double kI = 1.5; //or I is too  high
         public static final double kD = 20; // or D is too high? lower d and increase i first thing tmr
-        public static final double kS = 3;// 2.0, //4.2, //2.75; //3 // its not overshooting so can't be this
+        public static final double kS = 3;// 3
         public static final double kV = 5.5;//6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
         public static final double kA = 1;//1.4123;
 
@@ -376,7 +378,7 @@ public class Constants {
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
         //blueDepot pose
-        public static final Pose3d blueDepot = new Pose3d (3, 6.0, 0.2, new Rotation3d());
+        public static final Pose3d blueDepot = new Pose3d (2, 6.0, 0.2, new Rotation3d());
 
         //blueLeftBumpCorner pose
         public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new Rotation3d()); //x4.03 and y was +1
@@ -385,7 +387,7 @@ public class Constants {
         public static final Pose3d blueRightBumpCorner = new Pose3d (3.5, 1, 0.2, new Rotation3d()); //x4.03 and y was -1
 
         //redAimThreshold pose
-        public static final Pose3d blueAimThreshold = new Pose3d (3, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d blueAimThreshold = new Pose3d (2, 2.080, 0.2, new Rotation3d());
 
         //redHub translations
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264/*1.828*/, new Rotation3d());
@@ -393,7 +395,7 @@ public class Constants {
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
         //redAimThreshold pose
-        public static final Pose3d redAimThreshold = new Pose3d (14, 6.0, 0.2, new Rotation3d());
+        public static final Pose3d redAimThreshold = new Pose3d (15, 6.0, 0.2, new Rotation3d());
 
         //redRightBumpCorner pose
         public static final Pose3d redRightBumpCorner = new Pose3d (13.5, 7, 0.2, new Rotation3d()); //12.505 and y  was + 1
@@ -402,7 +404,7 @@ public class Constants {
         public static final Pose3d redLeftBumpCorner = new Pose3d (13.5, 1, 0.2, new Rotation3d()); //12.505 and y was -1
 
         //blueDepot pose
-        public static final Pose3d redDepot = new Pose3d (14, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d redDepot = new Pose3d (15, 2.080, 0.2, new Rotation3d());
 
         // threshold for how close we are to the blue bump/trench for auto rotation
         public static final double blueLeftBumpOrTrenchThreshold = 2.5;
