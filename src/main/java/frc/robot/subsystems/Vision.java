@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.Field;
+import frc.robot.utils.Target;
 
 public class Vision extends SubsystemBase{
 
@@ -374,103 +375,6 @@ public class Vision extends SubsystemBase{
 
         } else {return blueHub;}
     }
-
-    public boolean isBlue(){
-        if(isBlue == false && isRed == false){
-            if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                isBlue = false;
-                isRed = false;
-            }
-        }
-        return isBlue;
-    }
-
-    public boolean isRed(){
-        if(isBlue == false && isRed == false){
-            if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                isBlue = false;
-                isRed = false;
-            }
-        }
-        return isRed;
-    }
-
-    public Rotation2d angleToFace(Pose2d robotPose) {
-        if(isBlue == false && isRed == false){
-            if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                isBlue = false;
-                isRed = false;
-            }
-        }
-
-        double x = robotPose.getX();
-        double y = robotPose.getY();
-
-        if (isBlue) {
-
-            boolean isBumpOrTrench = (
-                x >= VisionConstants.blueLeftBumpOrTrenchThreshold && 
-                x <= VisionConstants.blueRightBumpOrTrenchThreshold
-            ) ? true : false;
-
-            if (isBumpOrTrench){
-                return getTrenchAngle(x);
-            } else if(x < VisionConstants.blueHub.getX()){
-                return getAngleToTarget(robotPose, VisionConstants.blueHub.getTranslation().toTranslation2d());
-                // Check Y zones from top to bottom
-            } else if (y >= 5.029) {
-                // Top zone - face depot
-                return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
-            } else if (y > 4.044) {
-                // Upper middle zone - face left bump corner
-                return getAngleToTarget(robotPose, VisionConstants.blueDepot.getTranslation().toTranslation2d());
-            } else if (y > 3.059) {
-                // Lower middle zone - face right bump corner
-                return getAngleToTarget(robotPose, VisionConstants.blueAimThreshold.getTranslation().toTranslation2d());
-            } else {
-                // Bottom zone - face aim threshold
-                return getAngleToTarget(robotPose, VisionConstants.blueAimThreshold.getTranslation().toTranslation2d());
-            }
-
-        } else if (isRed) {
-            // Check Y zones from top to bottom
-            boolean isBumpOrTrench = (
-                x >= VisionConstants.redLeftBumpOrTrenchThreshold && 
-                x <= VisionConstants.redRightBumpOrTrenchThreshold
-            ) ? true : false;
-
-            if (isBumpOrTrench){
-                return getTrenchAngle(x);
-            } else if(x > VisionConstants.redHub.getX()){
-                return getAngleToTarget(robotPose, VisionConstants.redHub.getTranslation().toTranslation2d());
-            // Check Y zones from top to bottom
-            } else if (y >= 5.029) {
-                // Top zone - face aim threshold
-                return getAngleToTarget(robotPose, VisionConstants.redAimThreshold.getTranslation().toTranslation2d());
-            } else if (y > 4.044) {
-                // Upper middle zone - face right bump corner
-                return getAngleToTarget(robotPose, VisionConstants.redAimThreshold.getTranslation().toTranslation2d());
-            } else if (y > 3.059) {
-                // Lower middle zone - face left bump corner
-                return getAngleToTarget(robotPose, VisionConstants.redDepot.getTranslation().toTranslation2d());
-            } else {
-                // Bottom zone - face depot
-                return getAngleToTarget(robotPose, VisionConstants.redDepot.getTranslation().toTranslation2d());
-            }
-        }
-        
-        return new Rotation2d(0);
-    }
-
     public Rotation2d getTrenchAngle(double x) {
         if (Field.isBlue()) {
             if (x > 4.63){

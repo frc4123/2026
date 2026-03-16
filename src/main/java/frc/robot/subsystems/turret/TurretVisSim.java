@@ -23,6 +23,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.utils.Field;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShotCache;
 
@@ -165,7 +166,7 @@ public class TurretVisSim extends SubsystemBase{
         double x = poseSupplier.get().getX();
         double y = poseSupplier.get().getY();
 
-        if(vision.isBlue()) {
+        if(Field.isBlue()) {
             if(x < Constants.VisionConstants.blueHub.getX()){
                 return Constants.VisionConstants.blueHubTranslation3d;
             // Past hub - match the Y zones from Turret.targetAngle()
@@ -183,7 +184,7 @@ public class TurretVisSim extends SubsystemBase{
                 return Constants.VisionConstants.blueAimThreshold.getTranslation();
             }
         }
-        else if(vision.isRed()) {
+        else if(Field.isRed()) {
             if(x > Constants.VisionConstants.redHub.getX()){
                 return Constants.VisionConstants.redHubTranslation3d;
             // Past hub - match the Y zones from Turret.targetAngle()
