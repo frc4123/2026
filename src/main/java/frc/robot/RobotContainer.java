@@ -266,7 +266,7 @@ public class RobotContainer {
         // joystick.povLeft().whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on button Y press.
-        joystick.y().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         joystick.a().whileTrue(
             drivetrain.applyRequest(() -> {
