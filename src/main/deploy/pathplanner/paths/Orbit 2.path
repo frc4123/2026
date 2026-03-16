@@ -20,8 +20,8 @@
         "y": 2.333718894675926
       },
       "prevControl": {
-        "x": 7.089076027199074,
-        "y": 3.159427445023149
+        "x": 7.334065755208334,
+        "y": 3.1524071180555553
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,14 +35,14 @@
     },
     {
       "waypointRelativePos": 0.515491365131579,
-      "rotationDegrees": 69.58615067111873
+      "rotationDegrees": 84.66538845635026
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 0.75,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -50,14 +50,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 93.56653144400379
+    "velocity": 0.5,
+    "rotation": 81.51264295983016
   },
   "reversed": false,
   "folder": "OrbitAuto (R)",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

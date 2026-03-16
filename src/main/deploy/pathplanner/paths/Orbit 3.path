@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.653845630787037,
-        "y": 3.68575513599537
+        "x": 5.757772714120371,
+        "y": 3.7254495081018515
       },
       "prevControl": {
-        "x": 5.7493089554398145,
-        "y": 2.833999204282408
+        "x": 5.853236038773148,
+        "y": 2.8736935763888893
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,19 +30,29 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.08456003289473688,
-      "rotationDegrees": 65.0
-    },
-    {
-      "waypointRelativePos": 0.4702508223684211,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.4015316611842106,
+      "rotationDegrees": -47.336930032212074
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6941834509966777,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -56,8 +66,8 @@
   "reversed": false,
   "folder": "OrbitAuto (R)",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 93.56653144400379
+    "velocity": 0.5,
+    "rotation": 81.51264295983016
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

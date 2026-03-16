@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.653845630787037,
-        "y": 3.68575513599537
+        "x": 5.757772714120371,
+        "y": 3.7254495081018515
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.619763888888889,
-        "y": 0.7886564670138885
+        "x": 6.723690972222222,
+        "y": 0.82835083912037
       },
       "isLocked": false,
       "linkedName": "Orbit 3-4"
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
+    "velocity": 2.0,
     "rotation": 0.0
   },
   "reversed": false,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
