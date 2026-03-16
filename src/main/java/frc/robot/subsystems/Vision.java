@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.utils.Field;
 
 public class Vision extends SubsystemBase{
 
@@ -422,7 +423,7 @@ public class Vision extends SubsystemBase{
             ) ? true : false;
 
             if (isBumpOrTrench){
-                return getBumpOrTrench(y, robotPose.getRotation());
+                return getTrenchAngle(x);
             } else if(x < VisionConstants.blueHub.getX()){
                 return getAngleToTarget(robotPose, VisionConstants.blueHub.getTranslation().toTranslation2d());
                 // Check Y zones from top to bottom
@@ -448,7 +449,7 @@ public class Vision extends SubsystemBase{
             ) ? true : false;
 
             if (isBumpOrTrench){
-                return getBumpOrTrench(y, robotPose.getRotation());
+                return getTrenchAngle(x);
             } else if(x > VisionConstants.redHub.getX()){
                 return getAngleToTarget(robotPose, VisionConstants.redHub.getTranslation().toTranslation2d());
             // Check Y zones from top to bottom
@@ -470,19 +471,19 @@ public class Vision extends SubsystemBase{
         return new Rotation2d(0);
     }
 
-    private Rotation2d getBumpOrTrench(double y, Rotation2d rotation) {
-
-        if( y >= VisionConstants.topBumpTrenchEdge ||
-            y <= VisionConstants.bottomBumpTrenchEdge) {
-
-            double closest = 180 * Math.round(rotation.getDegrees() / 180);
-            return new Rotation2d(Math.toRadians(closest));
+    public Rotation2d getTrenchAngle(double x) {
+        if (Field.isBlue()) {
+            if (x > 4.63){
+                return new Rotation2d(Math.toRadians(0));
+            } else {
+                return new Rotation2d(Math.toRadians(180));
+            }
         } else {
-            
-            // Add 45 to shift, snap to nearest 90, then subtract 45
-            double closest = 90 * Math.round((rotation.getDegrees() - 45) / 90.0) + 45;
-            
-            return new Rotation2d(Math.toRadians(closest));
+            if (x > 11.91){
+                return new Rotation2d(Math.toRadians(180));
+            } else {
+                return new Rotation2d(Math.toRadians(0));
+            }
         }
     }
 
