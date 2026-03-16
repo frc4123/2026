@@ -19,16 +19,16 @@ public class Target {
             // Past hub - match the Y zones from Turret.targetAngle()
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot.getTranslation(); // Convert Pose2d to Translation3d
+                return Constants.VisionConstants.blueLeftBumpCorner.getTranslation(); // blueDepotConvert Pose2d to Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
-                return Constants.VisionConstants.blueLeftBumpCorner.getTranslation();
+                return Constants.VisionConstants.blueLeftBumpCorner.getTranslation(); //blueLeftBumpCorner.
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
-                return Constants.VisionConstants.blueRightBumpCorner.getTranslation();
+                return Constants.VisionConstants.blueRightBumpCorner.getTranslation(); //blueRIghtBumpCorner
             } else {
                 // Bottom zone - aim threshold
-                return Constants.VisionConstants.blueAimThreshold.getTranslation();
+                return Constants.VisionConstants.blueRightBumpCorner.getTranslation(); //blueAimThreshold
             }
         }
         else if(Field.isRed()) {
@@ -37,16 +37,16 @@ public class Target {
             // Past hub - match the Y zones from Turret.targetAngle()
             } else if (y >= 5.029) {
                 // Top zone - aim threshold
-                return Constants.VisionConstants.redAimThreshold.getTranslation();
+                return Constants.VisionConstants.redRightBumpCorner.getTranslation(); // redaimthreshold
             } else if (y > 4.044) {
                 // Upper middle zone - right bump corner
-                return Constants.VisionConstants.redRightBumpCorner.getTranslation();
+                return Constants.VisionConstants.redRightBumpCorner.getTranslation(); // redRightBumpCorner
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
-                return Constants.VisionConstants.redLeftBumpCorner.getTranslation();
+                return Constants.VisionConstants.redLeftBumpCorner.getTranslation(); //redLeftBumpCorner
             } else {
                 // Bottom zone - depot
-                return Constants.VisionConstants.redDepot.getTranslation();
+                return Constants.VisionConstants.redLeftBumpCorner.getTranslation(); //red depot
             }
         }
     
