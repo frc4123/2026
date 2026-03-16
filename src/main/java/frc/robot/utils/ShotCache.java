@@ -1,13 +1,15 @@
 package frc.robot.utils;
 
+import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 
 public class ShotCache {
 
-    private static ShotData cachedShot;
+    private static ShotData cachedShot = new ShotData(0,60, VisionConstants.blueHubTranslation3d);
     private static final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     public static boolean isPassingShot() {
