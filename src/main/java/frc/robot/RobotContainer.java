@@ -61,6 +61,7 @@ import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmOut;
+import frc.robot.commands.intakeRoller.AutoIntakeRollerIn;
 //import frc.robot.commands.intakeArm.IntakeShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
@@ -122,6 +123,7 @@ public class RobotContainer {
     private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
     private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
+    private final AutoIntakeRollerIn autoIntakeRollerIn = new AutoIntakeRollerIn(intakeRollers, intakeArm);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
     private final IntakeRollerShimmy intakeRollerShimmy = new IntakeRollerShimmy(intakeRollers, intakeArm);
     //private final Roll roll = new Roll(sevenEleven);
@@ -178,7 +180,7 @@ public class RobotContainer {
             )
         ));
         NamedCommands.registerCommand("Aim", aim);
-        NamedCommands.registerCommand("IntakeIn", intakeRollersIn);
+        NamedCommands.registerCommand("IntakeIn", autoIntakeRollerIn);
         NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
         NamedCommands.registerCommand("Uptake", uptakeUp);
         // NamedCommands.registerCommand("ClimbUp", climbUp);
@@ -358,18 +360,34 @@ public class RobotContainer {
             )
         );
         
-        Trigger shiftWarning = new Trigger(() ->
-            ShiftHelpers.isFiveSecBeforeShiftChange(Timer.getMatchTime())
+        Trigger upcomingShiftWarning = new Trigger(() ->
+            ShiftHelpers.isFiveSecBeforeShiftChange(Timer.getMatchTime()) && !ShiftHelpers.currentShiftIsYours()
         );
 
-        shiftWarning.whileTrue(
+        Trigger endingShiftWarning = new Trigger(() ->
+            ShiftHelpers.isSevenSecBeforeShiftChange(Timer.getMatchTime()) && ShiftHelpers.currentShiftIsYours()
+        );
+
+        upcomingShiftWarning.whileTrue(
             Commands.run(() ->
                 joystick.setRumble(RumbleType.kBothRumble, 1.0)
             )
         );
 
-        shiftWarning.onFalse(
+        endingShiftWarning.whileTrue(
+            Commands.run(() ->
+                joystick.setRumble(RumbleType.kBothRumble, 1.0)
+            )
+        );
+
+        upcomingShiftWarning.onFalse(
             Commands.runOnce(() ->
+                joystick.setRumble(RumbleType.kBothRumble, 0)
+            )
+        );
+
+        endingShiftWarning.onFalse(
+            Commands.run(() ->
                 joystick.setRumble(RumbleType.kBothRumble, 0)
             )
         );

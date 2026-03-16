@@ -5,9 +5,34 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Orbit 1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Orbit 1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmOut"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Start Shooting"
+                }
+              }
+            ]
           }
         },
         {
@@ -29,9 +54,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Orbit 5"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Orbit 5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop Shooting"
+                }
+              }
+            ]
           }
         },
         {
