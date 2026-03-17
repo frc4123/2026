@@ -327,12 +327,11 @@ public class RobotContainer {
         joystick.rightTrigger().onFalse(uptakeStop);
 
         joystick.leftTrigger().onTrue(intakeArmMid);
+        joystick.leftTrigger().onTrue(intakeArmOut);
 
         joystick.leftStick().onTrue(intakeArmIn);
         
-        // ---------- Buttonboard Commands ------------ //
-
-        
+        // ---------- Buttonboard Commands ------------ //        
 
         m_buttonBoard.button(1).onTrue(uptakeUp);
         m_buttonBoard.button(1).onFalse(uptakeStop);
