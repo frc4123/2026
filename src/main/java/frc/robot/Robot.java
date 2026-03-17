@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
             SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
             SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
             SmartDashboard.putNumber("Match Data/TimeLeftInShift",
-                    ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
+            ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
         }
     }
 

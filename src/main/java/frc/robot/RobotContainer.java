@@ -62,6 +62,7 @@ import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmOut;
 import frc.robot.commands.intakeRoller.AutoIntakeRollerIn;
+import frc.robot.commands.intakeRoller.IntakeReverse;
 //import frc.robot.commands.intakeArm.IntakeShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
@@ -125,6 +126,7 @@ public class RobotContainer {
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
     private final AutoIntakeRollerIn autoIntakeRollerIn = new AutoIntakeRollerIn(intakeRollers, intakeArm);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
+    private final IntakeReverse intakeReverse = new IntakeReverse(intakeRollers, intakeArm);
     private final IntakeRollerShimmy intakeRollerShimmy = new IntakeRollerShimmy(intakeRollers, intakeArm);
     //private final Roll roll = new Roll(sevenEleven);
     private final RollLow rollLow = new RollLow(sevenEleven);
@@ -327,9 +329,15 @@ public class RobotContainer {
         
         // ---------- Buttonboard Commands ------------ //
 
-        m_buttonBoard.button(1).onTrue(intakeArmIn);
+        
+
+        m_buttonBoard.button(1).onTrue(uptakeUp);
+        m_buttonBoard.button(1).onFalse(uptakeStop);
 
         m_buttonBoard.button(2).onTrue(uptakeUp);
+        m_buttonBoard.button(2).onTrue(intakeReverse);
+        m_buttonBoard.button(2).onTrue(intakeArmOut);
+        m_buttonBoard.button(2).onFalse(intakeRollersStop);
         m_buttonBoard.button(2).onFalse(uptakeStop);
 
         m_buttonBoard.button(3).onTrue(uptakeUp);

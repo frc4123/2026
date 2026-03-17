@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -19,7 +21,8 @@ public class ShiftHelpers {
     public static int timeLeftInShiftSeconds(double currentMatchTime) {
         if (currentMatchTime >= 130) {
             if(Constants.Sim.CURRENT_MODE == Mode.Sim){
-                SmartDashboard.putBoolean("Won Auto?", didWeWinAuto());
+                int value = ThreadLocalRandom.current().nextInt(1, 11); // 1–10// TODO CHANGE THIS WHEN NOT PRACTICING 
+                SmartDashboard.putBoolean("Won Auto?", value > 5);
             }
             SmartDashboard.putBoolean("Won Auto?", didWeWinAuto());
             return (int)(currentMatchTime - 130);
