@@ -9,7 +9,12 @@ import frc.robot.Constants.Sim.Mode;
 
 public class ShiftHelpers {
 
+    public static boolean blueWinAutoSimRandom = Math.random() > 0.5;
+
     public static boolean blueWonAuto() {
+        if(Constants.Sim.CURRENT_MODE == Mode.Sim){
+            return blueWinAutoSimRandom;
+        }
         String matchInfo = DriverStation.getGameSpecificMessage();
         if (matchInfo != null && matchInfo.length() > 0) {
             return matchInfo.charAt(0) == 'B';
@@ -20,9 +25,6 @@ public class ShiftHelpers {
 
     public static int timeLeftInShiftSeconds(double currentMatchTime) {
         if (currentMatchTime >= 130) {
-            if(Constants.Sim.CURRENT_MODE == Mode.Sim){
-                SmartDashboard.putBoolean("Won Auto?", Math.random() > 0.5);
-            }
             SmartDashboard.putBoolean("Won Auto?", didWeWinAuto());
             return (int)(currentMatchTime - 130);
         } else if (currentMatchTime >= 105 && currentMatchTime <= 130) {
