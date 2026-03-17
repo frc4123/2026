@@ -151,10 +151,11 @@ public class Constants {
 
         public static final double zeroVelo = 0;
         public static final double intakeVelo = 31; //was 35
+        public static final double reverseVelo = -20;
         public static final double intakeAcc = 90;
        
         public static final double kP = 0.426;
-        public static final double kI = 0; // was 0.0441
+        public static final double kI = 0.03; // was 0.0441
         public static final double kD = 0;
         public static final double kS = 0;          
         public static final double kV = 0.118;  //try this 0;
@@ -168,7 +169,7 @@ public class Constants {
         public static final double sevenElevenMidVelo = 37; //12
         public static final double sevenElevenHighVelo = 45; //20
 
-        public static final double sevenElevenAcc = 7; //30
+        public static final double sevenElevenAcc = 14; //7, //30
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
