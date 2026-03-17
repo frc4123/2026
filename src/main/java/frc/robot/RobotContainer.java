@@ -320,6 +320,9 @@ public class RobotContainer {
 
         joystick.b().whileTrue(avoidDecapitation);
 
+        joystick.rightTrigger().onTrue(uptakeUp);
+        joystick.rightTrigger().onFalse(uptakeStop);
+
         joystick.leftTrigger().onTrue(intakeArmMid);
         
         // ---------- Buttonboard Commands ------------ //
@@ -366,7 +369,7 @@ public class RobotContainer {
         );
 
         Trigger endingShiftWarning = new Trigger(() ->
-            ShiftHelpers.isSevenSecBeforeShiftChange(Timer.getMatchTime()) && ShiftHelpers.currentShiftIsYours()
+            ShiftHelpers.isTwelveSecBeforeShiftChange(Timer.getMatchTime()) && ShiftHelpers.currentShiftIsYours()
         );
 
         upcomingShiftWarning.whileTrue(

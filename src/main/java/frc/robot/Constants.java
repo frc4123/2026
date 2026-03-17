@@ -272,7 +272,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.15; //0.21 0.225 0.275, 0.2,  0.15
+        public static final double shootingTestErrorRatio = 1.2355 + 0.21; // 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
 
         public static final double kP = 4; 
         public static final double kI = 0; 
@@ -423,6 +423,13 @@ public class Constants {
     }
 
     public static final class Sim {
+
+        public enum RobotMode {
+            COMP,
+            PRACTICE
+        }
+
+        public static final RobotMode DS_MODE = RobotMode.COMP;
 
         public static enum Mode {Real, Sim, Replay};
         public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.Real : Mode.Sim;
