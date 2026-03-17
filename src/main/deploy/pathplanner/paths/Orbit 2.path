@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.906547526041668,
-        "y": 5.320047887731481
+        "x": 6.729333478009259,
+        "y": 4.6911709346064825
       },
       "isLocked": false,
       "linkedName": "Orbit 1-2"
@@ -40,9 +40,21 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.7964986503322268,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "UptakeStop"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 0.75,
+    "maxVelocity": 0.9,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

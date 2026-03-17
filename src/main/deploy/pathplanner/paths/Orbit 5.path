@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 0.7881685474537041,
-        "y": 0.5008886718750001
+        "x": 1.0275813802083338,
+        "y": 0.4968864293981483
       },
       "prevControl": {
-        "x": 1.1022461660879634,
-        "y": 0.477728153935185
+        "x": 1.341658998842593,
+        "y": 0.4737259114583332
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,14 +33,19 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Start Shooting",
+      "name": "Uptake",
       "waypointRelativePos": 0.2173354443521594,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Uptake"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.3,
+    "maxVelocity": 0.617,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

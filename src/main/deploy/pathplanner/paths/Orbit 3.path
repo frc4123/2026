@@ -37,7 +37,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6941834509966777,
+      "minWaypointRelativePos": 0.6877076411960135,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.8,
@@ -52,7 +52,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 2.3,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -66,7 +66,7 @@
   "reversed": false,
   "folder": "OrbitAuto (R)",
   "idealStartingState": {
-    "velocity": 0.5,
+    "velocity": 0.9,
     "rotation": 81.51264295983016
   },
   "useDefaultConstraints": false

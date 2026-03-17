@@ -25,12 +25,6 @@
                 "data": {
                   "name": "IntakeIn"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Start Shooting"
-                }
               }
             ]
           }
@@ -62,20 +56,8 @@
                 "data": {
                   "pathName": "Orbit 5"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop Shooting"
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Orbit 6"
           }
         }
       ]

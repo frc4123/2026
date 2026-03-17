@@ -185,6 +185,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeIn", autoIntakeRollerIn);
         NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
         NamedCommands.registerCommand("Uptake", uptakeUp);
+        NamedCommands.registerCommand("UptakeStop", uptakeStop);
         // NamedCommands.registerCommand("ClimbUp", climbUp);
         // NamedCommands.registerCommand("ClimbDown", climbDown);
 
@@ -326,6 +327,8 @@ public class RobotContainer {
         joystick.rightTrigger().onFalse(uptakeStop);
 
         joystick.leftTrigger().onTrue(intakeArmMid);
+
+        joystick.leftStick().onTrue(intakeArmIn);
         
         // ---------- Buttonboard Commands ------------ //
 
@@ -487,10 +490,10 @@ public class RobotContainer {
             new WaitCommand(0.01),
             new SequentialCommandGroup(new orbit().orbitRight())
         ));
-        // autoChooser.addOption("3 Bump Right", new ParallelCommandGroup(
-        //     new WaitCommand(0.01),
-        //     new SequentialCommandGroup(new threeBumpRight().threeBumpAuto())
-        // ));
+        autoChooser.addOption("5m test", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new mtest().metertest())
+        ));
 
         SmartDashboard.putData("Auto Selector", autoChooser);
     }
