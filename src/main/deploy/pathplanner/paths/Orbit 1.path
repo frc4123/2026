@@ -45,25 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Start Shooting",
-      "waypointRelativePos": 0.5276681893687709,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Uptake"
-        }
-      }
-    },
-    {
-      "name": "Stop Shooting",
-      "waypointRelativePos": 0.8855118355481725,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
