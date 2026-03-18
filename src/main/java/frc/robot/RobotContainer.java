@@ -337,6 +337,8 @@ public class RobotContainer {
         joystick.leftTrigger().onFalse(intakeArmOut);
 
         joystick.leftStick().onTrue(intakeArmIn);
+
+        //joystick.rightStick().onTrue()
         
         // ---------- Buttonboard Commands ------------ //        
 
