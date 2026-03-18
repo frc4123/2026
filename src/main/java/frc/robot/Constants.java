@@ -182,7 +182,7 @@ public class Constants {
     public static class UptakeConstants {
 
         public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 45;
+        public static final double uptakeVelo = 55;
         public static final double reverseVelo = -45;
         public static final double uptakeAcc = uptakeVelo * 3.0;
        
@@ -343,7 +343,7 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        public static final double ambiguityThreshold = 0.05;
+        public static final double ambiguityThreshold = 0.08;
 
         //FLO = Front_Left_Outside camera
         public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364

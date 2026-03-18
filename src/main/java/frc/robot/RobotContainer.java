@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -54,8 +56,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.orbit;
-import frc.robot.commands.autos.twoCycleDepot;
-import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.ForceIntakeArmMid;
@@ -482,17 +482,15 @@ public class RobotContainer {
     }
 
     public void initializeAutoChooser() {
-        autoChooser.setDefaultOption("super secret auto", new WaitCommand(1));
+        autoChooser.setDefaultOption("super secret auto", 
+        new WaitCommand(3)
+        .andThen(new ParallelRaceGroup(
+            new IntakeArmOut(intakeArm),
+            new IntakeRollerIn(intakeRollers, intakeArm),
+            new WaitCommand(2)
 
-        autoChooser.addOption("2 Cycle Outpost Climb Right", new ParallelCommandGroup(
-            new WaitCommand(0.01),
-            new SequentialCommandGroup(new twoCycleOutpost().twoCycleOutpostRight())
-        ));
-
-        autoChooser.addOption("2 Cycle Depot Climb Left", new ParallelCommandGroup(
-            new WaitCommand(0.01),
-            new SequentialCommandGroup(new twoCycleDepot().twoCycleDepotLeft())
-        ));
+        ))
+        .andThen(new UptakeUp(uptake, turret, sevenEleven)));
 
         autoChooser.addOption("Orbit Right", new ParallelCommandGroup(
             new WaitCommand(0.01),
