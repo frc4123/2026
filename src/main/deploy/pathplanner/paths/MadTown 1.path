@@ -1,0 +1,96 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.461308593750001,
+        "y": 7.538208767361111
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.761750940393519,
+        "y": 7.5752131076388896
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.215280815972223,
+        "y": 4.218775101273149
+      },
+      "prevControl": {
+        "x": 7.976058330363411,
+        "y": 5.048287192480472
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "MadTown 1-2 (2.0)"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5660567434210527,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.4105066445182724,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.2,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "StartAuto",
+      "waypointRelativePos": 0.10854443521594685,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ArmOut"
+        }
+      }
+    },
+    {
+      "name": "StartAuto",
+      "waypointRelativePos": 0.11,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeIn"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 69.130556269698
+  },
+  "reversed": false,
+  "folder": "MadTown (L)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

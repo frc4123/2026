@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.0300804398148156,
+        "y": 7.385664279513889
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.257659360532408,
+        "y": 7.395046585648148
+      },
+      "isLocked": false,
+      "linkedName": "MadTown 2-3"
+    },
+    {
+      "anchor": {
+        "x": 7.5579945023148145,
+        "y": 4.375190610532408
+      },
+      "prevControl": {
+        "x": 9.231587962962964,
+        "y": 7.87000122974537
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "MadTown 3-4"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2979132401315789,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.6277240953947367,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7897373338870433,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.4,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.8,
+    "rotation": 69.130556269698
+  },
+  "reversed": false,
+  "folder": "MadTown (L)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 179.5824291247519
+  },
+  "useDefaultConstraints": true
+}
