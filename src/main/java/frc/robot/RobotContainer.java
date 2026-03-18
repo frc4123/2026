@@ -133,10 +133,12 @@ public class RobotContainer {
     private final RollLow rollLow = new RollLow(sevenEleven);
     private final RollMid rollMid = new RollMid(sevenEleven);
     private final RollHigh rollHigh = new RollHigh(sevenEleven);
-    private final Command rollerPulse =
-        rollLow.withTimeout(0.5)
-        .andThen(rollMid.withTimeout(0.5))
-        .andThen(rollHigh.withTimeout(1)
+    private final RepeatCommand rollerPulse =
+        new RepeatCommand(
+            rollLow.withTimeout(0.5)
+            .andThen(rollMid.withTimeout(0.5))
+            .andThen(rollHigh.withTimeout(1)
+        )
     );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
