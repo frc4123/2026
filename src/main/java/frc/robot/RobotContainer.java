@@ -327,6 +327,8 @@ public class RobotContainer {
         joystick.a().onFalse(intakeRollersStop);
 
         joystick.b().whileTrue(avoidDecapitation);
+        joystick.b().onTrue(intakeRollersIn);
+        joystick.b().onFalse(intakeRollersStop);
 
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().onFalse(uptakeStop);
