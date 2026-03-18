@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.215280815972223,
-        "y": 4.218775101273149
+        "x": 8.218430121527778,
+        "y": 4.570841218171297
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1016257957175926,
-        "y": 2.2950086805555556
+        "x": 3.0817159288194453,
+        "y": 2.8179246238425932
       },
       "isLocked": false,
       "linkedName": "MadTown 1-2 (2.0)"
@@ -20,8 +20,8 @@
         "y": 5.400683232060185
       },
       "prevControl": {
-        "x": 10.140293836805556,
-        "y": 6.58541261574074
+        "x": 9.72465111400463,
+        "y": 6.22101171875
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,8 +34,8 @@
       "rotationDegrees": 11.856584698902141
     },
     {
-      "waypointRelativePos": 0.29971217105263154,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.15686677631578952,
+      "rotationDegrees": -28.783406604770263
     },
     {
       "waypointRelativePos": 0.4307565789473683,
