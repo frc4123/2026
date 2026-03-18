@@ -29,13 +29,13 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+//import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
 public class TurretCalculator {
 
-    private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+    //private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
         Translation2d turretPos =

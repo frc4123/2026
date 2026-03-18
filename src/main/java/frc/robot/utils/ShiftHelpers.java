@@ -1,7 +1,5 @@
 package frc.robot.utils;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
