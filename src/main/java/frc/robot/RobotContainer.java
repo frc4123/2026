@@ -58,6 +58,7 @@ import frc.robot.commands.autos.twoCycleDepot;
 import frc.robot.commands.autos.twoCycleOutpost;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
+import frc.robot.commands.intakeArm.ForceIntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmOut;
@@ -140,6 +141,7 @@ public class RobotContainer {
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
+    private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(intakeArm);
     //private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
@@ -185,6 +187,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeIn", autoIntakeRollerIn);
         NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
         NamedCommands.registerCommand("Uptake", uptakeUp);
+        NamedCommands.registerCommand("HoodDown", avoidDecapitation);
         NamedCommands.registerCommand("UptakeStop", uptakeStop);
         // NamedCommands.registerCommand("ClimbUp", climbUp);
         // NamedCommands.registerCommand("ClimbDown", climbDown);
@@ -326,8 +329,8 @@ public class RobotContainer {
         joystick.rightTrigger().onTrue(uptakeUp);
         joystick.rightTrigger().onFalse(uptakeStop);
 
-        joystick.leftTrigger().onTrue(intakeArmMid);
-        joystick.leftTrigger().onTrue(intakeArmOut);
+        joystick.leftTrigger().onTrue(forceIntakeArmMid);
+        joystick.leftTrigger().onFalse(intakeArmOut);
 
         joystick.leftStick().onTrue(intakeArmIn);
         
