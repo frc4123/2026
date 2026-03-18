@@ -381,10 +381,10 @@ public class Constants {
         public static final Pose3d blueDepot = new Pose3d (2, 6.0, 0.2, new Rotation3d());
 
         //blueLeftBumpCorner pose
-        public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new Rotation3d()); //x4.03 and y was +1
+        //public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new Rotation3d()); //x4.03 and y was +1
 
         //blueLeftBumpCorner pose
-        public static final Pose3d blueRightBumpCorner = new Pose3d (3.5, 1, 0.2, new Rotation3d()); //x4.03 and y was -1
+       // public static final Pose3d blueRightBumpCorner = new Pose3d (3.5, 1, 0.2, new Rotation3d()); //x4.03 and y was -1
 
         //redAimThreshold pose
         public static final Pose3d blueAimThreshold = new Pose3d (2, 2.080, 0.2, new Rotation3d());
