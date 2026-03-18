@@ -52,6 +52,7 @@ import frc.robot.Constants.InputConstants;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.Sim.Mode;
+import frc.robot.commands.autos.MadTown;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.orbit;
 import frc.robot.commands.autos.twoCycleDepot;
@@ -492,6 +493,11 @@ public class RobotContainer {
         autoChooser.addOption("2 Cycle Depot Climb Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
             new SequentialCommandGroup(new twoCycleDepot().twoCycleDepotLeft())
+        ));
+
+        autoChooser.addOption("MadTown Left", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new MadTown().madTownLeft())
         ));
 
         autoChooser.addOption("Orbit Right", new ParallelCommandGroup(
