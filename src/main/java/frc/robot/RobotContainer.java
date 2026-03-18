@@ -68,11 +68,11 @@ import frc.robot.commands.intakeRoller.IntakeReverse;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
-import frc.robot.commands.sevenEleven.RollHigh;
-import frc.robot.commands.sevenEleven.RollLow;
-import frc.robot.commands.sevenEleven.RollMid;
+// import frc.robot.commands.sevenEleven.RollHigh;
+// import frc.robot.commands.sevenEleven.RollLow;
+// import frc.robot.commands.sevenEleven.RollMid;
 import frc.robot.commands.shooter.SetShooterVelocity;
-import frc.robot.commands.swerve.DriveToClimb;
+// import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
 import frc.robot.commands.uptake.UptakeStop;
 import frc.robot.commands.uptake.UptakeUp;
@@ -122,33 +122,33 @@ public class RobotContainer {
     // private final Climb climb = new Climb();
 
     private final Aim aim = new Aim(turret, drivetrain);
-    private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
-    private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
+    // private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain, 0);
+    // private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain, 1);
     private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(intakeRollers, intakeArm);
     private final AutoIntakeRollerIn autoIntakeRollerIn = new AutoIntakeRollerIn(intakeRollers, intakeArm);
     private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(intakeRollers);
     private final IntakeReverse intakeReverse = new IntakeReverse(intakeRollers, intakeArm);
-    private final IntakeRollerShimmy intakeRollerShimmy = new IntakeRollerShimmy(intakeRollers, intakeArm);
+    // private final IntakeRollerShimmy intakeRollerShimmy = new IntakeRollerShimmy(intakeRollers, intakeArm);
     //private final Roll roll = new Roll(sevenEleven);
-    private final RollLow rollLow = new RollLow(sevenEleven);
-    private final RollMid rollMid = new RollMid(sevenEleven);
-    private final RollHigh rollHigh = new RollHigh(sevenEleven);
-    private final RepeatCommand rollerPulse =
-        new RepeatCommand(
-            rollLow.withTimeout(0.5)
-            .andThen(rollMid.withTimeout(0.5))
-            .andThen(rollHigh.withTimeout(1)
-        )
-    );
+    // private final RollLow rollLow = new RollLow(sevenEleven);
+    // private final RollMid rollMid = new RollMid(sevenEleven);
+    // private final RollHigh rollHigh = new RollHigh(sevenEleven);
+    // private final RepeatCommand rollerPulse =
+    //     new RepeatCommand(
+    //         rollLow.withTimeout(0.5)
+    //         .andThen(rollMid.withTimeout(0.5))
+    //         .andThen(rollHigh.withTimeout(1)
+    //     )
+    // );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
-    private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
+    //private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
     private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(intakeArm);
     //private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
-    private final UptakeUp uptakeUp = new UptakeUp(uptake, turret);
+    private final UptakeUp uptakeUp = new UptakeUp(uptake, turret, sevenEleven);
     private final UptakeStop uptakeStop = new UptakeStop(uptake);
     //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
     // private final ClimbUp climbUp = new ClimbUp(climb);
@@ -173,7 +173,7 @@ public class RobotContainer {
         turret.setDefaultCommand(aim);
         hood.setDefaultCommand(hoodAim);
         shooter.setDefaultCommand(setShooterVelocity);
-        sevenEleven.setDefaultCommand(rollerPulse);
+        //sevenEleven.setDefaultCommand(rollerPulse);
 
         NamedCommands.registerCommand("ArmIn", intakeArmIn);
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
@@ -351,7 +351,7 @@ public class RobotContainer {
 
         m_buttonBoard.button(3).onTrue(uptakeUp);
         m_buttonBoard.button(3).onFalse(intakeArmOut);
-        m_buttonBoard.button(3).onFalse(uptakeUp);
+        m_buttonBoard.button(3).onFalse(uptakeStop);
         m_buttonBoard.button(3).onTrue(
             new RepeatCommand(
                 new SequentialCommandGroup(
