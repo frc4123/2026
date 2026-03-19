@@ -39,7 +39,7 @@ public class Robot extends LoggedRobot {
             Logger.start();
         }
         SmartDashboard.putString("Driver Checklist", 
-            "-----Brady-----\n Plug in ethernet until clickMake sure controller inputs are in order\nSelect appropriate auto\n\n-----Milton + Joseph\n-----Is Battery percentage above 30%\n2 Pis are plugged firmly into external battery\nQuest is plugged firmly into external battery\nZero Intake\n Zero Hood\n" );
+            ">>   Brady   <<\n 1. Plug in ethernet until click\n2. Make sure controller inputs are in order\n3. Select appropriate auto\n\n>>   Milton & Joseph   <<\n1. Is Battery percentage above 30%\n2. Two PI's are plugged firmly into external battery\n3. Quest is plugged firmly into external battery\n4. Zero Intake\n5.  Zero Hood\n" );
         DriverStation.silenceJoystickConnectionWarning(true);
     }
 
