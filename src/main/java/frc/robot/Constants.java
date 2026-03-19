@@ -373,12 +373,12 @@ public class Constants {
         public static final double FRI_frontYaw = Math.toRadians(-131.987);
 
         //FRO = Front_Right_Outside camera
-        public static final double FRO_frontX = Units.inchesToMeters(0); // 7.495 7.176364 -7.176364
-        public static final double FRO_frontY = Units.inchesToMeters(0);
-        public static final double FRO_frontZ = Units.inchesToMeters(0); // 7.02
+        public static final double FRO_frontX = Units.inchesToMeters(9.411); // 7.495 7.176364 -7.176364
+        public static final double FRO_frontY = Units.inchesToMeters(-10.998);
+        public static final double FRO_frontZ = Units.inchesToMeters(13.929); // 7.02
 
         public static final double FRO_frontRoll = Math.toRadians(0);
-        public static final double FRO_frontPitch = Math.toRadians(0); // -75.0 negative pitch is up according to 25 code
+        public static final double FRO_frontPitch = Math.toRadians(-15); // -75.0 negative pitch is up according to 25 code
         public static final double FRO_frontYaw = Math.toRadians(0);
 
         //blueHub translations
