@@ -41,7 +41,9 @@ public class Vision extends SubsystemBase{
 
     private final Transform3d FLO_robotToCam;
     private final Transform3d FLI_robotToCam;
-    private final Transform3d FR_robotToCam;
+    private final Transform3d FRI_robotToCam;
+    private final Transform3d FRO_robotToCam;
+
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
     // Standard deviations (tune these based on camera characteristics)
@@ -56,12 +58,13 @@ public class Vision extends SubsystemBase{
     
     private final PhotonCamera FLO_camera = new PhotonCamera("Front_Left_Outside");
     private final PhotonCamera FLI_camera = new PhotonCamera("Front_Left_Inside");
-    private final PhotonCamera FR_camera = new PhotonCamera("Front_Right");
-    private final PhotonCamera turretCam = new PhotonCamera("Turret_Arducam");
+    private final PhotonCamera FRI_camera = new PhotonCamera("Front_Right_Inside");
+    private final PhotonCamera FRO_camera = new PhotonCamera("Front_Right_Outside");
 
     private final PhotonPoseEstimator FLO_Estimator;
     private final PhotonPoseEstimator FLI_Estimator;
-    private final PhotonPoseEstimator FR_Estimator;
+    private final PhotonPoseEstimator FRI_Estimator;
+    private final PhotonPoseEstimator FRO_Estimator;
 
     private int camProcessorCounter = 0;
 
@@ -98,15 +101,26 @@ public class Vision extends SubsystemBase{
                 VisionConstants.FLI_frontYaw)
         );
 
-        FR_robotToCam = new Transform3d(
+        FRI_robotToCam = new Transform3d(
             new Translation3d(
-                VisionConstants.FR_frontX,
-                VisionConstants.FR_frontY,
-                VisionConstants.FR_frontZ),
+                VisionConstants.FRI_frontX,
+                VisionConstants.FRI_frontY,
+                VisionConstants.FRI_frontZ),
             new Rotation3d(
-                VisionConstants.FR_frontRoll,
-                VisionConstants.FR_frontPitch,
-                VisionConstants.FR_frontYaw)
+                VisionConstants.FRI_frontRoll,
+                VisionConstants.FRI_frontPitch,
+                VisionConstants.FRI_frontYaw)
+        );
+
+        FRO_robotToCam = new Transform3d(
+            new Translation3d(
+                VisionConstants.FRO_frontX,
+                VisionConstants.FRO_frontY,
+                VisionConstants.FRO_frontZ),
+            new Rotation3d(
+                VisionConstants.FRO_frontRoll,
+                VisionConstants.FRO_frontPitch,
+                VisionConstants.FRO_frontYaw)
         );
 
         // front camera estimator (new 2026 syntax)
@@ -120,9 +134,14 @@ public class Vision extends SubsystemBase{
             FLI_robotToCam
         );
 
-        FR_Estimator = new PhotonPoseEstimator(
+        FRI_Estimator = new PhotonPoseEstimator(
             aprilTagFieldLayout,
-            FR_robotToCam
+            FRI_robotToCam
+        );
+
+        FRO_Estimator = new PhotonPoseEstimator(
+            aprilTagFieldLayout,
+            FRO_robotToCam
         );
 
         // Initialize NetworkTables publishers
@@ -214,60 +233,60 @@ public class Vision extends SubsystemBase{
         // return true; // Accept the update
     }
 
-    public double getTurretCamOffset() {
-        PhotonPipelineResult result = getLatestResults(turretCam);
+    // public double getTurretCamOffset() {
+    //     PhotonPipelineResult result = getLatestResults(turretCam);
 
-        if (result == null || result.getTargets().isEmpty()) {
-            return 0.0; // no targets
-        }
+    //     if (result == null || result.getTargets().isEmpty()) {
+    //         return 0.0; // no targets
+    //     }
 
-        for (var target : result.getTargets()) {
-            int id = target.getFiducialId();
+    //     for (var target : result.getTargets()) {
+    //         int id = target.getFiducialId();
 
-            boolean validTag = false;
+    //         boolean validTag = false;
 
-            if (isBlue) {
-                for (double validId : TurretConstants.validTurretTagsBlue) {
-                    if (id == (int) validId) {
-                        validTag = true;
-                        break;
-                    }
-                }
-            } else if (isRed) {
-                for (double validId : TurretConstants.validTurretTagsRed) {
-                    if (id == (int) validId) {
-                        validTag = true;
-                        break;
-                    }
-                }
-            }
+    //         if (isBlue) {
+    //             for (double validId : TurretConstants.validTurretTagsBlue) {
+    //                 if (id == (int) validId) {
+    //                     validTag = true;
+    //                     break;
+    //                 }
+    //             }
+    //         } else if (isRed) {
+    //             for (double validId : TurretConstants.validTurretTagsRed) {
+    //                 if (id == (int) validId) {
+    //                     validTag = true;
+    //                     break;
+    //                 }
+    //             }
+    //         }
 
-            if (!validTag) continue;
+    //         if (!validTag) continue;
 
-            // Get camera yaw (degrees) to this tag
-            double photonYaw = target.getYaw();
+    //         // Get camera yaw (degrees) to this tag
+    //         double photonYaw = target.getYaw();
 
-            // XY distance from camera to tag
-            double dx = target.getBestCameraToTarget().getX(); // forward
-            double dy = target.getBestCameraToTarget().getY(); // sideways
+    //         // XY distance from camera to tag
+    //         double dx = target.getBestCameraToTarget().getX(); // forward
+    //         double dy = target.getBestCameraToTarget().getY(); // sideways
 
-            double[] offsets = getHubOffsetForTag(target.getFiducialId()); // returns {offsetX, offsetY}
-            dx -= offsets[0]; // forward adjustment
-            dy -= offsets[1]; // sideways adjustment
+    //         double[] offsets = getHubOffsetForTag(target.getFiducialId()); // returns {offsetX, offsetY}
+    //         dx -= offsets[0]; // forward adjustment
+    //         dy -= offsets[1]; // sideways adjustment
 
-            // Compute turret angle to hub center without X/Y offset yet
-            // Hub offset will be applied in a separate method
-            double angleToHubCenterRad = Math.atan2(dy, dx); // relative to camera forward
-            double angleToHubCenterDeg = Math.toDegrees(angleToHubCenterRad);
+    //         // Compute turret angle to hub center without X/Y offset yet
+    //         // Hub offset will be applied in a separate method
+    //         double angleToHubCenterRad = Math.atan2(dy, dx); // relative to camera forward
+    //         double angleToHubCenterDeg = Math.toDegrees(angleToHubCenterRad);
 
-            // Combine camera yaw with raw geometry
-            double turretAngle = photonYaw + angleToHubCenterDeg;
+    //         // Combine camera yaw with raw geometry
+    //         double turretAngle = photonYaw + angleToHubCenterDeg;
 
-            return turretAngle;
-        }
+    //         return turretAngle;
+    //     }
 
-        return 0.0; // no valid target found
-    }
+    //     return 0.0; // no valid target found
+    // }
 
     public double[] getHubOffsetForTag(int id){
         switch(id){
@@ -411,10 +430,11 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic() {
-        switch(camProcessorCounter % 3) {
+        switch(camProcessorCounter % 4) {
             case 0: processVision(FLO_camera, FLO_Estimator); break;
             case 1: processVision(FLI_camera, FLI_Estimator); break;
-            case 2: processVision(FR_camera, FR_Estimator); break;
+            case 2: processVision(FRI_camera, FRI_Estimator); break;
+            case 3: processVision(FRO_camera, FRO_Estimator); break;
         }
         camProcessorCounter++;
     }
