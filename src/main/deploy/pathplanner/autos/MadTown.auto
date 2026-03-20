@@ -23,6 +23,31 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Uptake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 7.75
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmIn"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Uptake"
