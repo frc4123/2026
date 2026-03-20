@@ -82,7 +82,7 @@ public class Oculus extends SubsystemBase{
 
     public void updateSwerve(){
         //if there are no questFrames then dont crash the robot code
-        if(unreadFrames.length <= 0) {return;}
+        if(unreadFrames.length >= 0) {return;}
         // Get the latest pose data frames from the Quest
         // Loop over the pose data frames and send them to the pose estimator
         for (PoseFrame questFrame : unreadFrames) {

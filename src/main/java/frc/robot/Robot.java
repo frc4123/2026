@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 // import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,7 +54,7 @@ public class Robot extends LoggedRobot {
         // SmartDashboard.putNumber("Target Exit Velocity", ShotCache.get().getExitVelocity().in(MetersPerSecond));
         if (++dashboardCounter >= 50) {
             dashboardCounter = 0;
-
+            SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
             SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
             SmartDashboard.putNumber("Match Data/TimeLeftInShift",

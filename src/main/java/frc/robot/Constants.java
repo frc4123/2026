@@ -184,7 +184,7 @@ public class Constants {
         public static final double zeroVelo = 0;
         public static final double uptakeVelo = 100;
         public static final double reverseVelo = -60;
-        public static final double uptakeAcc = uptakeVelo * 1.5;
+        public static final double uptakeAcc = uptakeVelo * 3;
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -327,9 +327,9 @@ public class Constants {
     public static final class Quest {
 
         //Front Forward Camera Translation and Angle
-        public static final double frontX = Units.inchesToMeters(12.5); // 7.495 7.176364 -7.176364
-        public static final double frontY = Units.inchesToMeters(-9);
-        public static final double frontZ = Units.inchesToMeters(10); // 7.02
+        public static final double frontX = Units.inchesToMeters(12.75);//12.5 // 7.495 7.176364 -7.176364
+        public static final double frontY = Units.inchesToMeters(-9.498); // -9
+        public static final double frontZ = Units.inchesToMeters(10); //10// 7.02
 
         public static final double frontRoll = Math.toRadians(0);
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
@@ -343,7 +343,7 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        public static final double ambiguityThreshold = 0.08;
+        public static final double ambiguityThreshold = 0.06;
 
         //FLO = Front_Left_Outside camera
         public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
