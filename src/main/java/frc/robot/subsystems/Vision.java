@@ -173,7 +173,7 @@ public class Vision extends SubsystemBase{
         if(!shouldAcceptPhotonUpdate()) {return;}
 
         PhotonPipelineResult result = getLatestResults(camera);
-        if (!result.hasTargets()) return;
+        if (result == null) return;
         
         // Get pose using new 2026 methods
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
