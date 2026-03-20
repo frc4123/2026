@@ -343,7 +343,7 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        public static final double ambiguityThreshold = 0.06;
+        public static final double ambiguityThreshold = 0.04;// 0.06
 
         //FLO = Front_Left_Outside camera
         public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364

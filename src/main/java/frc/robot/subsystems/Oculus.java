@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,6 +24,8 @@ public class Oculus extends SubsystemBase{
     private int loopLimiter = 0;
     private PoseFrame[] unreadFrames;
     StructPublisher<Pose2d> posePub;
+
+    private double lastVisionUpdateTime = 0;
 
     QuestNav quest = new QuestNav();
 
@@ -69,6 +72,11 @@ public class Oculus extends SubsystemBase{
 
     public void setRobotPose(Pose3d pose){
         // Transform by the offset to get the Quest pose
+        double now = Timer.getFPGATimestamp();
+        if (now - lastVisionUpdateTime < 0.5) return; // ~50 Hz cap
+
+        lastVisionUpdateTime = now;
+
         Pose3d questPose = pose.transformBy(robotToQuest);
         // Send the reset operation
         quest.setPose(questPose);
@@ -82,30 +90,46 @@ public class Oculus extends SubsystemBase{
 
     public void updateSwerve(){
         //if there are no questFrames then dont crash the robot code
-        if(unreadFrames.length >= 0) {return;}
+        
+        if( unreadFrames == null || unreadFrames.length <= 0) {return;}
         // Get the latest pose data frames from the Quest
         // Loop over the pose data frames and send them to the pose estimator
-        for (PoseFrame questFrame : unreadFrames) {
-            // Make sure the Quest was tracking the pose for this frame
-            if (questFrame.isTracking()) {
-                // Get the pose of the Quest
-                Pose3d questPose = questFrame.questPose3d();
-                // Get timestamp for when the data was sent
-                double timestamp = questFrame.dataTimestamp();
 
-                // Transform by the mount pose to get your robot pose
-                Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
+        PoseFrame latestFrame = unreadFrames[unreadFrames.length - 1];
 
-                // You can put some sort of filtering here if you would like!
+        if (latestFrame.isTracking()) {
+            Pose3d questPose = latestFrame.questPose3d();
+            double timestamp = latestFrame.dataTimestamp();
 
-                // Add the measurement to our estimator
-                swerve.addVisionMeasurement(
-                    robotPose.toPose2d(),
-                    timestamp,
-                    Constants.Quest.QUESTNAV_STD_DEVS
-                );
-            }
+            Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
+
+            swerve.addVisionMeasurement(
+                robotPose.toPose2d(),
+                timestamp,
+                Constants.Quest.QUESTNAV_STD_DEVS
+            );
         }
+        // for (PoseFrame questFrame : unreadFrames) {
+        //     // Make sure the Quest was tracking the pose for this frame
+        //     if (questFrame.isTracking()) {
+        //         // Get the pose of the Quest
+        //         Pose3d questPose = questFrame.questPose3d();
+        //         // Get timestamp for when the data was sent
+        //         double timestamp = questFrame.dataTimestamp();
+
+        //         // Transform by the mount pose to get your robot pose
+        //         Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
+
+        //         // You can put some sort of filtering here if you would like!
+
+        //         // Add the measurement to our estimator
+        //         swerve.addVisionMeasurement(
+        //             robotPose.toPose2d(),
+        //             timestamp,
+        //             Constants.Quest.QUESTNAV_STD_DEVS
+        //         );
+        //     }
+        // }
     }
     
     public void publishQuestStatus(){
