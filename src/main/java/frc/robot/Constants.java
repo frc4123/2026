@@ -168,6 +168,7 @@ public class Constants {
         public static final double sevenElevenLowVelo = 25; //9
         public static final double sevenElevenMidVelo = 37; //12
         public static final double sevenElevenHighVelo = 45; //20
+        public static final double sevenElevenReverseVelo = -20;
 
         public static final double sevenElevenAcc = 25; //7, //30
        

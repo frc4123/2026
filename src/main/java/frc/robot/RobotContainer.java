@@ -68,6 +68,7 @@ import frc.robot.commands.intakeRoller.IntakeReverse;
 import frc.robot.commands.intakeRoller.IntakeRollerIn;
 import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
 import frc.robot.commands.intakeRoller.IntakeRollerStop;
+import frc.robot.commands.sevenEleven.RollReverse;
 // import frc.robot.commands.sevenEleven.RollHigh;
 // import frc.robot.commands.sevenEleven.RollLow;
 // import frc.robot.commands.sevenEleven.RollMid;
@@ -145,6 +146,7 @@ public class RobotContainer {
     //private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
     private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(intakeArm);
     //private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm, intakeRollers);
+    private final RollReverse rollReverse = new RollReverse(sevenEleven);
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
@@ -350,8 +352,8 @@ public class RobotContainer {
         m_buttonBoard.button(1).onTrue(uptakeUp);
         m_buttonBoard.button(1).onFalse(uptakeStop);
 
-        m_buttonBoard.button(2).onTrue(uptakeUp);
         m_buttonBoard.button(2).onTrue(intakeReverse);
+        m_buttonBoard.button(2).onTrue(rollReverse);
         m_buttonBoard.button(2).onTrue(intakeArmOut);
         m_buttonBoard.button(2).onFalse(intakeRollersStop);
         m_buttonBoard.button(2).onFalse(uptakeStop);
