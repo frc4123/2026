@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -39,6 +41,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double m_lastSimTime;
 
     private static CommandSwerveDrivetrain instance;
+
+    private Consumer<Pose2d> onPoseResetCallback = null;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -259,7 +263,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+
     }
+
+    // Add setter
+    public void setOnPoseResetCallback(Consumer<Pose2d> callback) {
+        this.onPoseResetCallback = callback;
+    }
+
+    @Override
+    public void resetPose(Pose2d pose) {
+        super.resetPose(pose);
+        if (onPoseResetCallback != null) {
+            onPoseResetCallback.accept(pose);
+        }
+    }
+
 
     @Override
     public void periodic() {

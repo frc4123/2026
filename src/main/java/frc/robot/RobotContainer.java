@@ -155,11 +155,16 @@ public class RobotContainer {
     // private final ClimbDown climbDown = new ClimbDown(climb);
     // private final ClimbTest climbTest = new ClimbTest(climb);
 
-
     public double currentAngle = drivetrain.getState().Pose.getRotation().getDegrees();
 
     public RobotContainer() {
         configureBindings();
+
+        drivetrain.setOnPoseResetCallback(pose -> {
+            if (oculus.isQuestNavConnected()) {
+                oculus.setRobotPose(new Pose3d(pose));
+            }
+        });
 
         faceAngle.HeadingController.setP(3.1);//3.54123, 3.1, 3.4123
         faceAngle.HeadingController.setI(0);
