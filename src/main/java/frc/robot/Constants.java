@@ -327,9 +327,9 @@ public class Constants {
     public static final class Quest {
 
         //Front Forward Camera Translation and Angle
-        public static final double frontX = Units.inchesToMeters(12.75);//12.5 // 7.495 7.176364 -7.176364
-        public static final double frontY = Units.inchesToMeters(-9.498); // -9
-        public static final double frontZ = Units.inchesToMeters(10); //10// 7.02
+        public static final double frontX = Units.inchesToMeters(12.5);//12.5 // 7.495 7.176364 -7.176364 //12.75
+        public static final double frontY = Units.inchesToMeters(-9.5); // -9 //-9.498
+        public static final double frontZ = Units.inchesToMeters(10); //10// 7.02 //10
 
         public static final double frontRoll = Math.toRadians(0);
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
