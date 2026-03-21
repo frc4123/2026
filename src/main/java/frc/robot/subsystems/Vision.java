@@ -174,134 +174,62 @@ public class Vision extends SubsystemBase{
 
     private void processVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
         
-        if(!shouldAcceptPhotonUpdate()) {return;}
-
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
         
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-        
-        // Strategy 1: Try multi-tag (if available from coprocessor)
-        if (result.getMultiTagResult().isPresent()) {
-            for (PhotonTrackedTarget target : result.getTargets()) {
-                if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
-                    return; //reject measurement
+       
+        boolean allTargetsValid = true;
+        for (PhotonTrackedTarget target : result.getTargets()) {
+            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+                allTargetsValid = false;
+                break;
+            }
+        }
+
+        if (result.getMultiTagResult().isPresent() && allTargetsValid) {
+            estimatedPose = estimator.estimateCoprocMultiTagPose(result);
+        } else {
+            Optional<EstimatedRobotPose> singleTagPose =
+                estimator.estimateLowestAmbiguityPose(result);
+
+            if (singleTagPose.isPresent()) {
+                PhotonTrackedTarget best = result.getBestTarget();
+
+                if (best != null &&
+                    best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
+                    estimatedPose = singleTagPose;
                 }
             }
-            estimatedPose = estimator.estimateCoprocMultiTagPose(result);
         }
-    
+        
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
-            
-            if(result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold){
-                for (PhotonTrackedTarget target : result.getTargets()) {
-                    double distance = PhotonUtils.calculateDistanceToTargetMeters(
-                        estimator.getRobotToCameraTransform().getZ(),
-                        aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
-                        estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
-                        target.getPitch()
-                    );
 
-                    if (distance > maxDistance) {
-                        return;
-                    }
-                }
-                    swerve.addVisionMeasurement(
-                        est.estimatedPose.toPose2d(),
-                        est.timestampSeconds,
-                        stdDevs
-                    );
+            for (PhotonTrackedTarget target : result.getTargets()) {
+                double distance = PhotonUtils.calculateDistanceToTargetMeters(
+                    estimator.getRobotToCameraTransform().getZ(),
+                    aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
+                    estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
+                    target.getPitch()
+                );
 
-                // Reset QuestNav when we have confident AprilTag measurement
-                if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
-                    oculus.setRobotPose(est.estimatedPose);
-                }
+                if (distance > maxDistance) return;
+            }
+
+            swerve.addVisionMeasurement(
+                est.estimatedPose.toPose2d(),
+                est.timestampSeconds,
+                stdDevs
+            );
+
+            if (oculus.isQuestNavConnected()) {
+                oculus.setRobotPose(est.estimatedPose);
             }
         }
     }
     
-    private boolean shouldAcceptPhotonUpdate() {
-        return true;
-        // // Check 1: Robot pitch/roll (are we tilted like going over bump?)
-        // Rotation3d rotation = swerve.getRotation3d();
-        // double pitchDeg = Math.toDegrees(rotation.getY());
-        // double rollDeg = Math.toDegrees(rotation.getX());
-        
-        // if (Math.abs(pitchDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH || 
-        //     Math.abs(rollDeg) > VisionConstants.MAX_ACCEPTABLE_PITCH) {
-        //     return false; // Robot is tilted - probably on bump or climb
-        // }
-        
-        // // Check 2: Z-axis acceleration (are we bouncing/airborne?)
-        // // If you have an IMU with 3-axis accel:
-        // // double zAccel = navX.getRawAccelZ(); // or pigeon.getAccelZ()
-        // // if (Math.abs(zAccel - 9.81) > MAX_ACCEPTABLE_Z_ACCEL) {
-        // //     return false; // Experiencing high vertical acceleration
-        // // }
-        
-        // // Check 3: Large pose jumps (vision suddenly disagrees with odometry)
-        // // Add standard deviation checking here if needed
-        
-        // return true; // Accept the update
-    }
-
-    // public double getTurretCamOffset() {
-    //     PhotonPipelineResult result = getLatestResults(turretCam);
-
-    //     if (result == null || result.getTargets().isEmpty()) {
-    //         return 0.0; // no targets
-    //     }
-
-    //     for (var target : result.getTargets()) {
-    //         int id = target.getFiducialId();
-
-    //         boolean validTag = false;
-
-    //         if (isBlue) {
-    //             for (double validId : TurretConstants.validTurretTagsBlue) {
-    //                 if (id == (int) validId) {
-    //                     validTag = true;
-    //                     break;
-    //                 }
-    //             }
-    //         } else if (isRed) {
-    //             for (double validId : TurretConstants.validTurretTagsRed) {
-    //                 if (id == (int) validId) {
-    //                     validTag = true;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-
-    //         if (!validTag) continue;
-
-    //         // Get camera yaw (degrees) to this tag
-    //         double photonYaw = target.getYaw();
-
-    //         // XY distance from camera to tag
-    //         double dx = target.getBestCameraToTarget().getX(); // forward
-    //         double dy = target.getBestCameraToTarget().getY(); // sideways
-
-    //         double[] offsets = getHubOffsetForTag(target.getFiducialId()); // returns {offsetX, offsetY}
-    //         dx -= offsets[0]; // forward adjustment
-    //         dy -= offsets[1]; // sideways adjustment
-
-    //         // Compute turret angle to hub center without X/Y offset yet
-    //         // Hub offset will be applied in a separate method
-    //         double angleToHubCenterRad = Math.atan2(dy, dx); // relative to camera forward
-    //         double angleToHubCenterDeg = Math.toDegrees(angleToHubCenterRad);
-
-    //         // Combine camera yaw with raw geometry
-    //         double turretAngle = photonYaw + angleToHubCenterDeg;
-
-    //         return turretAngle;
-    //     }
-
-    //     return 0.0; // no valid target found
-    // }
-
     public double[] getHubOffsetForTag(int id){
         switch(id){
             case 21: return new double[]{0.0, TurretConstants.tagOffset};
@@ -316,24 +244,24 @@ public class Vision extends SubsystemBase{
     }
 
         
-    private boolean shouldResetQuestNav(PhotonPipelineResult result) {
-        // Only reset QuestNav with high-confidence measurements
-        if (result.getMultiTagResult().isPresent()) {
-            for (PhotonTrackedTarget target : result.getTargets()) {
-                if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
-                    return false; //reject measurement
-                }
-            }
-            return true; // Multi-tag = high confidence
-        }
+    // private boolean shouldResetQuestNav(PhotonPipelineResult result) {
+    //     // Only reset QuestNav with high-confidence measurements
+    //     if (result.getMultiTagResult().isPresent()) {
+    //         for (PhotonTrackedTarget target : result.getTargets()) {
+    //             if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+    //                 return false; //reject measurement
+    //             }
+    //         }
+    //         return true; // Multi-tag = high confidence
+    //     }
         
-        if (result.getBestTarget() != null) {
-            // Single tag with low ambiguity and close distance
-            return result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold;
-        }
+    //     if (result.getBestTarget() != null) {
+    //         // Single tag with low ambiguity and close distance
+    //         return result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold;
+    //     }
         
-        return false;
-    }
+    //     return false;
+    // }
 
     // private void publishTargetTransform(PhotonTrackedTarget target, boolean isRightCamera) {
     //     Optional<Pose3d> tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
