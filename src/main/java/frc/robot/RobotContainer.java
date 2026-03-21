@@ -295,15 +295,21 @@ public class RobotContainer {
                 
                 if (magnitude > 0.1) { // Only update rotation when stick is moved
                     targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
+
+                    return faceAngle
+                        .withVelocityX(leftY * MaxSpeed * 0.54123) // was 0.6
+                        .withVelocityY(leftX * MaxSpeed * 0.54123) //was 0.6
+                        .withTargetDirection(targetDirection);
+
                 } else {
                     // Joystick centered - hold current heading
                     targetDirection = drivetrain.getState().Pose.getRotation();
+                    return faceAngle
+                        .withVelocityX(leftY * MaxSpeed * 0.54123) // was 0.6
+                        .withVelocityY(leftX * MaxSpeed * 0.54123);
                 }
                 
-                return faceAngle
-                    .withVelocityX(leftY * MaxSpeed * 0.54123) // was 0.6
-                    .withVelocityY(leftX * MaxSpeed * 0.54123) //was 0.6
-                    .withTargetDirection(targetDirection);
+                
             })
         );
 
