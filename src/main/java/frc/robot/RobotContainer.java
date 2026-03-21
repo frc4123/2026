@@ -95,8 +95,8 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentricFacingAngle faceAngle = new SwerveRequest.FieldCentricFacingAngle()
             .withDriveRequestType(DriveRequestType.Velocity)
             .withSteerRequestType(SteerRequestType.Position)
-            .withDeadband(MaxSpeed * 0.02)
-            .withRotationalDeadband(MaxAngularRate * 0.02);
+            .withDeadband(MaxSpeed * 0.05)
+            .withRotationalDeadband(MaxAngularRate * 0.05);
 
     private final SwerveRequest.FieldCentric robotStrafe = new SwerveRequest.FieldCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);   
@@ -293,7 +293,7 @@ public class RobotContainer {
                 double magnitude = Math.sqrt(leftX * leftX + leftY * leftY);
                 Rotation2d targetDirection;
                 
-                if (magnitude > 0.1) { // Only update rotation when stick is moved
+                if (magnitude > 0.05) { // Only update rotation when stick is moved
                     targetDirection = new Rotation2d(joystick.getLeftY(), joystick.getLeftX());
 
                     return faceAngle
@@ -302,11 +302,9 @@ public class RobotContainer {
                         .withTargetDirection(targetDirection);
 
                 } else {
-                    // Joystick centered - hold current heading
-                    targetDirection = drivetrain.getState().Pose.getRotation();
-                    return faceAngle
-                        .withVelocityX(leftY * MaxSpeed * 0.54123) // was 0.6
-                        .withVelocityY(leftX * MaxSpeed * 0.54123);
+                    return robotStrafe
+                        .withVelocityX(0) // was 0.6
+                        .withVelocityY(0);
                 }
                 
                 
