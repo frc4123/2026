@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +13,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -70,6 +73,7 @@ public class Vision extends SubsystemBase{
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
+    private static double maxDistance = 3.0;
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
@@ -194,17 +198,30 @@ public class Vision extends SubsystemBase{
             
             // Add vision measurement to pose estimator
             if(result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold){
-                swerve.addVisionMeasurement(
-                    est.estimatedPose.toPose2d(),
-                    est.timestampSeconds,
-                    stdDevs
-                );
+                for (PhotonTrackedTarget target : result.getTargets()) {
+                    double distance = PhotonUtils.calculateDistanceToTargetMeters(
+                        estimator.getRobotToCameraTransform().getZ(),
+                        aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
+                        estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
+                        target.getPitch()
+                    );
+
+                    if (distance > maxDistance) {
+                        return;
+                    }
+                }
+                    swerve.addVisionMeasurement(
+                        est.estimatedPose.toPose2d(),
+                        est.timestampSeconds,
+                        stdDevs
+                    );
+                // Reset QuestNav when we have confident AprilTag measurement
+                if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
+                    oculus.setRobotPose(est.estimatedPose);
+                }
             }
             
-            // Reset QuestNav when we have confident AprilTag measurement
-            if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
-                oculus.setRobotPose(est.estimatedPose);
-            }
+            
         }
     }
     
