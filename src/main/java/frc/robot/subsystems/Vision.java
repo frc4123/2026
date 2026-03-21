@@ -179,24 +179,22 @@ public class Vision extends SubsystemBase{
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
         
-        // Get pose using new 2026 methods
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
         
         // Strategy 1: Try multi-tag (if available from coprocessor)
         if (result.getMultiTagResult().isPresent()) {
+            for (PhotonTrackedTarget target : result.getTargets()) {
+                if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+                    return; //reject measurement
+                }
+            }
             estimatedPose = estimator.estimateCoprocMultiTagPose(result);
         }
-        
-        // Strategy 2: Fallback to single tag (lowest ambiguity)
-        if (estimatedPose.isEmpty()) {
-            estimatedPose = estimator.estimateLowestAmbiguityPose(result);
-        }
-        
+    
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
             
-            // Add vision measurement to pose estimator
             if(result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold){
                 for (PhotonTrackedTarget target : result.getTargets()) {
                     double distance = PhotonUtils.calculateDistanceToTargetMeters(
@@ -215,13 +213,12 @@ public class Vision extends SubsystemBase{
                         est.timestampSeconds,
                         stdDevs
                     );
+
                 // Reset QuestNav when we have confident AprilTag measurement
                 if (shouldResetQuestNav(result) && oculus.isQuestNavConnected()) {
                     oculus.setRobotPose(est.estimatedPose);
                 }
             }
-            
-            
         }
     }
     
@@ -322,12 +319,17 @@ public class Vision extends SubsystemBase{
     private boolean shouldResetQuestNav(PhotonPipelineResult result) {
         // Only reset QuestNav with high-confidence measurements
         if (result.getMultiTagResult().isPresent()) {
+            for (PhotonTrackedTarget target : result.getTargets()) {
+                if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+                    return false; //reject measurement
+                }
+            }
             return true; // Multi-tag = high confidence
         }
         
         if (result.getBestTarget() != null) {
             // Single tag with low ambiguity and close distance
-            return result.getBestTarget().getPoseAmbiguity() < 0.1;
+            return result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold;
         }
         
         return false;
