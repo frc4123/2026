@@ -20,8 +20,8 @@
         "y": 5.400683232060185
       },
       "prevControl": {
-        "x": 9.72465111400463,
-        "y": 6.22101171875
+        "x": 9.658384476273149,
+        "y": 6.04615964988426
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,8 +42,8 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 0.7138363486842106,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.7781866776315788,
+      "rotationDegrees": -45.0
     }
   ],
   "constraintZones": [],
@@ -59,7 +59,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": -46.70551589941182
   },
   "reversed": false,
   "folder": "MadTown (L)",
