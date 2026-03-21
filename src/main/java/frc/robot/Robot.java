@@ -52,7 +52,7 @@ public class Robot extends LoggedRobot {
 
         // SmartDashboard.putNumber("Target Hood Angle", ShotCache.get().getHoodAngle().in(Degrees));
         // SmartDashboard.putNumber("Target Exit Velocity", ShotCache.get().getExitVelocity().in(MetersPerSecond));
-        if (++dashboardCounter >= 50) {
+        if (++dashboardCounter >= 25) {
             dashboardCounter = 0;
             SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());

@@ -181,7 +181,7 @@ public class Vision extends SubsystemBase{
 
         ArrayList<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
 
-        if (validTargets.isEmpty()) return;
+        //if (validTargets.isEmpty()) return;
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
 
