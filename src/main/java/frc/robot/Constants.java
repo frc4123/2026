@@ -451,6 +451,10 @@ public class Constants {
 
     public static class FieldConstants {
 
+
+        public static final int[] blueTags = {18,19,20,21,24,25,26,27};
+        public static final int[] redTags = {8,9,10,11,2,3,4,5};
+
         public static final Distance FIELD_LENGTH = Inches.of(650.12);
         public static final Distance FIELD_WIDTH = Inches.of(316.64);
 

@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -187,6 +188,10 @@ public class Vision extends SubsystemBase{
         /*if (result.getMultiTagResult().isPresent() && validTargets.size() > 1) {
             estimatedPose = estimator.estimateCoprocMultiTagPose(result);
         } else {*/
+
+        if(!isTagHub(result)) {
+            return;
+        }
             Optional<EstimatedRobotPose> singleTagPose =
                 estimator.estimateLowestAmbiguityPose(result);
 
@@ -356,6 +361,17 @@ public class Vision extends SubsystemBase{
         double crossProduct = robotVelocity.vxMetersPerSecond * toTarget.getY() - robotVelocity.vyMetersPerSecond * toTarget.getX();
     
         return crossProduct / distanceSquared;
+    }
+
+    public boolean isTagHub(PhotonPipelineResult result){
+        if(result == null) {return false;}
+        int tagId = result.getBestTarget().getFiducialId();
+        if(Set.of(18,19,20,21,24,25,26,27).contains(tagId) && Field.isBlue()){
+            return true;
+        } else if (Set.of(8,9,10,11,2,3,4,5).contains(tagId) && Field.isRed()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
