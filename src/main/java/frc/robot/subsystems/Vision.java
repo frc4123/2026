@@ -207,17 +207,6 @@ public class Vision extends SubsystemBase{
             EstimatedRobotPose est = estimatedPose.get();
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
 
-            for (PhotonTrackedTarget target : result.getTargets()) {
-                double distance = PhotonUtils.calculateDistanceToTargetMeters(
-                    estimator.getRobotToCameraTransform().getZ(),
-                    aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
-                    estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
-                    target.getPitch()
-                );
-
-                if (distance > maxDistance) return;
-            }
-
             swerve.addVisionMeasurement(
                 est.estimatedPose.toPose2d(),
                 est.timestampSeconds,
