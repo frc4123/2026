@@ -243,35 +243,6 @@ public class Vision extends SubsystemBase{
         return new double[] {0.0,0.0};
     }
 
-        
-    // private boolean shouldResetQuestNav(PhotonPipelineResult result) {
-    //     // Only reset QuestNav with high-confidence measurements
-    //     if (result.getMultiTagResult().isPresent()) {
-    //         for (PhotonTrackedTarget target : result.getTargets()) {
-    //             if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
-    //                 return false; //reject measurement
-    //             }
-    //         }
-    //         return true; // Multi-tag = high confidence
-    //     }
-        
-    //     if (result.getBestTarget() != null) {
-    //         // Single tag with low ambiguity and close distance
-    //         return result.getBestTarget().getPoseAmbiguity() < VisionConstants.ambiguityThreshold;
-    //     }
-        
-    //     return false;
-    // }
-
-    // private void publishTargetTransform(PhotonTrackedTarget target, boolean isRightCamera) {
-    //     Optional<Pose3d> tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
-    //     if (tagPose.isEmpty()) return;
-
-    //     Transform3d cameraToTarget = target.getBestCameraToTarget();
-    //     Transform3d robotToTarget = robotToCam.plus(cameraToTarget);
-    //     CamTargetTransformPublisher.set(robotToTarget);
-    // }
-
     public static AprilTagFieldLayout loadAprilTagFieldLayout(String resourceFile) {
         try (InputStream is = Vision.class.getResourceAsStream(resourceFile);
              InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
