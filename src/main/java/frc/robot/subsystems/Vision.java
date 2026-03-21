@@ -73,7 +73,7 @@ public class Vision extends SubsystemBase{
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
-    private static double maxDistance = 3.0;
+    private static double maxDistance = 6.0;
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
