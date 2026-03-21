@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,7 @@ public class Vision extends SubsystemBase{
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
-    private static double maxDistance = 6.0;
+    private static double maxDistance = 4.0;
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
@@ -173,23 +174,19 @@ public class Vision extends SubsystemBase{
     }
 
     private void processVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
-        
+
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
-        
-        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-       
-        boolean allTargetsValid = true;
-        for (PhotonTrackedTarget target : result.getTargets()) {
-            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
-                allTargetsValid = false;
-                break;
-            }
-        }
 
-        if (result.getMultiTagResult().isPresent() && allTargetsValid) {
+        ArrayList<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
+
+        if (validTargets.isEmpty()) return;
+
+        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
+
+        /*if (result.getMultiTagResult().isPresent() && validTargets.size() > 1) {
             estimatedPose = estimator.estimateCoprocMultiTagPose(result);
-        } else {
+        } else {*/
             Optional<EstimatedRobotPose> singleTagPose =
                 estimator.estimateLowestAmbiguityPose(result);
 
@@ -201,11 +198,12 @@ public class Vision extends SubsystemBase{
                     estimatedPose = singleTagPose;
                 }
             }
-        }
-        
+        //}
+
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
-            Matrix<N3, N1> stdDevs = calculateStdDevs(est, result.getTargets());
+
+            Matrix<N3, N1> stdDevs = calculateStdDevs(est, validTargets);
 
             swerve.addVisionMeasurement(
                 est.estimatedPose.toPose2d(),
@@ -217,6 +215,31 @@ public class Vision extends SubsystemBase{
                 oculus.setRobotPose(est.estimatedPose);
             }
         }
+    }
+
+    private ArrayList<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
+        ArrayList<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
+        for (PhotonTrackedTarget target : result.getTargets()) {
+
+            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+                continue;
+            }
+
+            double distance = PhotonUtils.calculateDistanceToTargetMeters(
+                estimator.getRobotToCameraTransform().getZ(),
+                aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
+                estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
+                target.getPitch()
+            );
+
+            if (distance > maxDistance) {
+                continue;
+            }
+
+            validTargets.add(target);
+        }
+
+        return validTargets;
     }
     
     public double[] getHubOffsetForTag(int id){
