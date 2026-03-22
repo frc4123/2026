@@ -22,6 +22,7 @@ public class Oculus extends SubsystemBase{
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final Transform3d robotToQuest;
     private int loopLimiter = 0;
+    private boolean flagHasSeenApriltag = false;
     private PoseFrame[] unreadFrames;
     StructPublisher<Pose2d> posePub;
 
@@ -61,6 +62,14 @@ public class Oculus extends SubsystemBase{
         return null;
     }
 
+    public boolean getHasSeenApriltag(){
+        return flagHasSeenApriltag;
+    }
+
+    public void setHasSeenApriltag(boolean status){
+        flagHasSeenApriltag = status;
+    }
+
     public Pose3d getQuestPose() {
         if (unreadFrames.length > 0) {
             // Get the most recent Quest pose
@@ -80,6 +89,7 @@ public class Oculus extends SubsystemBase{
         Pose3d questPose = pose.transformBy(robotToQuest);
         // Send the reset operation
         quest.setPose(questPose);
+        flagHasSeenApriltag = true;
     }
 
     public boolean isQuestNavConnected() {
@@ -156,10 +166,11 @@ public class Oculus extends SubsystemBase{
 
     @Override
     public void periodic() {
-        unreadFrames = quest.getAllUnreadPoseFrames();
-        updateSwerve();
         publishQuestStatus();
-        loopLimiter++;
-        //publishQuestState();
+        unreadFrames = quest.getAllUnreadPoseFrames();
+        if (flagHasSeenApriltag){
+            updateSwerve();
+            loopLimiter++;
+        }
     }
 }
