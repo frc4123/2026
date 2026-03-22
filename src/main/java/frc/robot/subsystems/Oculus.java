@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -168,9 +169,11 @@ public class Oculus extends SubsystemBase{
     public void periodic() {
         publishQuestStatus();
         unreadFrames = quest.getAllUnreadPoseFrames();
-        if (flagHasSeenApriltag){
-            updateSwerve();
-            loopLimiter++;
+        if (flagHasSeenApriltag) {
+            if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
+                updateSwerve();
+                loopLimiter++;
+            }
         }
     }
 }
