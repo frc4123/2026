@@ -90,7 +90,9 @@ public class Oculus extends SubsystemBase{
         Pose3d questPose = pose.transformBy(robotToQuest);
         // Send the reset operation
         quest.setPose(questPose);
-        flagHasSeenApriltag = true;
+        if(DriverStation.isDSAttached() && DriverStation.isTeleop()) {
+            flagHasSeenApriltag = true;
+        }
     }
 
     public boolean isQuestNavConnected() {
