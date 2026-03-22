@@ -156,10 +156,10 @@ public class Oculus extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // unreadFrames = quest.getAllUnreadPoseFrames();
-        // updateSwerve();
-        // publishQuestStatus();
-        // loopLimiter++;
+        unreadFrames = quest.getAllUnreadPoseFrames();
+        updateSwerve();
+        publishQuestStatus();
+        loopLimiter++;
         //publishQuestState();
     }
 }
