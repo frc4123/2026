@@ -169,13 +169,13 @@ public class Oculus extends SubsystemBase{
 
     @Override
     public void periodic() {
-        publishQuestStatus();
-        unreadFrames = quest.getAllUnreadPoseFrames();
-        if (flagHasSeenApriltag) {
-            if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
-                updateSwerve();
-                loopLimiter++;
-            }
-        }
+        // publishQuestStatus();
+        // unreadFrames = quest.getAllUnreadPoseFrames();
+        // if (flagHasSeenApriltag) {
+        //     if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
+        //         updateSwerve();
+        //         loopLimiter++;
+        //     }
+        // }
     }
 }
