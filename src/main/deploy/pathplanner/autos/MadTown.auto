@@ -35,22 +35,29 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 7.75
+                  "waitTime": 7.0
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ArmIn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Uptake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmIn"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Uptake"
+                }
+              }
+            ]
           }
         }
       ]
