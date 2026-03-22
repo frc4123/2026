@@ -183,7 +183,7 @@ public class Constants {
     public static class UptakeConstants {
 
         public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 55; //change to 45 if bad
+        public static final double uptakeVelo = 40; // was 55, but change to 45 if bad
         public static final double reverseVelo = -45;
         public static final double uptakeAcc = uptakeVelo * 3.0;
        
