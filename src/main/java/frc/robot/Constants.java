@@ -337,6 +337,7 @@ public class Constants {
         public static final double frontYaw = Math.toRadians(0);
 
         public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(0.02, 0.02, 0.035);
+        public static final double questUpdate = 30.00;
         // Trust down to 2cm in X directio
         // Trust down to 2cm in Y direction 0.035
         // Trust down to 2 degrees rotational);

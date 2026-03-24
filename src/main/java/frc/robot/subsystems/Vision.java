@@ -35,11 +35,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.Quest;
+
 import frc.robot.utils.Field;
 
 public class Vision extends SubsystemBase{
@@ -79,6 +82,7 @@ public class Vision extends SubsystemBase{
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
+    private double lastUpdate = 0;
 
     public Vision(Oculus oculus) {
         this.oculus = oculus;
@@ -217,7 +221,11 @@ public class Vision extends SubsystemBase{
             );
 
             if (oculus.isQuestNavConnected()) {
-                oculus.setRobotPose(est.estimatedPose);
+                double now = Timer.getFPGATimestamp();
+                if (now - lastUpdate >= Quest.questUpdate) {
+                    oculus.setRobotPose(est.estimatedPose);
+                    lastUpdate = now;
+                }
             }
         }
     }
@@ -240,7 +248,6 @@ public class Vision extends SubsystemBase{
             if (distance > maxDistance) {
                 continue;
             }
-
             validTargets.add(target);
         }
 
@@ -384,5 +391,4 @@ public class Vision extends SubsystemBase{
         }
         camProcessorCounter++;
     }
-
 }
