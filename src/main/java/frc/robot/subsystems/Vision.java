@@ -183,31 +183,33 @@ public class Vision extends SubsystemBase{
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
 
-        ArrayList<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
-
-        //if (validTargets.isEmpty()) return;
+        List<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
 
-        /*if (result.getMultiTagResult().isPresent() && validTargets.size() > 1) {
-            estimatedPose = estimator.estimateCoprocMultiTagPose(result);
-        } else {*/
+        if (validTargets.size() > 1) {
 
-        if(!isTagHub(result)) {
-            return;
-        }
+            PhotonPipelineResult filteredResult = new PhotonPipelineResult(
+                result.metadata,
+                validTargets,
+                Optional.empty()
+            );
+
+            estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
+
+        } else {
             Optional<EstimatedRobotPose> singleTagPose =
                 estimator.estimateLowestAmbiguityPose(result);
 
             if (singleTagPose.isPresent()) {
                 PhotonTrackedTarget best = result.getBestTarget();
-
                 if (best != null &&
                     best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
                     estimatedPose = singleTagPose;
                 }
             }
-        //}
+        }
+
 
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
@@ -219,7 +221,7 @@ public class Vision extends SubsystemBase{
                 est.timestampSeconds,
                 stdDevs
             );
-
+            //May need to adjust this with a cooldown so 4 poses don't udpate all at once since it is times 2 cause quest
             if (oculus.isQuestNavConnected()) {
                 double now = Timer.getFPGATimestamp();
                 if (now - lastUpdate >= Quest.questUpdate) {
@@ -230,8 +232,8 @@ public class Vision extends SubsystemBase{
         }
     }
 
-    private ArrayList<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
-        ArrayList<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
+    private List<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
+        List<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
         for (PhotonTrackedTarget target : result.getTargets()) {
 
             if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
@@ -294,26 +296,6 @@ public class Vision extends SubsystemBase{
         double avgDistance = totalDistance / numTags;
         Matrix<N3, N1> baseDevs = numTags >= 2 ? multiTagStdDevs : singleTagStdDevs;
         return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
-    }
-
-    public Translation2d getHub() {
-        if(isBlue == false && isRed == false){
-            if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                isBlue = false;
-                isRed = false;
-            }
-        }
-
-        Translation2d blueHub = VisionConstants.blueHubTranslation2d;
-        Translation2d redHub = VisionConstants.redHubTranslation2d;
-
-        if(isRed){
-            return redHub;
-
-        } else {return blueHub;}
     }
 
     public Pose3d getHub3D() {
