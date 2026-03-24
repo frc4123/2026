@@ -1,7 +1,13 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.UptakeConstants;
+import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.utils.ShotCache;
+
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 
@@ -46,8 +52,15 @@ public class Uptake extends SubsystemBase{
     }
 
     public void setUptakeVelo(double velo){
-        uptakeMotor.setControl(  
-            motionMagic.withVelocity(velo));
+        ShotData shot = ShotCache.get();
+
+        double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
+            / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters)));
+
+            // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
+            // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
+
+        uptakeMotor.setControl(motionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio * 0.9)));  //1.23
     }
 
     public double getUptakeVelo() {
