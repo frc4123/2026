@@ -29,6 +29,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
+import frc.robot.Constants.SwerveConstants;
 //import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.Constants.FieldConstants;
 
@@ -100,8 +101,8 @@ public class TurretCalculator {
             fieldSpeeds, 
             rotation2d
         );
-        double predictedX = target.getX() - fieldSpeeds.vxMetersPerSecond * timeOfFlight.in(Seconds);
-        double predictedY = target.getY() - fieldSpeeds.vyMetersPerSecond * timeOfFlight.in(Seconds);
+        double predictedX = target.getX() - (fieldSpeeds.vxMetersPerSecond * SwerveConstants.shootOnTheMoveError) * timeOfFlight.in(Seconds);
+        double predictedY = target.getY() - (fieldSpeeds.vyMetersPerSecond * SwerveConstants.shootOnTheMoveError) * timeOfFlight.in(Seconds);
 
         return new Translation3d(predictedX, predictedY, target.getZ());
     }

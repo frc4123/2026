@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.168074281295487,
+        "y": 2.8916268081331884
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.54305619996361,
+        "y": 3.7144625636826785
+      },
+      "isLocked": false,
+      "linkedName": "Spear 1-2"
+    },
+    {
+      "anchor": {
+        "x": 2.2100073917394467,
+        "y": 2.279773301037118
+      },
+      "prevControl": {
+        "x": 4.822227927128821,
+        "y": 1.9569919032023289
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Spear 2-3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.26940275493421056,
+      "rotationDegrees": -32.58781555395574
+    },
+    {
+      "waypointRelativePos": 0.48926637883771934,
+      "rotationDegrees": 21.50939194096976
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.290948275862069,
+      "maxWaypointRelativePos": 0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.5,
+    "rotation": 43.80189897113155
+  },
+  "reversed": false,
+  "folder": "Spear (R)",
+  "idealStartingState": {
+    "velocity": 0.5,
+    "rotation": -58.237397529385774
+  },
+  "useDefaultConstraints": true
+}
