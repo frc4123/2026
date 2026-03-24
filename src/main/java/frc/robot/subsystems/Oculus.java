@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
+import frc.robot.subsystems.Vision;
+import frc.robot.RobotContainer;
+import java.util.ArrayList;
 
 public class Oculus extends SubsystemBase{
 
@@ -166,11 +169,24 @@ public class Oculus extends SubsystemBase{
     //         posePub.set(questPose2d);
     //     }
     // }
+    public Boolean cameraFlag(){
+        ArrayList<Boolean> cameraStatuses = Vision.getCameraStatuses();
+        for(Boolean cameraStatus: cameraStatuses){
+            if(cameraStatus == false){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void periodic() {
-        // publishQuestStatus();
-        // unreadFrames = quest.getAllUnreadPoseFrames();
+        publishQuestStatus();
+        unreadFrames = quest.getAllUnreadPoseFrames();
+        if(cameraFlag()){
+            updateSwerve();
+            loopLimiter++;
+        }
         // if (flagHasSeenApriltag) {
         //     if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
         //         updateSwerve();

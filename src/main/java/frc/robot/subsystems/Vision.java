@@ -80,6 +80,8 @@ public class Vision extends SubsystemBase{
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
 
+    public static ArrayList <Boolean> weSeeing = new ArrayList<>(List.of(true, true, true, true));
+
     public Vision(Oculus oculus) {
         this.oculus = oculus;
         this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/2026Welded.json");
@@ -174,8 +176,11 @@ public class Vision extends SubsystemBase{
         return latest;
     }
 
-    private void processVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
-
+    private void processVision(PhotonCamera camera, PhotonPoseEstimator estimator, int camIndex) {
+        if(!camera.isConnected()){
+            weSeeing.set(camIndex, camera.isConnected());
+            return;
+        }
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
 
@@ -374,13 +379,17 @@ public class Vision extends SubsystemBase{
         return false;
     }
 
+    public static ArrayList<Boolean> getCameraStatuses(){
+        return weSeeing;
+    }
+
     @Override
     public void periodic() {
         switch(camProcessorCounter % 4) {
-            case 0: processVision(FLO_camera, FLO_Estimator); break;
-            case 1: processVision(FLI_camera, FLI_Estimator); break;
-            case 2: processVision(FRI_camera, FRI_Estimator); break;
-            case 3: processVision(FRO_camera, FRO_Estimator); break;
+            case 0: processVision(FLO_camera, FLO_Estimator, 0); break;
+            case 1: processVision(FLI_camera, FLI_Estimator, 1); break;
+            case 2: processVision(FRI_camera, FRI_Estimator, 2); break;
+            case 3: processVision(FRO_camera, FRO_Estimator, 3); break;
         }
         camProcessorCounter++;
     }
