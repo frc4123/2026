@@ -150,9 +150,9 @@ public class Constants {
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
 
         public static final double zeroVelo = 0;
-        public static final double intakeVelo = 31; //was 35
+        public static final double intakeVelo = 60; //was 31
         public static final double reverseVelo = -20;
-        public static final double intakeAcc = 90;
+        public static final double intakeAcc = 120; // was 90
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -167,10 +167,10 @@ public class Constants {
         public static final double zeroVelo = 0;
         public static final double sevenElevenLowVelo = 25; //9
         public static final double sevenElevenMidVelo = 37; //12
-        public static final double sevenElevenHighVelo = 45; //20
+        public static final double sevenElevenHighVelo = 90; // 45
         public static final double sevenElevenReverseVelo = -20;
 
-        public static final double sevenElevenAcc = 25; //7, //30
+        public static final double sevenElevenAcc = 60;//25 //7, //30
        
         public static final double kP = 0.426;
         public static final double kI = 0; // was 0.0441
@@ -183,7 +183,7 @@ public class Constants {
     public static class UptakeConstants {
 
         public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 40; // was 55, but change to 45 if bad
+        public static final double uptakeVelo = 80; // 40 was 55, but change to 45 if bad
         public static final double reverseVelo = -45;
         public static final double uptakeAcc = uptakeVelo * 3.0;
        
