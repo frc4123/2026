@@ -181,6 +181,9 @@ public class Vision extends SubsystemBase{
             weSeeing.set(camIndex, camera.isConnected());
             return;
         }
+        else {
+            weSeeing.set(camIndex, camera.isConnected());
+        }
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
 
