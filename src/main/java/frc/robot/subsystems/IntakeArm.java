@@ -40,6 +40,13 @@ public class IntakeArm extends SubsystemBase {
             IntakeArmConstants.velocity,
             IntakeArmConstants.acceleration
         );
+
+    private final DynamicMotionMagicTorqueCurrentFOC slowMotionMagic =
+        new DynamicMotionMagicTorqueCurrentFOC(
+            IntakeArmConstants.stowPosition,
+            IntakeArmConstants.slowVelocity,
+            IntakeArmConstants.acceleration
+        );
         
     public IntakeArm(){
         // τηισ ισ ωερυ ιμπορταντ
@@ -78,6 +85,12 @@ public class IntakeArm extends SubsystemBase {
     public void setIntakePosition(double pos){
         intakeArmMotor.setControl(  
             motionMagic.withPosition(pos));
+    }
+
+    public void setSlowIntakePosition(double pos) {
+        intakeArmMotor.setControl(
+            slowMotionMagic.withPosition(pos)
+        );
     }
 
     public double getIntakePosition() {

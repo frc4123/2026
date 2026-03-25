@@ -60,6 +60,7 @@ import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.ForceIntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmIn;
+import frc.robot.commands.intakeArm.IntakeArmInSlow;
 import frc.robot.commands.intakeArm.IntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmOut;
 import frc.robot.commands.intakeRoller.AutoIntakeRollerIn;
@@ -142,6 +143,7 @@ public class RobotContainer {
     //     )
     // );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
+    private final IntakeArmInSlow intakeArmInSlow = new IntakeArmInSlow(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     //private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
     private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(intakeArm);
@@ -183,6 +185,7 @@ public class RobotContainer {
         //sevenEleven.setDefaultCommand(rollerPulse);
 
         NamedCommands.registerCommand("ArmIn", intakeArmIn);
+        NamedCommands.registerCommand("ArmSlowIn", intakeArmInSlow);
         NamedCommands.registerCommand("ArmOut", intakeArmOut);
         NamedCommands.registerCommand("IntakeShimmy", new WaitCommand(1.8).andThen(
             new RepeatCommand(
