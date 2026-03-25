@@ -89,7 +89,7 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
              // Use open-loop control for drive motors
-    //private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final SwerveRequest.FieldCentricFacingAngle faceAngle = new SwerveRequest.FieldCentricFacingAngle()
@@ -258,21 +258,24 @@ public class RobotContainer {
             )
         );
 
-        joystick.y().onTrue(
-            Commands.runOnce(() -> {
-                snappedAngle[0] = Target.getBumpAngle(
-                    drivetrain.getState().Pose.getTranslation().getX()
-                );
-            })
-        );
+        // joystick.y().onTrue(
+        //     Commands.runOnce(() -> {
+        //         snappedAngle[0] = Target.getBumpAngle(
+        //             drivetrain.getState().Pose.getTranslation().getX()
+        //         );
+        //     })
+        // );
 
-        joystick.y().whileTrue(
-            drivetrain.applyRequest(() -> faceAngle
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2)
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2)
-                .withTargetDirection(snappedAngle[0])
-            )
-        );
+        // joystick.y().whileTrue(
+        //     drivetrain.applyRequest(() -> faceAngle
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed / 2)
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed / 2)
+        //         .withTargetDirection(snappedAngle[0])
+        //     )
+        // );
+
+        joystick.y().onTrue(drivetrain.applyRequest(() -> brake));
+
         //face desired angle of robot towards the Hub when B is held
 
         // Run SysId routines when holding back/start and X/Y.
