@@ -5,21 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "ArmOut"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeIn"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Cityboy 1"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmOut"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Cityboy 1"
+                }
+              }
+            ]
           }
         },
         {
