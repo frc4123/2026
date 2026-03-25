@@ -179,31 +179,32 @@ public class Vision extends SubsystemBase{
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
 
-        ArrayList<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
-
-        //if (validTargets.isEmpty()) return;
+        List<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
 
-        /*if (result.getMultiTagResult().isPresent() && validTargets.size() > 1) {
-            estimatedPose = estimator.estimateCoprocMultiTagPose(result);
-        } else {*/
+        if (validTargets.size() > 1) {
 
-        if(!isTagHub(result)) {
-            return;
-        }
+            PhotonPipelineResult filteredResult = new PhotonPipelineResult(
+                result.metadata,
+                validTargets,
+                Optional.empty()
+            );
+
+            estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
+
+        } else {
             Optional<EstimatedRobotPose> singleTagPose =
                 estimator.estimateLowestAmbiguityPose(result);
 
             if (singleTagPose.isPresent()) {
                 PhotonTrackedTarget best = result.getBestTarget();
-
                 if (best != null &&
                     best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
                     estimatedPose = singleTagPose;
                 }
             }
-        //}
+        }
 
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
@@ -215,13 +216,16 @@ public class Vision extends SubsystemBase{
                 est.timestampSeconds,
                 stdDevs
             );
-
             if (oculus.isQuestNavConnected()) {
-                oculus.setRobotPose(est.estimatedPose);
+                double now = Timer.getFPGATimestamp();
+                if (now - lastUpdate >= Quest.questUpdate) {
+                    oculus.setRobotPose(est.estimatedPose);
+                    lastUpdate = now;
+                }
             }
         }
     }
-
+    
     private ArrayList<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
         ArrayList<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
         for (PhotonTrackedTarget target : result.getTargets()) {
