@@ -73,6 +73,7 @@ public class Oculus extends SubsystemBase{
 
     public Pose3d getQuestPose() {
         if (unreadFrames.length > 0) {
+            // Get the most recent Quest pose
             Pose3d questPose = unreadFrames[unreadFrames.length - 1].questPose3d();
             return questPose;
         }
@@ -80,12 +81,14 @@ public class Oculus extends SubsystemBase{
     }
 
     public void setRobotPose(Pose3d pose){
+        // Transform by the offset to get the Quest pose
         double now = Timer.getFPGATimestamp();
-        if (now - lastVisionUpdateTime < 0.5) return;
+        if (now - lastVisionUpdateTime < 0.5) return; // ~50 Hz cap
+
         lastVisionUpdateTime = now;
 
         Pose3d questPose = pose.transformBy(robotToQuest);
-
+        // Send the reset operation
         quest.setPose(questPose);
         if(DriverStation.isDSAttached() && DriverStation.isTeleop()) {
             flagHasSeenApriltag = true;
@@ -101,7 +104,7 @@ public class Oculus extends SubsystemBase{
     public void updateSwerve(){
         //if there are no questFrames then dont crash the robot code
         
-        if(unreadFrames == null || unreadFrames.length <= 0) {return;}
+        if( unreadFrames == null || unreadFrames.length <= 0) {return;}
         // Get the latest pose data frames from the Quest
         // Loop over the pose data frames and send them to the pose estimator
 
@@ -166,13 +169,11 @@ public class Oculus extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // publishQuestStatus();
-        // unreadFrames = quest.getAllUnreadPoseFrames();
-        // if (flagHasSeenApriltag) {
-        //     if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
-        //         updateSwerve();
-        //         loopLimiter++;
-        //     }
-        // }
+        publishQuestStatus();
+        unreadFrames = quest.getAllUnreadPoseFrames();
+        if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
+            updateSwerve();
+            loopLimiter++;
+            }
+        }
     }
-}
