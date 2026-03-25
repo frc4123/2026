@@ -64,7 +64,7 @@ public class Uptake extends SubsystemBase{
             // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
             // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
 
-        uptakeMotor.setControl(motionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio * 0.9)));  //1.23
+        uptakeMotor.setControl(motionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio * 0.8)));  //1.23
     }
 
     public double getUptakeVelo() {
