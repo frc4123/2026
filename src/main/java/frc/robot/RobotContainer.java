@@ -386,7 +386,7 @@ public class RobotContainer {
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onFalse(uptakeStop);
         m_buttonBoard.button(4).onFalse(intakeArmOut);
-        m_buttonBoard.button(4).whileTrue(new WaitCommand(0.75).andThen(intakeArmInSlow));
+        m_buttonBoard.button(4).whileTrue(new WaitCommand(0.5).andThen(intakeArmInSlow));
         
         Trigger upcomingShiftWarning = new Trigger(() ->
             ShiftHelpers.isFiveSecBeforeShiftChange(Timer.getMatchTime()) && !ShiftHelpers.currentShiftIsYours()
@@ -496,6 +496,16 @@ public class RobotContainer {
 
         ))
         .andThen(new UptakeUp(uptake, turret, sevenEleven)));
+
+        autoChooser.addOption("City Boy Left", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new MadTown().madTownLeft())
+        ));
+
+        autoChooser.addOption("City Boy Right", new ParallelCommandGroup(
+            new WaitCommand(0.01),
+            new SequentialCommandGroup(new MadTown().madTownLeft())
+        ));
 
         autoChooser.addOption("MadTown Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
