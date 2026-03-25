@@ -386,19 +386,7 @@ public class RobotContainer {
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onFalse(uptakeStop);
         m_buttonBoard.button(4).onFalse(intakeArmOut);
-        m_buttonBoard.button(4).whileTrue(
-            new WaitCommand(1.8).andThen(
-                new RepeatCommand(
-                    new SequentialCommandGroup(
-                        new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
-                        new ParallelCommandGroup(
-                            new IntakeArmOut(intakeArm).withTimeout(0.3),
-                            new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
-                        )
-                    )
-                )
-            )
-        );
+        m_buttonBoard.button(4).whileTrue(new WaitCommand(0.75).andThen(intakeArmInSlow));
         
         Trigger upcomingShiftWarning = new Trigger(() ->
             ShiftHelpers.isFiveSecBeforeShiftChange(Timer.getMatchTime()) && !ShiftHelpers.currentShiftIsYours()
