@@ -1,7 +1,6 @@
 package frc.robot.commands.uptake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.UptakeConstants;
 import frc.robot.subsystems.Uptake;
 
 public class UptakeStop extends Command{
@@ -15,7 +14,7 @@ public class UptakeStop extends Command{
 
     @Override
     public void execute() {
-        uptake.setUptakeVelo(UptakeConstants.zeroVelo);
+        uptake.zeroUptakeVelo();
     }
 
 }

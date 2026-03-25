@@ -51,6 +51,10 @@ public class Uptake extends SubsystemBase{
         uptakeMotor.getConfigurator().apply(pid);
     }
 
+    public void zeroUptakeVelo(){
+        uptakeMotor.setControl(motionMagic.withVelocity(0));
+    }
+
     public void setUptakeVelo(double velo){
         ShotData shot = ShotCache.get();
 

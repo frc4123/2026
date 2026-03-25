@@ -24,7 +24,7 @@ public class UptakeUp extends Command{
     @Override
     public void execute() {
         if (ShotHelper.getIsWrapping()){
-            uptake.setUptakeVelo(UptakeConstants.zeroVelo);
+            uptake.zeroUptakeVelo();
             return;
         }
         uptake.setUptakeVelo(UptakeConstants.uptakeVelo);
@@ -33,7 +33,7 @@ public class UptakeUp extends Command{
     
     @Override
     public void end(boolean interrupted) {
-        uptake.setUptakeVelo(UptakeConstants.zeroVelo);
+        uptake.zeroUptakeVelo();
         sevenEleven.setSevenElevenVelo(SevenElevenConstants.zeroVelo);
     }
 }
