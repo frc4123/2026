@@ -96,7 +96,7 @@ public class Constants {
 
         public static final double driverDeadband = 0.05;
 
-        public static final double shootOnTheMoveError = 1.75; //1.2
+        public static final double shootOnTheMoveError = 1.75;
 
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
@@ -276,7 +276,7 @@ public class Constants {
 
         public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.24; //0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
+        public static final double shootingTestErrorRatio = 1.2355 + 0.272; //0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
 
         public static final double kP = 4; 
         public static final double kI = 0; 
@@ -285,7 +285,7 @@ public class Constants {
         public static final double kV = 0.114123;  
         public static final double kA = 0; 
         
-        public static final double acceleration = 400;
+        public static final double acceleration = 1300;
     }
 
     public static final class HoodConstants {
@@ -293,7 +293,7 @@ public class Constants {
         public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724); // its really 29.359724
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  
 
-        public static final Angle MAX_HOOD_SHOOT_ANGLE = Degrees.of(65);
+        public static final Angle MAX_HOOD_SHOT_ANGLE = Degrees.of(65);
 
         public static final double sensorToMechanismRatio = 136.0 / 1.0; 
 

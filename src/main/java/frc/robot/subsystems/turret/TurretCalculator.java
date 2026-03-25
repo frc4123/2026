@@ -72,8 +72,8 @@ public class TurretCalculator {
         Angle calculatedAngle = Radians.of(angle);
         if (calculatedAngle.lt(HoodConstants.MIN_HOOD_ANGLE)) {
             return HoodConstants.MIN_HOOD_ANGLE;
-        } else if (calculatedAngle.gt(HoodConstants.MAX_HOOD_SHOOT_ANGLE)) {
-            return HoodConstants.MAX_HOOD_SHOOT_ANGLE;
+        } else if (calculatedAngle.gt(HoodConstants.MAX_HOOD_SHOT_ANGLE)) {
+            return HoodConstants.MAX_HOOD_SHOT_ANGLE;
         }
 
         return Radians.of(angle);
