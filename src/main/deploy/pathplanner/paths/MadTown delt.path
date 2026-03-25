@@ -71,7 +71,7 @@
   "folder": "MadTown (L)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.5824291247519
+    "rotation": 179.58242912475194
   },
   "useDefaultConstraints": true
 }

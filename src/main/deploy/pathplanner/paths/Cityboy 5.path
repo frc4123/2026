@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2100073917394467,
-        "y": 2.279773301037118
+        "x": 5.7947109829876275,
+        "y": 2.84699690684134
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2100073917394467,
-        "y": 2.2797733010371175
+        "x": 5.1821094887190675,
+        "y": 2.372473844614265
       },
       "isLocked": false,
-      "linkedName": "Spear 2-3"
+      "linkedName": "Spear 4-5"
     },
     {
       "anchor": {
-        "x": 7.426120871997816,
-        "y": 2.647384063409753
+        "x": 2.1112232191593887,
+        "y": 2.1296273426128094
       },
       "prevControl": {
-        "x": 6.426120871997816,
-        "y": 2.647384063409753
+        "x": 2.844621094912483,
+        "y": 2.239129370772619
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -57.14594889103369
+    "rotation": 23.397763915925964
   },
   "reversed": false,
   "folder": "Spear (R)",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 43.80189897113155
+    "velocity": 0.5,
+    "rotation": 67.36817742251037
   },
   "useDefaultConstraints": true
 }

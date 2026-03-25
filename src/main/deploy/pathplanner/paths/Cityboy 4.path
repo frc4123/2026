@@ -3,46 +3,46 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.741404430494905,
-        "y": 3.692022948508006
+        "x": 6.980769309497816,
+        "y": 3.6482407660116447
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.759231735901661,
-        "y": 0.08279483485705175
+        "x": 5.761201157660116,
+        "y": 3.8962733124090247
       },
       "isLocked": false,
-      "linkedName": "2Cycle3-4 (2.0)"
+      "linkedName": "Spear 3-4"
     },
     {
       "anchor": {
-        "x": 3.2824215338427947,
-        "y": 0.5859812818413388
+        "x": 5.7947109829876275,
+        "y": 2.84699690684134
       },
       "prevControl": {
-        "x": 5.760951828602618,
-        "y": 0.4312975345705967
+        "x": 6.0431424558770015,
+        "y": 3.6399131754912672
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2 Cycle 4-5 (2.0"
+      "linkedName": "Spear 4-5"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.09763055098684201,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.2242067571271932,
+      "rotationDegrees": 28.31888194891686
     },
     {
-      "waypointRelativePos": 0.4327542489035087,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.572034333881579,
+      "rotationDegrees": 64.80494455319325
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.35,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -50,14 +50,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
-    "rotation": 0.0
+    "velocity": 0.5,
+    "rotation": 67.36817742251037
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Spear (R)",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

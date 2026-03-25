@@ -3,44 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.215280815972223,
-        "y": 4.218775101273149
+        "x": 2.2100073917394467,
+        "y": 2.279773301037118
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.313040509260528,
-        "y": 7.180775535305422
+        "x": 3.2100073917394467,
+        "y": 2.2797733010371175
       },
       "isLocked": false,
-      "linkedName": "MadTown 1-2"
+      "linkedName": "Spear 2-3"
     },
     {
       "anchor": {
-        "x": 3.0300804398148156,
-        "y": 7.385664279513889
+        "x": 6.980769309497816,
+        "y": 3.6482407660116447
       },
       "prevControl": {
-        "x": 7.030945095487381,
-        "y": 7.443663990166533
+        "x": 7.434598059952692,
+        "y": 2.306950168304221
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MadTown 2-3"
+      "linkedName": "Spear 3-4"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.7017372532894739,
-      "rotationDegrees": 180.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7615759966777406,
-      "maxWaypointRelativePos": 0.9155549210963447,
+      "minWaypointRelativePos": 0.7033840351458887,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.4,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -60,14 +55,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 179.58242912475194
+    "velocity": 1.0,
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "MadTown (L)",
+  "folder": "Spear (R)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 43.80189897113155
   },
   "useDefaultConstraints": true
 }

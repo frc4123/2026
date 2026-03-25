@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.85725,
-  "robotLength": 0.85725,
+  "robotWidth": 0.857,
+  "robotLength": 1.047,
   "holonomicMode": true,
   "pathFolders": [
     "2CycleDepot(L)",
