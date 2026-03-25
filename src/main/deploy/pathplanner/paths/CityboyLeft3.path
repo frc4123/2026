@@ -3,44 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.466996426070676,
-        "y": 0.42336656548665696
+        "x": 2.2100073917394467,
+        "y": 5.789326
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.466996426070676,
-        "y": 0.42336656548665696
+        "x": 4.112587563682678,
+        "y": 5.813414301310044
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CityBoyLeft 2-3"
     },
     {
       "anchor": {
-        "x": 7.9124621315502175,
-        "y": 2.9430384597889385
+        "x": 6.980769309497816,
+        "y": 4.421326
       },
       "prevControl": {
-        "x": 8.328991255003638,
-        "y": 1.3790471479257644
+        "x": 6.845982021015284,
+        "y": 5.468492483169578
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Spear 1-2"
+      "linkedName": "CityBoyLeft 3-4"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5648557428728073,
-      "rotationDegrees": -89.66152678133223
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7246870855437668,
+      "minWaypointRelativePos": 0.7033840351458887,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.4,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -60,14 +55,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.8,
-    "rotation": -58.236999999999995
+    "velocity": 1.0,
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Cityboy (R)",
+  "folder": "Cityboy (L)",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": -43.802
   },
   "useDefaultConstraints": true
 }

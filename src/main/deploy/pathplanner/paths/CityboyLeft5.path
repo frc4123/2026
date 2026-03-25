@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.374682268922853,
-        "y": 8.069
+        "x": 5.753621554312227,
+        "y": 5.361330854257642
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.884541716260817,
-        "y": 7.290137369791668
+        "x": 5.1044185544032015,
+        "y": 5.450590656841339
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CityBoyLeft 4-5"
     },
     {
       "anchor": {
-        "x": 11.91,
-        "y": 7.366637225115741
+        "x": 2.1112232191593887,
+        "y": 5.939326
       },
       "prevControl": {
-        "x": 11.065198784722222,
-        "y": 6.443825086805557
+        "x": 2.457341816775837,
+        "y": 5.392796181313684
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 174.8660161953823
+    "rotation": -23.398
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Cityboy (L)",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -175.82749680661738
+    "velocity": 0.5,
+    "rotation": -45.0
   },
   "useDefaultConstraints": true
 }
