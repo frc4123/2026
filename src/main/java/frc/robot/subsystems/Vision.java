@@ -35,11 +35,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.Quest;
+
 import frc.robot.utils.Field;
 
 public class Vision extends SubsystemBase{
@@ -79,6 +82,7 @@ public class Vision extends SubsystemBase{
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
+    private double lastUpdate = 0;
 
     public Vision(Oculus oculus) {
         this.oculus = oculus;
@@ -206,6 +210,7 @@ public class Vision extends SubsystemBase{
             }
         }
 
+
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
 
@@ -225,9 +230,9 @@ public class Vision extends SubsystemBase{
             }
         }
     }
-    
-    private ArrayList<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
-        ArrayList<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
+
+    private List<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
+        List<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
         for (PhotonTrackedTarget target : result.getTargets()) {
 
             if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
@@ -244,7 +249,6 @@ public class Vision extends SubsystemBase{
             if (distance > maxDistance) {
                 continue;
             }
-
             validTargets.add(target);
         }
 
@@ -291,26 +295,6 @@ public class Vision extends SubsystemBase{
         double avgDistance = totalDistance / numTags;
         Matrix<N3, N1> baseDevs = numTags >= 2 ? multiTagStdDevs : singleTagStdDevs;
         return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
-    }
-
-    public Translation2d getHub() {
-        if(isBlue == false && isRed == false){
-            if(DriverStation.isDSAttached()){
-                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                isBlue = false;
-                isRed = false;
-            }
-        }
-
-        Translation2d blueHub = VisionConstants.blueHubTranslation2d;
-        Translation2d redHub = VisionConstants.redHubTranslation2d;
-
-        if(isRed){
-            return redHub;
-
-        } else {return blueHub;}
     }
 
     public Pose3d getHub3D() {
@@ -388,5 +372,4 @@ public class Vision extends SubsystemBase{
         }
         camProcessorCounter++;
     }
-
 }
