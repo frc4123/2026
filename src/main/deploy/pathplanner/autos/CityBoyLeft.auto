@@ -9,6 +9,12 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "CityboyLeft1"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "ArmOut"
@@ -18,12 +24,6 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeIn"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CityboyLeft1"
                 }
               }
             ]
@@ -84,6 +84,12 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "CityboyLeft3"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "ArmOut"
@@ -99,12 +105,6 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeIn"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CityboyLeft3"
                 }
               }
             ]
