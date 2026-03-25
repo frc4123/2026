@@ -178,8 +178,3 @@ public class Oculus extends SubsystemBase{
             }
         }
     }
-<<<<<<< HEAD
-}
-=======
-
->>>>>>> main
