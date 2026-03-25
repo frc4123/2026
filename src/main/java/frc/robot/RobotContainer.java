@@ -53,6 +53,8 @@ import frc.robot.Constants.InputConstants;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.Sim.Mode;
+import frc.robot.commands.autos.CityBoyLeft;
+import frc.robot.commands.autos.CityBoyRight;
 import frc.robot.commands.autos.MadTown;
 import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.orbit;
@@ -60,6 +62,7 @@ import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
 import frc.robot.commands.intakeArm.ForceIntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmIn;
+import frc.robot.commands.intakeArm.IntakeArmInMid;
 import frc.robot.commands.intakeArm.IntakeArmInSlow;
 import frc.robot.commands.intakeArm.IntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmOut;
@@ -144,6 +147,7 @@ public class RobotContainer {
     // );
     private final IntakeArmIn intakeArmIn = new IntakeArmIn(intakeArm, intakeRollers);
     private final IntakeArmInSlow intakeArmInSlow = new IntakeArmInSlow(intakeArm, intakeRollers);
+    private final IntakeArmInMid intakeArmInMid = new IntakeArmInMid(intakeArm, intakeRollers);
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(intakeArm);
     //private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm, intakeRollers);
     private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(intakeArm);
@@ -371,17 +375,7 @@ public class RobotContainer {
         m_buttonBoard.button(3).onTrue(uptakeUp);
         m_buttonBoard.button(3).onFalse(intakeArmOut);
         m_buttonBoard.button(3).onFalse(uptakeStop);
-        m_buttonBoard.button(3).onTrue(
-            new RepeatCommand(
-                new SequentialCommandGroup(
-                    new IntakeArmMid(intakeArm, intakeRollers).withTimeout(0.3),
-                    new ParallelCommandGroup(
-                        new IntakeArmOut(intakeArm).withTimeout(0.3),
-                        new IntakeRollerShimmy(intakeRollers, intakeArm).withTimeout(0.7)
-                    )
-                )
-            )
-        );
+        m_buttonBoard.button(3).onTrue(intakeArmInMid);
 
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onFalse(uptakeStop);
@@ -499,12 +493,12 @@ public class RobotContainer {
 
         autoChooser.addOption("City Boy Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
-            new SequentialCommandGroup(new MadTown().madTownLeft())
+            new SequentialCommandGroup(new CityBoyLeft().cityBoyLeft())
         ));
 
         autoChooser.addOption("City Boy Right", new ParallelCommandGroup(
             new WaitCommand(0.01),
-            new SequentialCommandGroup(new MadTown().madTownLeft())
+            new SequentialCommandGroup(new CityBoyRight().cityBoyRight())
         ));
 
         autoChooser.addOption("MadTown Left", new ParallelCommandGroup(

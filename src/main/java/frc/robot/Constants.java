@@ -139,6 +139,7 @@ public class Constants {
 
         public static final double velocity = 2.5;
         public static final double slowVelocity = 0.11;
+        public static final double midVelocity = 0.33;
         public static final double acceleration = 3.5;
     }
 
