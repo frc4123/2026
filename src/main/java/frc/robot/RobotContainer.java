@@ -361,6 +361,7 @@ public class RobotContainer {
         joystick.leftStick().onTrue(intakeArmIn);
 
         joystick.rightStick().onTrue(avoidDecapitation);
+        joystick.rightStick().onFalse(hoodAim);
         
         // ---------- Buttonboard Commands ------------ //        
 
