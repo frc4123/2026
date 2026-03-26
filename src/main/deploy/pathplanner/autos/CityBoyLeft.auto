@@ -95,24 +95,6 @@
                 "data": {
                   "pathName": "CityboyLeft3"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ArmOut"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "UptakeStop"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
               }
             ]
           }
