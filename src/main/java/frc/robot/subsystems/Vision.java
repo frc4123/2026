@@ -29,17 +29,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.Quest;
 
 import frc.robot.utils.Field;
 
-public class Vision extends SubsystemBase{
+public class Vision extends SubsystemBase {
 
     private final Transform3d FLO_robotToCam;
     private final Transform3d FLI_robotToCam;
@@ -73,10 +71,8 @@ public class Vision extends SubsystemBase{
     private static boolean isRed = false;
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-    private Oculus oculus;
 
     public Vision(Oculus oculus) {
-        this.oculus = oculus;
         this.aprilTagFieldLayout = loadAprilTagFieldLayout("/fields/2026Welded.json");
 
         // Camera transforms

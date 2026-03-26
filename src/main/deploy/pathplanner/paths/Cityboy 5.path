@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.7947109829876275,
-        "y": 2.84699690684134
+        "x": 5.761001694414119,
+        "y": 2.6607979667030577
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.1821094887190675,
-        "y": 2.372473844614265
+        "x": 5.380525552674673,
+        "y": 2.3737703557132455
       },
       "isLocked": false,
       "linkedName": "Spear 4-5"
@@ -20,8 +20,8 @@
         "y": 2.1296273426128094
       },
       "prevControl": {
-        "x": 2.844621094912483,
-        "y": 2.239129370772619
+        "x": 2.5969162231623,
+        "y": 2.5347371952328968
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,8 +47,8 @@
   "reversed": false,
   "folder": "Cityboy (R)",
   "idealStartingState": {
-    "velocity": 0.5,
-    "rotation": 67.36817742251037
+    "velocity": 0.8,
+    "rotation": 50.031698391872276
   },
   "useDefaultConstraints": true
 }

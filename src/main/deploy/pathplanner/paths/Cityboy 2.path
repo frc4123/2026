@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.28744405021834,
-        "y": 3.7658742153384286
+        "x": 7.826892399017467,
+        "y": 3.601167439956332
       },
       "isLocked": false,
       "linkedName": "Spear 1-2"
@@ -20,8 +20,8 @@
         "y": 2.279773301037118
       },
       "prevControl": {
-        "x": 4.822227927128821,
-        "y": 1.9569919032023289
+        "x": 3.5141978256914124,
+        "y": 1.9035357532751083
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,11 +31,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.26940275493421056,
-      "rotationDegrees": -32.58781555395574
+      "rotationDegrees": -12.882313956575127
     },
     {
       "waypointRelativePos": 0.48926637883771934,
-      "rotationDegrees": 21.50939194096976
+      "rotationDegrees": 15.568076525989893
     }
   ],
   "constraintZones": [
