@@ -170,7 +170,7 @@ public class RobotContainer {
 
         drivetrain.setOnPoseResetCallback(pose -> {
             if (oculus.isQuestNavConnected()) {
-                oculus.setRobotPose(new Pose3d(pose));
+                oculus.setRobotPose();
             }
         });
 

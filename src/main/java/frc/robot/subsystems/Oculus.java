@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.OptionalInt;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -11,11 +10,11 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.Quest;
+
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
@@ -24,7 +23,6 @@ public class Oculus extends SubsystemBase{
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final Transform3d robotToQuest;
     private int loopLimiter = 0;
-    private boolean flagHasSeenApriltag = false;
     private PoseFrame[] unreadFrames;
     StructPublisher<Pose2d> posePub;
 
@@ -36,13 +34,13 @@ public class Oculus extends SubsystemBase{
 
         robotToQuest = new Transform3d(
             new Translation3d(
-                Constants.Quest.frontX,
-                Constants.Quest.frontY,
-                Constants.Quest.frontZ),
+                Quest.frontX,
+                Quest.frontY,
+                Quest.frontZ),
             new Rotation3d(
-                Constants.Quest.frontRoll,
-                Constants.Quest.frontPitch,
-                Constants.Quest.frontYaw)
+                Quest.frontRoll,
+                Quest.frontPitch,
+                Quest.frontYaw)
         );
 
         NetworkTable questTable = NetworkTableInstance.getDefault()
@@ -64,14 +62,6 @@ public class Oculus extends SubsystemBase{
         return null;
     }
 
-    public boolean getHasSeenApriltag(){
-        return flagHasSeenApriltag;
-    }
-
-    public void setHasSeenApriltag(boolean status){
-        flagHasSeenApriltag = status;
-    }
-
     public Pose3d getQuestPose() {
         if (unreadFrames.length > 0) {
             // Get the most recent Quest pose
@@ -81,19 +71,17 @@ public class Oculus extends SubsystemBase{
         return null;
     }
 
-    public void setRobotPose(Pose3d pose){
+    public void setRobotPose(){
         // Transform by the offset to get the Quest pose
         double now = Timer.getFPGATimestamp();
-        if (now - lastVisionUpdateTime < 0.5) return; // ~50 Hz cap
+        if (now - lastVisionUpdateTime < 20) return; // 20s refresh cap
 
         lastVisionUpdateTime = now;
 
-        Pose3d questPose = pose.transformBy(robotToQuest);
-        // Send the reset operation
+        Pose2d pose2d = swerve.getState().Pose;
+        Pose3d questPose = new Pose3d(pose2d).transformBy(robotToQuest);
+
         quest.setPose(questPose);
-        if(DriverStation.isDSAttached() && DriverStation.isTeleop()) {
-            flagHasSeenApriltag = true;
-        }
     }
 
     public boolean isQuestNavConnected() {
@@ -113,22 +101,22 @@ public class Oculus extends SubsystemBase{
 
         if (latestFrame.isTracking()) {
             Pose3d questPose = latestFrame.questPose3d();
-        double timestamp = latestFrame.dataTimestamp();
+            double timestamp = latestFrame.dataTimestamp();
 
-        Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
+            Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
 
-        // Compare Quest pose against current swerve odometry estimate
-        double deviation = swerve.getState().Pose.getTranslation()
-            .getDistance(robotPose.toPose2d().getTranslation());
+            // Compare Quest pose against current swerve odometry estimate
+            double deviation = swerve.getState().Pose.getTranslation()
+                .getDistance(robotPose.toPose2d().getTranslation());
 
-        // Hard reject if Quest disagrees with odometry too much
-        if (deviation > 0.5) return;
+            // Hard reject if Quest disagrees with odometry too much
+            if (deviation > 0.5) return;
 
-        swerve.addVisionMeasurement(
-            robotPose.toPose2d(),
-            timestamp,
-            Constants.Quest.QUESTNAV_STD_DEVS
-        );
+            swerve.addVisionMeasurement(
+                robotPose.toPose2d(),
+                timestamp,
+                Quest.QUESTNAV_STD_DEVS
+            );
         }
 
         // for (PoseFrame questFrame : unreadFrames) {
@@ -148,7 +136,7 @@ public class Oculus extends SubsystemBase{
         //         swerve.addVisionMeasurement(
         //             robotPose.toPose2d(),
         //             timestamp,
-        //             Constants.Quest.QUESTNAV_STD_DEVS
+        //             Quest.QUESTNAV_STD_DEVS
         //         );
         //     }
         // }
@@ -178,11 +166,15 @@ public class Oculus extends SubsystemBase{
 
     @Override
     public void periodic() {
+
         publishQuestStatus();
         unreadFrames = quest.getAllUnreadPoseFrames();
-        if(DriverStation.isDSAttached() && DriverStation.isTeleopEnabled()) {
+
+        if (isQuestNavConnected()) {
+            setRobotPose();
             updateSwerve();
-            loopLimiter++;
-            }
         }
+
+        loopLimiter++;
     }
+}
