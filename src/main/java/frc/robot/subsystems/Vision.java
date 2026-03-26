@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,7 +13,6 @@ import java.util.Set;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -24,14 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -78,7 +72,6 @@ public class Vision extends SubsystemBase{
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
-    private static double maxDistance = 4.0;
 
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private Oculus oculus;
@@ -186,34 +179,28 @@ public class Vision extends SubsystemBase{
         List<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-                    PhotonPipelineResult filteredResult = new PhotonPipelineResult(
-                result.metadata,
-                validTargets,
-                Optional.empty()
-            );
-    /* 
+        PhotonPipelineResult filteredResult = new PhotonPipelineResult(
+            result.metadata,
+            validTargets,
+            Optional.empty()
+        );
+
         if (validTargets.size() > 1) {
-
-            PhotonPipelineResult filteredResult = new PhotonPipelineResult(
-                result.metadata,
-                validTargets,
-                Optional.empty()
-            );
-
+        
             estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
-            */
-       // } else {
-            // Optional<EstimatedRobotPose> singleTagPose =
-            //     estimator.estimateLowestAmbiguityPose(filteredResult);
+            
+        } else {
+            Optional<EstimatedRobotPose> singleTagPose =
+                estimator.estimateLowestAmbiguityPose(filteredResult);
 
-            // if (singleTagPose.isPresent()) {
-            //     PhotonTrackedTarget best = result.getBestTarget();
-            //     if (best != null &&
-            //         best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
-            //         estimatedPose = singleTagPose;
-            //     }
-            // }
-       // }
+            if (singleTagPose.isPresent()) {
+                PhotonTrackedTarget best = result.getBestTarget();
+                if (best != null &&
+                    best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
+                    estimatedPose = singleTagPose;
+                }
+            }
+        }
 
         Optional<EstimatedRobotPose> singleTagPose = estimator.estimateLowestAmbiguityPose(filteredResult);
         estimatedPose = singleTagPose;
@@ -294,7 +281,7 @@ public class Vision extends SubsystemBase{
             if (tagPose.isEmpty()) continue;
 
             // Reject low-ambiguity threshold — tune this
-            if (target.getPoseAmbiguity() > 0.2) continue;
+            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) continue;
 
             numTags++;
             totalDistance += tagPose.get().toPose2d().getTranslation()
@@ -308,13 +295,13 @@ public class Vision extends SubsystemBase{
         // Hard reject if too far — tags beyond 4m are unreliable
         if (avgDistance > 4.0) return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 
-        Matrix<N3, N1> baseDevs = numTags >= 2 ? multiTagStdDevs : singleTagStdDevs;
+        Matrix<N3, N1> baseDevs = singleTagStdDevs;
 
         // Aggressive cubic scaling instead of quadratic
         double scalar = 1 + (avgDistance * avgDistance * avgDistance / 15.0);
 
-        // Single tags get an extra penalty
-        if (numTags == 1) scalar *= 3.0;
+        //extra penalty
+        scalar *= 3.0;
 
         return baseDevs.times(scalar);
     }
