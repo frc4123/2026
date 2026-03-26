@@ -42,7 +42,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -62,15 +62,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "parallel",
                       "data": {
-                        "name": "IntakeStop"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmSlowIn"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeStop"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ArmSlowIn"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -149,15 +156,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "parallel",
                       "data": {
-                        "name": "IntakeStop"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmSlowIn"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeStop"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ArmSlowIn"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
