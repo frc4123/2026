@@ -201,9 +201,6 @@ public class Vision extends SubsystemBase{
             }
         }
 
-        Optional<EstimatedRobotPose> singleTagPose = estimator.estimateLowestAmbiguityPose(filteredResult);
-        estimatedPose = singleTagPose;
-
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
 
@@ -232,17 +229,7 @@ public class Vision extends SubsystemBase{
             if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
                 continue;
             }
-
-            // double distance = PhotonUtils.calculateDistanceToTargetMeters(
-            //     estimator.getRobotToCameraTransform().getZ(),
-            //     aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
-            //     estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
-            //     target.getPitch()
-            // );
-
-            // if (distance > maxDistance) {
-            //     continue;
-            // }
+            
             validTargets.add(target);
         }
 
