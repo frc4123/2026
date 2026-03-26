@@ -154,7 +154,7 @@ public class Constants {
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
 
         public static final double zeroVelo = 0;
-        public static final double intakeVelo = 40; //was 60, 31
+        public static final double intakeVelo = 60; //was 60, 31
         public static final double reverseVelo = -20;
         public static final double intakeAcc = 120; // was 90
        
