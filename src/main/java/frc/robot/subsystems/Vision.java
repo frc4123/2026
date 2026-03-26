@@ -186,6 +186,11 @@ public class Vision extends SubsystemBase{
         List<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
+                    PhotonPipelineResult filteredResult = new PhotonPipelineResult(
+                result.metadata,
+                validTargets,
+                Optional.empty()
+            );
     /* 
         if (validTargets.size() > 1) {
 
@@ -198,18 +203,20 @@ public class Vision extends SubsystemBase{
             estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
             */
        // } else {
-            Optional<EstimatedRobotPose> singleTagPose =
-                estimator.estimateLowestAmbiguityPose(result);
+            // Optional<EstimatedRobotPose> singleTagPose =
+            //     estimator.estimateLowestAmbiguityPose(filteredResult);
 
-            if (singleTagPose.isPresent() && (isTagHub(result))) {
-                PhotonTrackedTarget best = result.getBestTarget();
-                if (best != null &&
-                    best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
-                    estimatedPose = singleTagPose;
-                }
-            }
+            // if (singleTagPose.isPresent()) {
+            //     PhotonTrackedTarget best = result.getBestTarget();
+            //     if (best != null &&
+            //         best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
+            //         estimatedPose = singleTagPose;
+            //     }
+            // }
        // }
 
+        Optional<EstimatedRobotPose> singleTagPose = estimator.estimateLowestAmbiguityPose(filteredResult);
+        estimatedPose = singleTagPose;
 
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
@@ -240,16 +247,16 @@ public class Vision extends SubsystemBase{
                 continue;
             }
 
-            double distance = PhotonUtils.calculateDistanceToTargetMeters(
-                estimator.getRobotToCameraTransform().getZ(),
-                aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
-                estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
-                target.getPitch()
-            );
+            // double distance = PhotonUtils.calculateDistanceToTargetMeters(
+            //     estimator.getRobotToCameraTransform().getZ(),
+            //     aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getZ(),
+            //     estimator.getRobotToCameraTransform().getRotation().getMeasureY().in(Degrees),
+            //     target.getPitch()
+            // );
 
-            if (distance > maxDistance) {
-                continue;
-            }
+            // if (distance > maxDistance) {
+            //     continue;
+            // }
             validTargets.add(target);
         }
 
@@ -285,17 +292,31 @@ public class Vision extends SubsystemBase{
         for (PhotonTrackedTarget target : targets) {
             Optional<Pose3d> tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
             if (tagPose.isEmpty()) continue;
-            
+
+            // Reject low-ambiguity threshold — tune this
+            if (target.getPoseAmbiguity() > 0.2) continue;
+
             numTags++;
             totalDistance += tagPose.get().toPose2d().getTranslation()
                 .getDistance(est.estimatedPose.toPose2d().getTranslation());
         }
 
-        if (numTags == 0) return singleTagStdDevs;
-        
+        if (numTags == 0) return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+
         double avgDistance = totalDistance / numTags;
+
+        // Hard reject if too far — tags beyond 4m are unreliable
+        if (avgDistance > 4.0) return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+
         Matrix<N3, N1> baseDevs = numTags >= 2 ? multiTagStdDevs : singleTagStdDevs;
-        return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
+
+        // Aggressive cubic scaling instead of quadratic
+        double scalar = 1 + (avgDistance * avgDistance * avgDistance / 15.0);
+
+        // Single tags get an extra penalty
+        if (numTags == 1) scalar *= 3.0;
+
+        return baseDevs.times(scalar);
     }
 
     public Pose3d getHub3D() {
@@ -324,32 +345,13 @@ public class Vision extends SubsystemBase{
             } else {
                 return new Rotation2d(Math.toRadians(180));
             }
-        } else {
+        } else { 
             if (x > 11.91){
                 return new Rotation2d(Math.toRadians(180));
             } else {
                 return new Rotation2d(Math.toRadians(0));
             }
         }
-    }
-
-    public double targetFF(Pose2d robotPose, Translation2d targetPosition, ChassisSpeeds robotVelocity) {
-        // Vector from robot to target
-        Translation2d toTarget = targetPosition.minus(robotPose.getTranslation());
-    
-        // Distance squared to target
-        double distanceSquared = toTarget.getX() * toTarget.getX() + toTarget.getY() * toTarget.getY();
-    
-        // Avoid division by zero when very close to target
-        if (distanceSquared < 0.0001) {
-            return 0.0;
-        }
-    
-        // Cross product of velocity and position vector
-        // ω = (v × r) / |r|²
-        double crossProduct = robotVelocity.vxMetersPerSecond * toTarget.getY() - robotVelocity.vyMetersPerSecond * toTarget.getX();
-    
-        return crossProduct / distanceSquared;
     }
 
     public boolean isTagHub(PhotonPipelineResult result){
