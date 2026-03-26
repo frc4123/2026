@@ -96,7 +96,7 @@ public class Constants {
 
         public static final double driverDeadband = 0.05;
 
-        public static final double shootOnTheMoveError = 1.75; //1.75
+        public static final double shootOnTheMoveError = 1.675; //1.75
 
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
@@ -154,7 +154,7 @@ public class Constants {
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to final velocity
 
         public static final double zeroVelo = 0;
-        public static final double intakeVelo = 60; //was 31
+        public static final double intakeVelo = 40; //was 60, 31
         public static final double reverseVelo = -20;
         public static final double intakeAcc = 120; // was 90
        
@@ -276,13 +276,13 @@ public class Constants {
         
         public static final Distance compression = Inches.of(0.25);
 
-        public static final double sensorTomechanismGearTeeth = 1.0 / 1.0; 
+        public static final double sensorTomechanfismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.272; //0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
+        public static final double shootingTestErrorRatio = 1.2355 + 0.2624123; //0.2675 0.272, 0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
 
         public static final double kP = 12; 
         public static final double kI = 0; 
-        public static final double kD = 0.0025;
+        public static final double kD = 0.0035; // 0.0025
         public static final double kS = 4.00025; 
         public static final double kV = 0.114123;  
         public static final double kA = 0; 
@@ -395,7 +395,7 @@ public class Constants {
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
         //blueDepot pose
-        public static final Pose3d blueDepot = new Pose3d (1.5, 6.0, 0.2, new Rotation3d());
+        public static final Pose3d blueDepot = new Pose3d (-1.5, 6.0, 0.2, new Rotation3d());
 
         //blueLeftBumpCorner pose
         //public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new Rotation3d()); //x4.03 and y was +1
@@ -404,7 +404,7 @@ public class Constants {
        // public static final Pose3d blueRightBumpCorner = new Pose3d (3.5, 1, 0.2, new Rotation3d()); //x4.03 and y was -1
 
         //redAimThreshold pose
-        public static final Pose3d blueAimThreshold = new Pose3d (1.5, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d blueAimThreshold = new Pose3d (-1.5, 2.080, 0.2, new Rotation3d());
 
         //redHub translations
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264/*1.828*/, new Rotation3d());
@@ -412,7 +412,7 @@ public class Constants {
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
         //redAimThreshold pose
-        public static final Pose3d redAimThreshold = new Pose3d (15.5, 6.0, 0.2, new Rotation3d());
+        public static final Pose3d redAimThreshold = new Pose3d (18.5, 6.0, 0.2, new Rotation3d());
 
         //redRightBumpCorner pose
         public static final Pose3d redRightBumpCorner = new Pose3d (13.5, 7, 0.2, new Rotation3d()); //12.505 and y  was + 1
@@ -421,7 +421,7 @@ public class Constants {
         public static final Pose3d redLeftBumpCorner = new Pose3d (13.5, 1, 0.2, new Rotation3d()); //12.505 and y was -1
 
         //blueDepot pose
-        public static final Pose3d redDepot = new Pose3d (15.5, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d redDepot = new Pose3d (18.5, 2.080, 0.2, new Rotation3d());
 
         // threshold for how close we are to the blue bump/trench for auto rotation
         public static final double blueLeftBumpOrTrenchThreshold = 2.5;

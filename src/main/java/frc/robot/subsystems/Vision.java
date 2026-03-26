@@ -182,11 +182,11 @@ public class Vision extends SubsystemBase{
 
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
-
+        
         List<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-
+    /* 
         if (validTargets.size() > 1) {
 
             PhotonPipelineResult filteredResult = new PhotonPipelineResult(
@@ -196,19 +196,19 @@ public class Vision extends SubsystemBase{
             );
 
             estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
-
-        } else {
+            */
+       // } else {
             Optional<EstimatedRobotPose> singleTagPose =
                 estimator.estimateLowestAmbiguityPose(result);
 
-            if (singleTagPose.isPresent()) {
+            if (singleTagPose.isPresent() && (isTagHub(result))) {
                 PhotonTrackedTarget best = result.getBestTarget();
                 if (best != null &&
                     best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
                     estimatedPose = singleTagPose;
                 }
             }
-        }
+       // }
 
 
         if (estimatedPose.isPresent()) {
@@ -221,6 +221,7 @@ public class Vision extends SubsystemBase{
                 est.timestampSeconds,
                 stdDevs
             );
+
             if (oculus.isQuestNavConnected()) {
                 double now = Timer.getFPGATimestamp();
                 if (now - lastUpdate >= Quest.questUpdate) {

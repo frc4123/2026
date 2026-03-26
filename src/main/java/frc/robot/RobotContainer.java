@@ -201,6 +201,7 @@ public class RobotContainer {
         ));
         NamedCommands.registerCommand("Aim", aim);
         NamedCommands.registerCommand("IntakeIn", autoIntakeRollerIn);
+        NamedCommands.registerCommand("IntakeReverse", intakeReverse);
         NamedCommands.registerCommand("IntakeStop", intakeRollersStop);
         NamedCommands.registerCommand("Uptake", uptakeUp);
         NamedCommands.registerCommand("HoodDown", avoidDecapitation);
@@ -359,7 +360,7 @@ public class RobotContainer {
 
         joystick.leftStick().onTrue(intakeArmIn);
 
-        //joystick.rightStick().onTrue()
+        joystick.rightStick().onTrue(avoidDecapitation);
         
         // ---------- Buttonboard Commands ------------ //        
 
@@ -380,9 +381,9 @@ public class RobotContainer {
         m_buttonBoard.button(4).onTrue(uptakeUp);
         m_buttonBoard.button(4).onFalse(uptakeStop);
         m_buttonBoard.button(4).onFalse(intakeArmOut);
-        m_buttonBoard.button(4).whileTrue(new WaitCommand(0.5).andThen(new ForceIntakeArmMid(intakeArm))
-            .andThen(new WaitCommand(0.5)).andThen(new IntakeArmOut(intakeArm))
-            .andThen(new WaitCommand(0.5)).andThen(new IntakeArmInSlow(intakeArm, intakeRollers)));
+        m_buttonBoard.button(4).whileTrue(new WaitCommand(1.5).andThen(new IntakeArmInSlow(intakeArm, intakeRollers))
+            .andThen(new WaitCommand(0.75)).andThen(new IntakeArmOut(intakeArm))
+            .andThen(new WaitCommand(0.75)).andThen(new ForceIntakeArmMid(intakeArm)));
         
         Trigger upcomingShiftWarning = new Trigger(() ->
             ShiftHelpers.isFiveSecBeforeShiftChange(Timer.getMatchTime()) && !ShiftHelpers.currentShiftIsYours()
