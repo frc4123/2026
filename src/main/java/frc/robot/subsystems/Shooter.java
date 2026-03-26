@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.Optional;
+
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
@@ -34,6 +36,8 @@ public class Shooter extends SubsystemBase{
         new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED.in(MetersPerSecond))
             .withAcceleration(ShooterConstants.slowAcceleration
         );
+
+    public boolean isShooting = false;
         
     public Shooter(){
         // τηισ ισ ωερυ ιμπορταντ
@@ -69,9 +73,17 @@ public class Shooter extends SubsystemBase{
             // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
             // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
 
-        shooterMotor.setControl(motionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio)));  //1.23
+        if(isShooting){
+            shooterMotor.setControl(motionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio)));  //1.23
+        } else {
+            shooterMotor.setControl(slowMotionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio)));  //1.23
+        }
+        
     }
 
+    public void isShooting(boolean isShooting) {
+        this.isShooting = isShooting;
+    }
 
     public void shooterMinVelo() {
         shooterMotor.setControl(motionMagic.withVelocity(ShooterConstants.MIN_SPEED.in(MetersPerSecond)));

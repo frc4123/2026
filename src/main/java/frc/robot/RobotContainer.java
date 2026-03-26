@@ -156,8 +156,8 @@ public class RobotContainer {
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
-    private final UptakeUp uptakeUp = new UptakeUp(uptake, turret, sevenEleven);
-    private final UptakeStop uptakeStop = new UptakeStop(uptake);
+    private final UptakeUp uptakeUp = new UptakeUp(uptake, turret, sevenEleven, shooter);
+    private final UptakeStop uptakeStop = new UptakeStop(uptake, shooter);
     //private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
     // private final ClimbUp climbUp = new ClimbUp(climb);
     // private final ClimbDown climbDown = new ClimbDown(climb);
@@ -493,7 +493,7 @@ public class RobotContainer {
             new WaitCommand(2)
 
         ))
-        .andThen(new UptakeUp(uptake, turret, sevenEleven)));
+        .andThen(new UptakeUp(uptake, turret, sevenEleven, shooter)));
 
         autoChooser.addOption("City Boy Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
