@@ -29,6 +29,11 @@ public class Shooter extends SubsystemBase{
         new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED.in(MetersPerSecond))
             .withAcceleration(ShooterConstants.acceleration
         );
+
+    private final VelocityTorqueCurrentFOC slowMotionMagic =
+        new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED.in(MetersPerSecond))
+            .withAcceleration(ShooterConstants.slowAcceleration
+        );
         
     public Shooter(){
         // τηισ ισ ωερυ ιμπορταντ
