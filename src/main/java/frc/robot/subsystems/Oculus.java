@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.OptionalInt;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -104,7 +105,7 @@ public class Oculus extends SubsystemBase{
     public void updateSwerve(){
         //if there are no questFrames then dont crash the robot code
         
-        if( unreadFrames == null || unreadFrames.length <= 0) {return;}
+        if(unreadFrames == null || unreadFrames.length <= 0) {return;}
         // Get the latest pose data frames from the Quest
         // Loop over the pose data frames and send them to the pose estimator
 
@@ -112,16 +113,24 @@ public class Oculus extends SubsystemBase{
 
         if (latestFrame.isTracking()) {
             Pose3d questPose = latestFrame.questPose3d();
-            double timestamp = latestFrame.dataTimestamp();
+        double timestamp = latestFrame.dataTimestamp();
 
-            Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
+        Pose3d robotPose = questPose.transformBy(robotToQuest.inverse());
 
-            swerve.addVisionMeasurement(
-                robotPose.toPose2d(),
-                timestamp,
-                Constants.Quest.QUESTNAV_STD_DEVS
-            );
+        // Compare Quest pose against current swerve odometry estimate
+        double deviation = swerve.getState().Pose.getTranslation()
+            .getDistance(robotPose.toPose2d().getTranslation());
+
+        // Hard reject if Quest disagrees with odometry too much
+        if (deviation > 0.5) return;
+
+        swerve.addVisionMeasurement(
+            robotPose.toPose2d(),
+            timestamp,
+            Constants.Quest.QUESTNAV_STD_DEVS
+        );
         }
+
         // for (PoseFrame questFrame : unreadFrames) {
         //     // Make sure the Quest was tracking the pose for this frame
         //     if (questFrame.isTracking()) {

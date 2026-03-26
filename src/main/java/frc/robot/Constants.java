@@ -343,11 +343,8 @@ public class Constants {
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
         public static final double frontYaw = Math.toRadians(0);
 
-        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(0.02, 0.02, 0.035);
+        public static  Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1.6, 1.6, 3.2);
         public static final double questUpdate = 10.00; //30
-        // Trust down to 2cm in X directio
-        // Trust down to 2cm in Y direction 0.035
-        // Trust down to 2 degrees rotational);
     }   
 
     public static final class VisionConstants {
