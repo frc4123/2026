@@ -288,7 +288,7 @@ public class Constants {
         public static final double kA = 0; 
         
         public static final double acceleration = 1300;
-        public static final double slowAcceleration = 20;
+        public static final double slowAcceleration = 9;
     }
 
     public static final class HoodConstants {
