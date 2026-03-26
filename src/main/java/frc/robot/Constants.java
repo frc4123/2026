@@ -280,9 +280,9 @@ public class Constants {
 
         public static final double shootingTestErrorRatio = 1.2355 + 0.272; //0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
 
-        public static final double kP = 4; 
+        public static final double kP = 12; 
         public static final double kI = 0; 
-        public static final double kD = 0;
+        public static final double kD = 0.0025;
         public static final double kS = 4.00025; 
         public static final double kV = 0.114123;  
         public static final double kA = 0; 
