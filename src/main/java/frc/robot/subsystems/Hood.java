@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
@@ -36,6 +37,13 @@ public class Hood extends SubsystemBase{
         new DynamicMotionMagicTorqueCurrentFOC(
             HoodConstants.stowPosition,
             HoodConstants.velocity,
+            HoodConstants.acceleration
+        );
+
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagicFree =
+        new DynamicMotionMagicTorqueCurrentFOC(
+            HoodConstants.stowPosition,
+            HoodConstants.slowVelocity,
             HoodConstants.acceleration
         );
 
@@ -88,6 +96,11 @@ public class Hood extends SubsystemBase{
 
     public void lowerHood() {
         hoodMotor.setControl(motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees)));
+    }
+
+    public void lowerHoodFree() {
+        hoodMotor.setControl(motionMagicFree.withPosition(HoodConstants.ZERO_HOOD_ANGLE.in(Degrees)));
+
     }
 
     // public double getHoodDegrees(){

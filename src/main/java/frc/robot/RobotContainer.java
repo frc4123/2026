@@ -60,6 +60,7 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.orbit;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
+import frc.robot.commands.hood.ManualReset;
 import frc.robot.commands.intakeArm.ForceIntakeArmMid;
 import frc.robot.commands.intakeArm.IntakeArmIn;
 import frc.robot.commands.intakeArm.IntakeArmInMid;
@@ -155,6 +156,7 @@ public class RobotContainer {
     private final RollReverse rollReverse = new RollReverse(sevenEleven);
     private final HoodAim hoodAim = new HoodAim(hood);
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(hood);
+    private final ManualReset manualReset = new ManualReset(hood);
     private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(shooter);
     private final UptakeUp uptakeUp = new UptakeUp(uptake, turret, sevenEleven, shooter);
     private final UptakeStop uptakeStop = new UptakeStop(uptake, shooter);
@@ -362,6 +364,9 @@ public class RobotContainer {
 
         joystick.rightStick().onTrue(avoidDecapitation);
         joystick.rightStick().onFalse(hoodAim);
+
+        joystick.button(8).onTrue(manualReset);
+        joystick.button(8).onFalse(hoodAim);
         
         // ---------- Buttonboard Commands ------------ //        
 
