@@ -293,7 +293,8 @@ public class Constants {
 
     public static final class HoodConstants {
 
-        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724); // its really 29.359724
+        public static final Angle ZERO_HOOD_ANGLE = Degrees.of(0);
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(35); // its really 29.359724
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);  
 
         public static final Angle MAX_HOOD_SHOT_ANGLE = Degrees.of(60); //65
@@ -307,6 +308,7 @@ public class Constants {
         public static final double kV = 0; 
         public static final double kA = 0;
 
+        public static final double slowVelocity = 40;
         public static final double velocity = 140;
         public static final double acceleration = 300;
 
