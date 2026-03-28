@@ -365,8 +365,8 @@ public class RobotContainer {
         joystick.rightStick().onTrue(avoidDecapitation);
         joystick.rightStick().onFalse(hoodAim);
 
-        joystick.button(8).onTrue(manualReset);
-        joystick.button(8).onFalse(hoodAim);
+        // joystick.button(8).onTrue(manualReset);
+        // joystick.button(8).onFalse(hoodAim);
         
         // ---------- Buttonboard Commands ------------ //        
 

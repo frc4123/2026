@@ -12,7 +12,7 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
@@ -102,6 +102,11 @@ public class Hood extends SubsystemBase{
         hoodMotor.setControl(motionMagicFree.withPosition(HoodConstants.ZERO_HOOD_ANGLE.in(Degrees)));
 
     }
+
+    // public void manualReset() {
+    //     SmartDashboard.put
+    //     hoodMotor.setPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees));
+    // }
 
     // public double getHoodDegrees(){
     //     return hoodPosition.getValueAsDouble();
