@@ -274,7 +274,7 @@ public class Vision extends SubsystemBase {
         double scalar = 1 + (avgDistance * avgDistance * avgDistance / 15.0);
 
         //extra penalty
-        scalar *= 3.0;
+        scalar *= 2.0; //3.0
 
         return baseDevs.times(scalar);
     }
