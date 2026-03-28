@@ -519,6 +519,11 @@ public class RobotContainer {
             new WaitCommand(0.01),
             new SequentialCommandGroup(new orbit().orbitRight())
         ));
+
+        autoChooser.addOption("Orbit Right Delay", new SequentialCommandGroup(
+            new WaitCommand(4).andThen(new orbit().orbitRight())
+        ));
+
         autoChooser.addOption("5m test", new ParallelCommandGroup(
             new WaitCommand(0.01),
             new SequentialCommandGroup(new mtest().metertest())

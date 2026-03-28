@@ -207,11 +207,11 @@ public class Constants {
 
         public  static final double dragCoeff = 1.14123;
 
-        public static final double kP = 20; //20 //either p is too low
+        public static final double kP = 24.5; //20 //either p is too low
         public static final double kI = 1.5; //or I is too  high
         public static final double kD = 20; // or D is too high? lower d and increase i first thing tmr
         public static final double kS = 3;// 3
-        public static final double kV = 5.5;//6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
+        public static final double kV = 6;//5.5, 6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
         public static final double kA = 1;//1.4123;
 
                                     // IN ROTATIONS //
@@ -278,7 +278,7 @@ public class Constants {
 
         public static final double sensorTomechanfismGearTeeth = 1.0 / 1.0; 
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.235; // // 0.24 0.251, 0.25824123, 0.2624123, 0.2675 0.272, 0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
+        public static final double shootingTestErrorRatio = 1.2355 + 0.227; // 0.235 0.24 0.251, 0.25824123, 0.2624123, 0.2675 0.272, 0.235,  0.245, 0.23, 0.21 0.18, 0.15, 0.21 0.225 0.275, 0.2,  0.15
 
         public static final double kP = 12; 
         public static final double kI = 0; 
