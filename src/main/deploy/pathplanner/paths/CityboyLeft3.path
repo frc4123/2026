@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2100073917394467,
-        "y": 5.789326
+        "x": 3.755249158478893,
+        "y": 7.426423705877002
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.112587563682678,
-        "y": 5.813414301310044
+        "x": 8.103697518649927,
+        "y": 7.856267001000729
       },
       "isLocked": false,
-      "linkedName": "CityBoyLeft 2-3"
+      "linkedName": "CityBoyLeft 2.5-3"
     },
     {
       "anchor": {
@@ -42,26 +42,13 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.2551081730769232,
-      "maxWaypointRelativePos": 0.44662839854111425,
-      "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
     }
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Stop Shooting",
-      "waypointRelativePos": 0.3028846153846154,
+      "waypointRelativePos": 0.03097024204244033,
       "endWaypointRelativePos": 1.0,
       "command": {
         "type": "race",
@@ -106,7 +93,7 @@
   "folder": "Cityboy (L)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -43.802
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
