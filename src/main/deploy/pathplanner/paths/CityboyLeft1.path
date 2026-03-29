@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 8.168074281295487,
-        "y": 5.177326
+        "x": 8.168672671033478,
+        "y": 5.2889256959607
       },
       "prevControl": {
-        "x": 8.077567833424308,
-        "y": 5.875547102438137
+        "x": 9.149832378093159,
+        "y": 5.075101096251819
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,8 +60,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.8,
-    "rotation": 64.0
+    "velocity": 0.3,
+    "rotation": 50.673278898676465
   },
   "reversed": false,
   "folder": "Cityboy (L)",

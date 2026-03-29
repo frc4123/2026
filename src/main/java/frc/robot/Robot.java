@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
 import frc.robot.utils.ShotCache;
+import frc.robot.subsystems.Oculus;
 
 public class Robot extends LoggedRobot {
 
@@ -57,8 +58,9 @@ public class Robot extends LoggedRobot {
             SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
             SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
-            SmartDashboard.putNumber("Match Data/TimeLeftInShift",
-            ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
+            SmartDashboard.putNumber("Match Data/TimeLeftInShift", ShiftHelpers.timeLeftInShiftSeconds(defaultPeriodSecs));
+            SmartDashboard.putBoolean("Trust Quest", Oculus.trustQuest());
+            ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime());
         }
     }
 

@@ -38,12 +38,14 @@ public class Shooter extends SubsystemBase{
 
     public boolean isShooting = false;
 
+    public String shootingString = "Shooting Slider";
+
     public double onTheGoSlider = 1.0;
         
     public Shooter(){
         // τηισ ισ ωερυ ιμπορταντ
         configureMotor();
-        SmartDashboard.putNumber("Shooting Slider", 1.0);
+        SmartDashboard.putNumber(shootingString, 1.0);
     }
 
     private void configureMotor() {
@@ -69,16 +71,11 @@ public class Shooter extends SubsystemBase{
 
         ShotData shot = ShotCache.get();
 
-        System.out.println(onTheGoSlider);
-
-
         double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
             / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters))) * onTheGoSlider;
 
             // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
             // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
-
-        
 
         if(isShooting){
             shooterMotor.setControl(motionMagic.withVelocity((Velo * ShooterConstants.shootingTestErrorRatio)));  //1.23
@@ -106,7 +103,7 @@ public class Shooter extends SubsystemBase{
     
     @Override
     public void periodic() {
-     onTheGoSlider = SmartDashboard.getNumber("Shooting Slider", 1.0);
+     onTheGoSlider = SmartDashboard.getNumber(shootingString, 1.0);
      //SmartDashboard.putNumber("Shooting Slider", onTheGoSlider);
     }
 }
