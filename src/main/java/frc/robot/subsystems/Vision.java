@@ -48,6 +48,7 @@ public class Vision extends SubsystemBase {
 
     // Standard deviations (tune these based on camera characteristics)
     private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.2, 0.2, 0.4);
     // the higher the number the less you trust your camera additions
     // third parameter should be double the first 2
 
@@ -169,32 +170,33 @@ public class Vision extends SubsystemBase {
 
         PhotonPipelineResult result = getLatestResults(camera);
         if (result == null) return;
-        
-        List<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
+
+        ArrayList<PhotonTrackedTarget> validTargets = getValidTargets(result, estimator);
+
+        //if (validTargets.isEmpty()) return;
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-        PhotonPipelineResult filteredResult = new PhotonPipelineResult(
-            result.metadata,
-            validTargets,
-            Optional.empty()
-        );
 
-        if (validTargets.size() > 1) {
-        
-            estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
-            
-        } else {
+        /*if (result.getMultiTagResult().isPresent() && validTargets.size() > 1) {
+            estimatedPose = estimator.estimateCoprocMultiTagPose(result);
+        } else {*/
+
+        if(!isTagHub(result)) {
+            return;
+        }
+
             Optional<EstimatedRobotPose> singleTagPose =
-                estimator.estimateLowestAmbiguityPose(filteredResult);
+                estimator.estimateLowestAmbiguityPose(result);
 
             if (singleTagPose.isPresent()) {
                 PhotonTrackedTarget best = result.getBestTarget();
+
                 if (best != null &&
                     best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
                     estimatedPose = singleTagPose;
                 }
             }
-        }
+        //}
 
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
@@ -209,8 +211,8 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    private List<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
-        List<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
+    private ArrayList<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
+        ArrayList<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
         for (PhotonTrackedTarget target : result.getTargets()) {
 
             if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
@@ -252,31 +254,17 @@ public class Vision extends SubsystemBase {
         for (PhotonTrackedTarget target : targets) {
             Optional<Pose3d> tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
             if (tagPose.isEmpty()) continue;
-
-            // Reject low-ambiguity threshold — tune this
-            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) continue;
-
+            
             numTags++;
             totalDistance += tagPose.get().toPose2d().getTranslation()
                 .getDistance(est.estimatedPose.toPose2d().getTranslation());
         }
 
-        if (numTags == 0) return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-
+        if (numTags == 0) return singleTagStdDevs;
+        
         double avgDistance = totalDistance / numTags;
-
-        // Hard reject if too far — tags beyond 4m are unreliable
-        if (avgDistance > 4.0) return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-
-        Matrix<N3, N1> baseDevs = singleTagStdDevs;
-
-        // Aggressive cubic scaling instead of quadratic
-        double scalar = 1 + (avgDistance * avgDistance * avgDistance / 15.0);
-
-        //extra penalty
-        scalar *= 1.8; //1.525, 1.7, 2.0,  3.0
-
-        return baseDevs.times(scalar);
+        Matrix<N3, N1> baseDevs = numTags >= 2 ? multiTagStdDevs : singleTagStdDevs;
+        return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
     }
 
     public Pose3d getHub3D() {
@@ -298,6 +286,7 @@ public class Vision extends SubsystemBase {
 
         } else {return blueHub;}
     }
+
     public Rotation2d getTrenchAngle(double x) {
         if (Field.isBlue()) {
             if (x > 4.63){
