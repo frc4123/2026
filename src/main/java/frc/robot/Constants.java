@@ -96,7 +96,7 @@ public class Constants {
 
         public static final double driverDeadband = 0.05;
 
-        public static final double shootOnTheMoveError = 1.675; //1.75
+        public static final double shootOnTheMoveError = 1.1; // .675, 1.75
 
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
@@ -236,8 +236,8 @@ public class Constants {
         public static final double encoder1Offset = 0; // -0.575684;
         public static final double encoder2Offset = 0;
 
-        public static final double encoder1CRTOffset = 0; // -0.575684;
-        public static final double encoder2CRTOffset = 0; // -0.481281;
+        public static final double encoder1CRTOffset = -0.38256; // -0.575684;
+        public static final double encoder2CRTOffset = -0.047852; // -0.481281;
         //TODO: if the wrap happens to be near the zero measurement (within hundredths check yams for interval confirmation), then RESEAT CANCODERS
                 
         public static final double coverageMargin = 1.2;
