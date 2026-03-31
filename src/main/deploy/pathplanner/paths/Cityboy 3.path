@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2100073917394467,
-        "y": 2.279773301037118
+        "x": 4.407114293981482,
+        "y": 0.5944492910879637
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2100073917394467,
-        "y": 2.2797733010371175
+        "x": 6.518067563657407,
+        "y": 0.586379195601852
       },
       "isLocked": false,
-      "linkedName": "Spear 2-3"
+      "linkedName": "CityBoy 2.5-3"
     },
     {
       "anchor": {
@@ -105,8 +105,8 @@
   "reversed": false,
   "folder": "Cityboy (R)",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 43.80189897113155
+    "velocity": 0.7,
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

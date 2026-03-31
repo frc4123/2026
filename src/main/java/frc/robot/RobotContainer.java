@@ -358,6 +358,8 @@ public class RobotContainer {
         joystick.leftTrigger().onTrue(forceIntakeArmMid);
         joystick.leftTrigger().onFalse(intakeArmOut);
 
+        //TODO make a shot that is independent of pose
+
         joystick.leftStick().onTrue(intakeArmIn);
 
         joystick.rightStick().onTrue(avoidDecapitation);

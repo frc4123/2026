@@ -40,9 +40,9 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 3.5
+                  "pathName": "CityBoyRight2.5"
                 }
               },
               {
@@ -81,13 +81,31 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
                   "pathName": "Cityboy 3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "UptakeStop"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ArmOut"
                 }
               }
             ]

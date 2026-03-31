@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5270439281798245,
-      "rotationDegrees": 26.653177174253244
+      "rotationDegrees": 25.644205631061716
     }
   ],
   "constraintZones": [
@@ -61,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 179.1754438251939
+    "rotation": -41.74643234718218
   },
   "reversed": false,
   "folder": "Cityboy (L)",

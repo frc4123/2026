@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4489144946324597,
-        "y": 5.632301673944687
+        "x": 2.2100073917394467,
+        "y": 2.279773301037118
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.426004267939815,
-        "y": 6.526363136574074
+        "x": 2.2474123987268526,
+        "y": 1.1011594328703713
       },
       "isLocked": false,
-      "linkedName": "CityBoyLeft 2-3"
+      "linkedName": "CityBoy 2-2.5"
     },
     {
       "anchor": {
-        "x": 4.091658854166667,
-        "y": 7.48204615162037
+        "x": 4.407114293981482,
+        "y": 0.5944492910879637
       },
       "prevControl": {
-        "x": 2.868612919560186,
-        "y": 7.204251157407407
+        "x": 3.5583108362268523,
+        "y": 0.8089957320601853
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CityBoyLeft 2.5-3"
+      "linkedName": "CityBoy 2.5-3"
     }
   ],
   "rotationTargets": [],
@@ -45,10 +45,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Cityboy (L)",
+  "folder": "Cityboy (R)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -41.74643234718218
+    "rotation": 43.80189897113155
   },
   "useDefaultConstraints": false
 }
