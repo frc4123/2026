@@ -4,9 +4,8 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
-
 import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 // import com.ctre.phoenix6.HootAutoReplay;
@@ -30,74 +29,83 @@ public class Robot extends LoggedRobot {
 
     // /* log and replay timestamp and joystick data */
     // private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
-    //     .withTimestampReplay()
-    //     .withJoystickReplay();
+    // .withTimestampReplay()
+    // .withJoystickReplay();
 
     public Robot() {
-        m_robotContainer = new RobotContainer();
-        if(Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.Sim) {
+        this.m_robotContainer = new RobotContainer();
+        if (Constants.Sim.CURRENT_MODE == Constants.Sim.Mode.SIM) {
             Logger.addDataReceiver(new NT4Publisher());
             Logger.start();
         }
-        SmartDashboard.putString("Driver Checklist", 
-            ">>   Brady   <<\n 1. Plug in ethernet until click\n2. Make sure controller inputs are in order\n3. Select appropriate auto\n\n>>   Milton & Joseph   <<\n1. Is Battery percentage above 30%\n2. Two PI's are plugged firmly into external battery\n3. Quest is plugged firmly into external battery\n4. Zero Intake\n5.  Zero Hood\n" );
+        SmartDashboard.putString("Driver Checklist",
+                ">>   Brady   <<\n 1. Plug in ethernet until click\n2. Make sure controller inputs are in order\n3. Select appropriate auto\n\n>>   Milton & Joseph   <<\n1. Is Battery percentage above 30%\n2. Two PI's are plugged firmly into external battery\n3. Quest is plugged firmly into external battery\n4. Zero Intake\n5.  Zero Hood\n");
         DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     @Override
     public void robotPeriodic() {
-        //m_timeAndJoystickReplay.update();
-        CommandScheduler.getInstance().run(); 
+        // m_timeAndJoystickReplay.update();
+        CommandScheduler.getInstance().run();
         ShotCache.update();
 
-        // SmartDashboard.putNumber("Target Hood Angle", ShotCache.get().getHoodAngle().in(Degrees));
-        // SmartDashboard.putNumber("Target Exit Velocity", ShotCache.get().getExitVelocity().in(MetersPerSecond));
-        if (++dashboardCounter >= 25) {
-            dashboardCounter = 0;
+        // SmartDashboard.putNumber("Target Hood Angle",
+        // ShotCache.get().getHoodAngle().in(Degrees));
+        // SmartDashboard.putNumber("Target Exit Velocity",
+        // ShotCache.get().getExitVelocity().in(MetersPerSecond));
+        if (++this.dashboardCounter >= 25) {
+            this.dashboardCounter = 0;
             SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
             SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
             SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
             SmartDashboard.putNumber("Match Data/TimeLeftInShift",
-            ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
+                    ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
         }
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+    }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+    }
 
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+    }
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        this.m_autonomousCommand = this.m_robotContainer.getAutonomousCommand();
 
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().schedule(m_autonomousCommand);
+        if (this.m_autonomousCommand != null) {
+            CommandScheduler.getInstance().schedule(this.m_autonomousCommand);
         }
     }
 
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+    }
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+    }
 
     @Override
     public void teleopInit() {
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().cancel(m_autonomousCommand);
+        if (this.m_autonomousCommand != null) {
+            CommandScheduler.getInstance().cancel(this.m_autonomousCommand);
         }
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+    }
 
     @Override
-    public void teleopExit() {}
+    public void teleopExit() {
+    }
 
     @Override
     public void testInit() {
@@ -105,10 +113,12 @@ public class Robot extends LoggedRobot {
     }
 
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+    }
 
     @Override
-    public void testExit() {}
+    public void testExit() {
+    }
 
     @Override
     public void simulationPeriodic() {
