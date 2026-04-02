@@ -1,5 +1,13 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.List;
 import java.util.Set;
 
 import com.ctre.phoenix6.CANBus;
@@ -34,46 +42,46 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final CANBus canivore = new CANBus("Good Boy CANivore 10");
+        public static final CANBus CARNIVORE = new CANBus("Good Boy CANivore 10");
 
-        public static final int Front_Left_Drive = 2;
-        public static final int Front_Right_Drive = 3;
-        public static final int Back_Left_Drive = 4;
-        public static final int Back_Right_Drive = 5;
+        public static final int FRONT_LEFT_DRIVE = 2;
+        public static final int FRONT_RIGHT_DRIVE = 3;
+        public static final int BACK_LEFT_DRIVE = 4;
+        public static final int BACK_RIGHT_DRIVE = 5;
         // drive motors - order - start top left in clockwise rotation
 
-        public static final int Front_Left_Turn = 6;
-        public static final int Front_Right_Turn = 7;
-        public static final int Back_Left_Turn = 8;
-        public static final int Back_Right_Turn = 9;
+        public static final int FRONT_LEFT_TURN = 6;
+        public static final int FRONT_RIGHT_TURN = 7;
+        public static final int BACK_LEFT_TURN = 8;
+        public static final int BACK_RIGHT_TURN = 9;
         // turn motors - order - start top left in clockwise rotation
 
-        public static final int Pigeon = 10;
+        public static final int PIGEON = 10;
 
-        public static final int Front_Left_CANcoder = 11;
-        public static final int Front_Right_CANcoder = 12;
-        public static final int Back_Left_CANcoder = 13;
-        public static final int Back_Right_CANcoder = 14;
+        public static final int FRONT_LEFT_CANCODER = 11;
+        public static final int FRONT_RIGHT_CANCODER = 12;
+        public static final int BACK_LEFT_CANCODER = 13;
+        public static final int BACK_RIGHT_CANCODER = 14;
 
-        public static final int Turret = 15;
-        public static final int Turret_Encoder1 = 16;
-        public static final int Turret_Encoder2 = 17;
+        public static final int TURRET = 15; // whats turret?
+        public static final int TURRET_ENCODER_1 = 16;
+        public static final int TURRET_ENCODER_2 = 17;
 
-        public static final int Intake_CANdi = 18;
+        public static final int INTAKE_CANDI = 18;
 
-        public static final int Intake_Arm = 19;
+        public static final int INTAKE_ARM = 19;
 
-        public static final int Intake_Roller = 20;
+        public static final int INTAKE_ROLLER = 20;
 
-        public static final int Hood = 21;
+        public static final int HOOD = 21;
 
-        public static final int Shooter = 23;
+        public static final int SHOOTER = 23;
 
-        public static final int Climb = 24;
+        public static final int CLIMB = 24;
 
-        public static final int SevenEleven = 25;
+        public static final int SEVEN_ELEVEN = 25;
 
-        public static final int Uptake = 26;
+        public static final int UPTAKE = 26;
     }
 
     public static final class InputConstants {
@@ -84,8 +92,8 @@ public class Constants {
         public static final int kDriverControllerPort0 = 0;
         public static final int kDriverControllerPort1 = 1;
         public static final int kDriverControllerPort2 = 2;
-        public static final boolean fieldOrientation = true;
-        public static final double kDeadband = 0.028;
+        public static final boolean FIELD_ORIENTATION = true;
+        public static final double DEADBAND = 0.028;
     }
 
     public static final class SwerveConstants {
@@ -101,9 +109,9 @@ public class Constants {
         public static final double CLOSE_ROTATION_PP_KI = 0.0;
         public static final double CLOSE_ROTATION_PP_KD = 0.0;
 
-        public static final double driverDeadband = 0.05;
+        public static final double DRIVER_DEADBAND = 0.05;
 
-        public static final double shootOnTheMoveError = 1.1; // .675, 1.75
+        public static final double SHOOT_ON_THE_MOVE_ERROR = 1.1; // .675, 1.75
 
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996,
                 new Rotation2d(0 * Math.PI / 180.0)); // id 31
@@ -128,8 +136,8 @@ public class Constants {
         }
 
         public static final CANdi intakeCANdi = new CANdi(
-                Constants.CanIdCanivore.Intake_CANdi,
-                Constants.CanIdCanivore.canivore);
+                Constants.CanIdCanivore.INTAKE_CANDI,
+                Constants.CanIdCanivore.CARNIVORE);
 
         static {
             IntakeArmConstants.intakeCANdi.optimizeBusUtilization();
@@ -161,15 +169,15 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final Distance STOW_POS = edu.wpi.first.units.Units.Inches.of(0);
-        public static final Distance DEPLOY_POS = edu.wpi.first.units.Units.Inches.of(10.875);
-        public static final Voltage SPIN_VOLTAGE = edu.wpi.first.units.Units.Volts.of(3);
+        public static final Distance STOW_POS = Inches.of(0);
+        public static final Distance DEPLOY_POS = Inches.of(10.875);
+        public static final Voltage SPIN_VOLTAGE = Volts.of(3);
 
         public static final double VEL_MULTIPLIER = 70.0; // multiplies goal velocity for targetting
         public static final double VEL_POWER = 0.3; // raises goal velocity to power
-        public static final LinearVelocity BASE_VEL = edu.wpi.first.units.Units.InchesPerSecond.of(50); // added to
-                                                                                                        // final
-                                                                                                        // velocity
+        public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to
+        // final
+        // velocity
 
         public static final double zeroVelo = 0;
         public static final double intakeVelo = 60; // was 60, 31
@@ -228,11 +236,11 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double stowPosition = 0;
-        public static final double velocity = 4; // 3
-        public static final double acceleration = 8; // 6
+        public static final double STOW_POSITION = 0;
+        public static final double VELOCITY = 4; // 3
+        public static final double ACCELERATION = 8; // 6
 
-        public static final double dragCoeff = 1.14123;
+        public static final double DRAG_COEFF = 1.14123;
 
         public static final double kP = 20; // 20 //either p is too low
         public static final double kI = 1.5; // or I is too high
@@ -243,62 +251,67 @@ public class Constants {
         public static final double kA = 1;// 1.4123;
 
         // IN ROTATIONS //
-        public static final double mechanismMinRange = -37.0 / 72.0; // -1 is -360 degrees
-        public static final double mechanismMaxRange = 37.0 / 72.0; // 1 is +360 degrees
+        public static final double MECHANISM_MIN_RANGE = -37.0 / 72.0; // -1 is -360 degrees
+        public static final double MECHANISM_MAX_RANGE = 37.0 / 72.0; // 1 is +360 degrees
         // this makes total of 720 degrees rotation^^^^
 
-        public static final double mechanismGearTeeth = 85.0; // drives botrh encoders
-        public static final double encoder1Teeth = 10.0; // 24.0; // Gear on Hex Shaft A that connects to turret
-        public static final double encoder2Teeth = 22.0; // 10.0 / (50.0/22.0); // 22.0;
-        public static final double turretDrivingGear = 10.0;
-        public static final double fiftyTGear = 50.0;
+        public static final int MECHANISM_GEAR_TEETH = 85; // drives botrh encoders
+        public static final int ENCODER_1_GEAR_TEETH = 10; // 24.0; // Gear on Hex Shaft A that connects to turret
+        public static final int ENCODER_2_GEAR_TEETH = 22; // 10.0 / (50.0/22.0); // 22.0;
+        public static final int TURRET_DRIVE_GEAR_TEETH = 10;
+        public static final int FIFTY_TOOTH_GEAR = 50;
 
-        public static final double motorToTurretRatio = (TurretConstants.fiftyTGear / TurretConstants.turretDrivingGear)
-                * (TurretConstants.mechanismGearTeeth / TurretConstants.encoder1Teeth);// (48.0/9.0) * (180.0/24.0);
+        public static final double MOTOR_TO_TURRET_RATIO = (TurretConstants.FIFTY_TOOTH_GEAR
+                / (double) TurretConstants.TURRET_DRIVE_GEAR_TEETH)
+                * (TurretConstants.MECHANISM_GEAR_TEETH / (double) TurretConstants.ENCODER_1_GEAR_TEETH);// (48.0/9.0) *
+        // (180.0/24.0);
 
-        public static final double rotorToEncoder1Ratio = (TurretConstants.fiftyTGear
-                / TurretConstants.turretDrivingGear); // 48.0 / 9.0;
-        public static final double sensorToMechanismRatio = (TurretConstants.mechanismGearTeeth
-                / TurretConstants.encoder1Teeth); // 180.0 / 24.0;
-        public static final double sensor2ToMechanismRatio = ((TurretConstants.mechanismGearTeeth
-                / TurretConstants.encoder1Teeth)
-                * (TurretConstants.fiftyTGear / TurretConstants.encoder2Teeth));
+        public static final double ROTOR_TO_ENCODER_1_RATION = (TurretConstants.FIFTY_TOOTH_GEAR
+                / TurretConstants.TURRET_DRIVE_GEAR_TEETH); // 48.0 / 9.0;
+        public static final double SENSOR_TO_MECHANISM_RATIO = (TurretConstants.MECHANISM_GEAR_TEETH
+                / TurretConstants.ENCODER_1_GEAR_TEETH); // 180.0 / 24.0;
+        public static final double SENSOR_2_TO_MECHANISM_RATIO = ((TurretConstants.MECHANISM_GEAR_TEETH
+                / TurretConstants.ENCODER_1_GEAR_TEETH)
+                * (TurretConstants.FIFTY_TOOTH_GEAR / TurretConstants.ENCODER_2_GEAR_TEETH));
 
         // public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth)
         // * (50.0 / encoder2Teeth); // Gear on Hex Shaft B that connects to turret
 
-        public static final double encoder1Offset = 0; // -0.575684;
-        public static final double encoder2Offset = 0;
+        public static final double ENCODER_1_OFFSET = 0; // -0.575684;
+        public static final double ENCODER_2_OFFSET = 0;
 
-        public static final double encoder1CRTOffset = -0.09668; // -0.575684;
-        public static final double encoder2CRTOffset = -0.165283; // -0.481281;
+        public static final double ENCODER_1_CRT_OFFSET = -0.09668; // -0.575684;
+        public static final double ENCODER_2_CRT_OFFSET = -0.165283; // -0.481281;
         // TODO: if the wrap happens to be near the zero measurement (within hundredths
         // check yams for interval confirmation), then RESEAT CANCODERS
 
-        public static final double coverageMargin = 1.2;
-        public static final int minTeeth = 1;
-        public static final int maxTeeth = 1;
-        public static final int maxIterations = 30;
+        public static final double COVERAGE_MARGIN = 1.2;
+        public static final int MIN_TEETH = 1;
+        public static final int MAX_TEETH = 1;
+        public static final int MAX_ITERATIONS = 30;
 
-        public static final double offsetX = Units.inchesToMeters(7);
-        public static final double offsetY = Units.inchesToMeters(0);
-        public static final double offsetZ = Units.inchesToMeters(21);
+        // this should be a type
+        public static final double OFFSET_X = Units.inchesToMeters(7);
+        public static final double OFFSET_Y = Units.inchesToMeters(0);
+        public static final double OFFSET_Z = Units.inchesToMeters(21);
 
-        public static final double tagOffset = Units.inchesToMeters(47 / 2);
-        public static final double[] validTurretTagsBlue = { 21, 26, 18 };
-        public static final double[] validTurretTagsRed = { 2, 10, 5 };
+        // offset to...?
+        public static final double TAG_OFFSET = Units.inchesToMeters(47 / (double) 2);
+        // whats this?
+        public static final List<Integer> VALID_TURRET_TAGS_BLUE = List.of(21, 26, 18);
+        public static final List<Integer> VALID_TURRET_TAGS_RED = List.of(2, 5, 10);
 
-        public static final Translation2d turretOffset = new Translation2d(TurretConstants.offsetX,
-                TurretConstants.offsetY);
-        public static final Pose3d robotToTurret = new Pose3d(TurretConstants.offsetX, TurretConstants.offsetY,
-                TurretConstants.offsetZ, new Rotation3d());
+        public static final Translation2d turretOffset = new Translation2d(TurretConstants.OFFSET_X,
+                TurretConstants.OFFSET_Y);
+        public static final Pose3d robotToTurret = new Pose3d(TurretConstants.OFFSET_X, TurretConstants.OFFSET_Y,
+                TurretConstants.OFFSET_Z, new Rotation3d());
         public static final Transform3d transform3D = new Transform3d(TurretConstants.robotToTurret, new Pose3d());
 
         public static final Transform2d robotToTurretTransform = new Transform2d(
                 TurretConstants.robotToTurret.getTranslation().toTranslation2d(),
                 TurretConstants.robotToTurret.getRotation().toRotation2d());
 
-        public static final Distance DISTANCE_ABOVE_FUNNEL = edu.wpi.first.units.Units.Inches.of(6); // was 20
+        public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(6); // was 20
     }
 
     public static final class ShooterConstants {
@@ -306,20 +319,21 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final LinearVelocity MIN_SPEED = edu.wpi.first.units.Units.MetersPerSecond.of(6);
+        public static final LinearVelocity MIN_SPEED = MetersPerSecond.of(6);
 
-        public static final Distance flywheelRadius = edu.wpi.first.units.Units.Inches.of(2.03);
+        public static final Distance FLYWHEEL_RADIUS = Inches.of(2.03);
 
-        public static final double metersPerRotation = 2.0 * Math.PI
-                * ShooterConstants.flywheelRadius.in(edu.wpi.first.units.Units.Meters);
+        public static final double METERS_PER_ROTATION = 2.0 * Math.PI
+                * ShooterConstants.FLYWHEEL_RADIUS.in(Meters);
 
-        public static final Distance compression = edu.wpi.first.units.Units.Inches.of(0.25);
+        public static final Distance compression = Inches.of(0.25);
 
-        public static final double sensorTomechanfismGearTeeth = 1.0 / 1.0;
+        public static final double SENSOR_TO_MECHANISM_GEAR_TEETH = 1.0;
 
-        public static final double shootingTestErrorRatio = 1.2355 + 0.25824123; // 0.2624123, 0.2675 0.272, 0.235,
-                                                                                 // 0.245, 0.23, 0.21 0.18, 0.15, 0.21
-                                                                                 // 0.225 0.275, 0.2, 0.15
+        public static final double SHOOTING_TEST_ERROR_RATIO = 1.2355 + 0.25824123; // 0.2624123, 0.2675 0.272, 0.235,
+                                                                                    // 0.245, 0.23, 0.21 0.18, 0.15,
+                                                                                    // 0.21
+                                                                                    // 0.225 0.275, 0.2, 0.15
 
         public static final double kP = 12;
         public static final double kI = 0;
@@ -328,8 +342,8 @@ public class Constants {
         public static final double kV = 0.114123;
         public static final double kA = 0;
 
-        public static final double acceleration = 1300;
-        public static final double slowAcceleration = 9;
+        public static final double ACCELERATION = 1300;
+        public static final double SLOW_ACCELERATION = 9;
     }
 
     public static final class HoodConstants {
@@ -337,12 +351,13 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724); // its really 29.359724
+        public static final Angle ZERO_HOOD_ANGLE = Degrees.of(0);
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(35); // its really 29.359724
         public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);
 
-        public static final Angle MAX_HOOD_SHOT_ANGLE = edu.wpi.first.units.Units.Degrees.of(60); // 65
+        public static final Angle MAX_HOOD_SHOT_ANGLE = Degrees.of(60); // 65
 
-        public static final double sensorToMechanismRatio = 136.0 / 1.0;
+        public static final double SENSOR_TO_MECHANISM_RATIO = 136.0 / 1.0;
 
         public static final double kP = 13;
         public static final double kI = 0.051;
@@ -355,7 +370,7 @@ public class Constants {
         public static final double velocity = 140;
         public static final double acceleration = 300;
 
-        public static final double stowPosition = HoodConstants.MAX_HOOD_ANGLE.in(edu.wpi.first.units.Units.Degrees);
+        public static final double STOW_POSITION = HoodConstants.MAX_HOOD_ANGLE.in(Degrees);
     }
 
     public static final class ClimbConstants {
@@ -393,7 +408,7 @@ public class Constants {
         public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
         public static final double frontYaw = Math.toRadians(0);
 
-        public static Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1.6, 1.6, 3.2);
+        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1.6, 1.6, 3.2);
         public static final double questUpdate = 10.00; // 30
     }
 
@@ -525,23 +540,24 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final int[] BLUE_TAGS = { 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 };
-        public static final int[] RED_TAGS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+        public static final Set<Integer> BLUE_TAGS = Set.of(17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+                32);
+        public static final Set<Integer> RED_TAGS = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 
         public static final Set<Integer> RED_HUB_TAG_IDS = Set.of(2, 3, 4, 5, 8, 9, 10, 11);
         public static final Set<Integer> BLUE_HUB_TAG_IDS = Set.of(18, 19, 20, 21, 24, 25, 26, 27);
 
-        public static final Distance FIELD_LENGTH = edu.wpi.first.units.Units.Inches.of(650.12);
-        public static final Distance FIELD_WIDTH = edu.wpi.first.units.Units.Inches.of(316.64);
+        public static final Distance FIELD_LENGTH = Inches.of(650.12);
+        public static final Distance FIELD_WIDTH = Inches.of(316.64);
 
-        public static final Distance ALLIANCE_ZONE = edu.wpi.first.units.Units.Inches.of(156.06);
+        public static final Distance ALLIANCE_ZONE = Inches.of(156.06);
 
         // public static final Translation3d HUB_BLUE =
         // new Translation3d(Inches.of(181.56), FIELD_WIDTH.div(2), Inches.of(56.4));
         // public static final Translation3d HUB_RED =
         // new Translation3d(FIELD_LENGTH.minus(Inches.of(181.56)), FIELD_WIDTH.div(2),
         // Inches.of(56.4));
-        public static final Distance FUNNEL_RADIUS = edu.wpi.first.units.Units.Inches.of(24);
-        public static final Distance FUNNEL_HEIGHT = edu.wpi.first.units.Units.Inches.of(72 - 56.4);
+        public static final Distance FUNNEL_RADIUS = Inches.of(24);
+        public static final Distance FUNNEL_HEIGHT = Inches.of(72 - 56.4);
     }
 }

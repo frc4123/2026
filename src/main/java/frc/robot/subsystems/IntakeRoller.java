@@ -1,63 +1,57 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
-import frc.robot.Constants.IntakeRollerConstants;
-
 import static frc.robot.Constants.IntakeRollerConstants.intakeVelo;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
-
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.IntakeRollerConstants;
 
-
-public class IntakeRoller extends SubsystemBase{
+public class IntakeRoller extends SubsystemBase {
 
     private final TalonFX intakeRollerMotor = new TalonFX(
-        Constants.CanIdCanivore.Intake_Roller,
-        Constants.CanIdCanivore.canivore
-    );
+            Constants.CanIdCanivore.INTAKE_ROLLER,
+            Constants.CanIdCanivore.CARNIVORE);
     // Motion Magic controller object
 
-    private final MotionMagicVelocityVoltage motionMagic =
-        new MotionMagicVelocityVoltage(IntakeRollerConstants.zeroVelo)
-           .withVelocity(IntakeRollerConstants.intakeVelo)
-           .withAcceleration(IntakeRollerConstants.intakeAcc
-        );
+    private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(
+            IntakeRollerConstants.zeroVelo)
+            .withVelocity(IntakeRollerConstants.intakeVelo)
+            .withAcceleration(IntakeRollerConstants.intakeAcc);
 
-    public IntakeRoller(){
+    public IntakeRoller() {
         // τηισ ισ ωερυ ιμπορταντ
-        configureMotor();
+        this.configureMotor();
     }
 
     private void configureMotor() {
-        intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
+        this.intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
 
-        Slot0Configs pid = new Slot0Configs()
-            .withKP(IntakeRollerConstants.kP)
-            .withKI(IntakeRollerConstants.kI)
-            .withKD(IntakeRollerConstants.kD)
-            .withKS(IntakeRollerConstants.kS)
-            .withKV(IntakeRollerConstants.kV)
-            .withKA(IntakeRollerConstants.kA);
+        final Slot0Configs pid = new Slot0Configs()
+                .withKP(IntakeRollerConstants.kP)
+                .withKI(IntakeRollerConstants.kI)
+                .withKD(IntakeRollerConstants.kD)
+                .withKS(IntakeRollerConstants.kS)
+                .withKV(IntakeRollerConstants.kV)
+                .withKA(IntakeRollerConstants.kA);
 
-        intakeRollerMotor.getConfigurator().apply(pid);
+        this.intakeRollerMotor.getConfigurator().apply(pid);
     }
 
-    public void setIntakeVelo(double velo){
-        intakeRollerMotor.setControl(  
-            motionMagic.withVelocity(velo));
+    public void setIntakeVelo(final double velo) {
+        this.intakeRollerMotor.setControl(
+                this.motionMagic.withVelocity(velo));
     }
 
     public boolean isIntaking() {
-        return intakeRollerMotor.getVelocity().getValueAsDouble() > intakeVelo * 0.3;
+        return this.intakeRollerMotor.getVelocity().getValueAsDouble() > intakeVelo * 0.3;
     }
 
     public double getIntakeVelo() {
-        return intakeRollerMotor.getVelocity().getValueAsDouble();
+        return this.intakeRollerMotor.getVelocity().getValueAsDouble();
     }
 }

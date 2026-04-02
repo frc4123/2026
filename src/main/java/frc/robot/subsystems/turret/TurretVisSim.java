@@ -123,8 +123,8 @@ public class TurretVisSim extends SubsystemBase {
 
         // Turret offset in robot coordinates (2D for horizontal, separate Z)
         final Translation2d turretOffset2d = new Translation2d(
-                Constants.TurretConstants.offsetX,
-                Constants.TurretConstants.offsetY);
+                Constants.TurretConstants.OFFSET_X,
+                Constants.TurretConstants.OFFSET_Y);
 
         // Rotate by robot heading
         final Translation2d rotatedOffset2d = turretOffset2d.rotateBy(robotHeading);
@@ -133,7 +133,7 @@ public class TurretVisSim extends SubsystemBase {
         return new Translation3d(
                 robot.getX() + rotatedOffset2d.getX(),
                 robot.getY() + rotatedOffset2d.getY(),
-                robot.getZ() + Constants.TurretConstants.offsetZ);
+                robot.getZ() + Constants.TurretConstants.OFFSET_Z);
     }
 
     public Command repeatedlyLaunchFuel(
@@ -264,14 +264,14 @@ public class TurretVisSim extends SubsystemBase {
 
         // Wrap azimuth angle relative to ±360° of turret limits
         double azimuthDeg = Math.toDegrees(azimuthToTarget);
-        while (azimuthDeg > TurretConstants.mechanismMaxRange * 360.0)
+        while (azimuthDeg > TurretConstants.MECHANISM_MAX_RANGE * 360.0)
             azimuthDeg -= 360.0;
-        while (azimuthDeg < TurretConstants.mechanismMinRange * 360.0)
+        while (azimuthDeg < TurretConstants.MECHANISM_MIN_RANGE * 360.0)
             azimuthDeg += 360.0;
 
         // Clamp to physical limits
-        azimuthDeg = Math.max(TurretConstants.mechanismMinRange * 360.0,
-                Math.min(TurretConstants.mechanismMaxRange * 360.0, azimuthDeg));
+        azimuthDeg = Math.max(TurretConstants.MECHANISM_MIN_RANGE * 360.0,
+                Math.min(TurretConstants.MECHANISM_MAX_RANGE * 360.0, azimuthDeg));
 
         azimuthToTarget = Math.toRadians(azimuthDeg);
 

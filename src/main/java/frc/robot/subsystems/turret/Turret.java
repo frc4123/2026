@@ -49,13 +49,13 @@ import yams.units.EasyCRTConfig;
 public class Turret extends SubsystemBase {
 
     // Motor controlling turret rotation
-    private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.Turret, Constants.CanIdCanivore.canivore);
+    private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.TURRET, Constants.CanIdCanivore.CARNIVORE);
 
     // Absolute turret encoder
-    private final CANcoder turretEncoder1 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder1,
-            Constants.CanIdCanivore.canivore);
-    private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.Turret_Encoder2,
-            Constants.CanIdCanivore.canivore);
+    private final CANcoder turretEncoder1 = new CANcoder(Constants.CanIdCanivore.TURRET_ENCODER_1,
+            Constants.CanIdCanivore.CARNIVORE);
+    private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.TURRET_ENCODER_2,
+            Constants.CanIdCanivore.CARNIVORE);
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -73,9 +73,9 @@ public class Turret extends SubsystemBase {
 
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            TurretConstants.stowPosition,
-            TurretConstants.velocity,
-            TurretConstants.acceleration);
+            TurretConstants.STOW_POSITION,
+            TurretConstants.VELOCITY,
+            TurretConstants.ACCELERATION);
 
     // Make sure these are initialized in your constructor:
     // private final StatusSignal<Angle> motorPositionSignal =
@@ -93,8 +93,8 @@ public class Turret extends SubsystemBase {
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal =
     // turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
-    private final double minCumulativeAngle = TurretConstants.mechanismMinRange * 360.0;
-    private final double maxCumulativeAngle = TurretConstants.mechanismMaxRange * 360.0;
+    private final double minCumulativeAngle = TurretConstants.MECHANISM_MIN_RANGE * 360.0;
+    private final double maxCumulativeAngle = TurretConstants.MECHANISM_MAX_RANGE * 360.0;
 
     // Cumulative turret angle tracking
     private double cumulativeAngle;
@@ -137,11 +137,11 @@ public class Turret extends SubsystemBase {
         final TalonFXConfiguration feedbackUnits = new TalonFXConfiguration();
 
         feedbackUnits.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        feedbackUnits.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.Turret_Encoder1;
+        feedbackUnits.Feedback.FeedbackRemoteSensorID = Constants.CanIdCanivore.TURRET_ENCODER_1;
         feedbackUnits.Feedback.FeedbackRotorOffset = 0;
 
-        feedbackUnits.Feedback.RotorToSensorRatio = TurretConstants.rotorToEncoder1Ratio;
-        feedbackUnits.Feedback.SensorToMechanismRatio = TurretConstants.sensorToMechanismRatio;
+        feedbackUnits.Feedback.RotorToSensorRatio = TurretConstants.ROTOR_TO_ENCODER_1_RATION;
+        feedbackUnits.Feedback.SensorToMechanismRatio = TurretConstants.SENSOR_TO_MECHANISM_RATIO;
 
         // Configure the rest of your motor settings
         feedbackUnits.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -173,7 +173,7 @@ public class Turret extends SubsystemBase {
         final MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
                 .withAbsoluteSensorDiscontinuityPoint(1.0)
                 .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) // TODO: check which is which
-                .withMagnetOffset(TurretConstants.encoder1Offset); // Set the offset here
+                .withMagnetOffset(TurretConstants.ENCODER_1_OFFSET); // Set the offset here
 
         final CANcoderConfiguration config1 = new CANcoderConfiguration()
                 .withMagnetSensor(magnetConfig1);
@@ -184,7 +184,7 @@ public class Turret extends SubsystemBase {
         final MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
                 .withAbsoluteSensorDiscontinuityPoint(1.0)
                 .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) // TODO: check which is which
-                .withMagnetOffset(TurretConstants.encoder2Offset); // Set the offset here
+                .withMagnetOffset(TurretConstants.ENCODER_2_OFFSET); // Set the offset here
 
         final CANcoderConfiguration config2 = new CANcoderConfiguration()
                 .withMagnetSensor(magnetConfig2);
@@ -223,11 +223,12 @@ public class Turret extends SubsystemBase {
                 .of(this.encoder2AbsolutePositionSignal.getValueAsDouble());
 
         final var easyCrt = new EasyCRTConfig(enc1Supplier, enc2Supplier)
-                .withEncoderRatios(TurretConstants.sensorToMechanismRatio, TurretConstants.sensor2ToMechanismRatio)
-                .withAbsoluteEncoderOffsets(Units.Rotations.of(TurretConstants.encoder1CRTOffset),
-                        Units.Rotations.of(TurretConstants.encoder2CRTOffset)) // WE ALREADY FLASHED OFFSETS
-                .withMechanismRange(Units.Rotations.of(TurretConstants.mechanismMinRange - 0.07),
-                        Units.Rotations.of(TurretConstants.mechanismMaxRange + 0.07))
+                .withEncoderRatios(TurretConstants.SENSOR_TO_MECHANISM_RATIO,
+                        TurretConstants.SENSOR_2_TO_MECHANISM_RATIO)
+                .withAbsoluteEncoderOffsets(Units.Rotations.of(TurretConstants.ENCODER_1_CRT_OFFSET),
+                        Units.Rotations.of(TurretConstants.ENCODER_2_CRT_OFFSET)) // WE ALREADY FLASHED OFFSETS
+                .withMechanismRange(Units.Rotations.of(TurretConstants.MECHANISM_MIN_RANGE - 0.07),
+                        Units.Rotations.of(TurretConstants.MECHANISM_MAX_RANGE + 0.07))
                 .withMatchTolerance(Units.Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure
                                                               // about this so prolly js keep tts as it is or research
                                                               // //TODO: research
@@ -286,7 +287,7 @@ public class Turret extends SubsystemBase {
 
         // Current encoder reading using THE SAME MATH as updateCumulativeAngle()
         final double currentEncoderDegrees = this.encoder1PositionSignal.getValueAsDouble() * 360.0
-                / TurretConstants.sensorToMechanismRatio;
+                / TurretConstants.SENSOR_TO_MECHANISM_RATIO;
 
         // Calculate offset: 87° - 3° = 84° offset
         this.initOffsetDegrees = this.cumulativeAngle - currentEncoderDegrees;
@@ -301,7 +302,7 @@ public class Turret extends SubsystemBase {
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
         this.cumulativeAngle = this.initOffsetDegrees
-                + (this.encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.sensorToMechanismRatio);
+                + (this.encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.SENSOR_TO_MECHANISM_RATIO);
     }
 
     public Rotation2d targetAngle(final Pose2d robotPose) {
