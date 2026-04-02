@@ -103,7 +103,7 @@ public class Constants {
 
         public static final double driverDeadband = 0.05;
 
-        public static final double shootOnTheMoveError = 1.675; // 1.75
+        public static final double shootOnTheMoveError = 1.1; // .675, 1.75
 
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996,
                 new Rotation2d(0 * Math.PI / 180.0)); // id 31
@@ -192,7 +192,7 @@ public class Constants {
         public static final double zeroVelo = 0;
         public static final double sevenElevenLowVelo = 25; // 9
         public static final double sevenElevenMidVelo = 37; // 12
-        public static final double sevenElevenHighVelo = 90; // 45
+        public static final double sevenElevenHighVelo = 60; // 90, 5
         public static final double sevenElevenReverseVelo = -20;
 
         public static final double sevenElevenAcc = 60;// 25 //7, //30
@@ -337,9 +337,8 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final Angle MIN_HOOD_ANGLE = edu.wpi.first.units.Units.Degrees.of(29.359724); // its really
-                                                                                                    // 29.359724
-        public static final Angle MAX_HOOD_ANGLE = edu.wpi.first.units.Units.Degrees.of(71.359724);
+        public static final Angle MIN_HOOD_ANGLE = Degrees.of(29.359724); // its really 29.359724
+        public static final Angle MAX_HOOD_ANGLE = Degrees.of(71.359724);
 
         public static final Angle MAX_HOOD_SHOT_ANGLE = edu.wpi.first.units.Units.Degrees.of(60); // 65
 
@@ -352,6 +351,7 @@ public class Constants {
         public static final double kV = 0;
         public static final double kA = 0;
 
+        public static final double slowVelocity = 40;
         public static final double velocity = 140;
         public static final double acceleration = 300;
 

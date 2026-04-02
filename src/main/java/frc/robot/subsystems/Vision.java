@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -21,11 +22,14 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -63,6 +67,7 @@ public class Vision extends SubsystemBase {
     // Standard deviations (tune these based on camera characteristics)
     // third parameter should be double the first 2
     private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.2, 0.2, 0.4);
     // the higher the number the less you trust your camera additions
     private int camProcessorCounter = 0;
 
@@ -177,23 +182,24 @@ public class Vision extends SubsystemBase {
     private void processVision(final PhotonCamera camera, final PhotonPoseEstimator estimator) {
 
         final PhotonPipelineResult result = Vision.getLatestResults(camera);
-        if (result == null)
-            return;
-
-        final List<PhotonTrackedTarget> validTargets = this.getValidTargets(result);
+        if (result == null) return;
+        
+        final List<PhotonTrackedTarget> validTargets = this.getValidTargets(result, estimator);
 
         Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
         final PhotonPipelineResult filteredResult = new PhotonPipelineResult(
-                result.metadata,
-                validTargets,
-                Optional.empty());
+            result.metadata,
+            validTargets,
+            Optional.empty()
+        );
 
         if (validTargets.size() > 1) {
-
+        
             estimatedPose = estimator.estimateCoprocMultiTagPose(filteredResult);
-
+            
         } else {
-            final Optional<EstimatedRobotPose> singleTagPose = estimator.estimateLowestAmbiguityPose(filteredResult);
+            final Optional<EstimatedRobotPose> singleTagPose =
+                estimator.estimateLowestAmbiguityPose(filteredResult);
 
             if (singleTagPose.isPresent()) {
                 final PhotonTrackedTarget best = result.getBestTarget();
@@ -202,7 +208,7 @@ public class Vision extends SubsystemBase {
                     estimatedPose = singleTagPose;
                 }
             }
-        }
+        //}
 
         if (estimatedPose.isPresent()) {
             final EstimatedRobotPose est = estimatedPose.get();
@@ -216,8 +222,8 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    private List<PhotonTrackedTarget> getValidTargets(final PhotonPipelineResult result) {
-        final List<PhotonTrackedTarget> validTargets = new ArrayList<>();
+    private List<PhotonTrackedTarget> getValidTargets(final PhotonPipelineResult result, final PhotonPoseEstimator estimator) {
+        final List<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
         for (final PhotonTrackedTarget target : result.getTargets()) {
 
             // this is reallllly tiny
@@ -237,9 +243,11 @@ public class Vision extends SubsystemBase {
 
         for (final PhotonTrackedTarget target : targets) {
             final Optional<Pose3d> tagPose = this.aprilTagFieldLayout.getTagPose(target.getFiducialId());
+            if (tagPose.isEmpty())
+                continue;
+
             // Reject low-ambiguity threshold — tune this
-            final var hasHighAmbiguity = target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold;
-            if (tagPose.isEmpty() || hasHighAmbiguity)
+            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold)
                 continue;
 
             numTags++;
@@ -265,5 +273,75 @@ public class Vision extends SubsystemBase {
         scalar *= 3.0;
 
         return baseDevs.times(scalar);
+    }
+
+    public Pose3d getHub3D() {
+        if (isBlue == false && isRed == false) {
+            if (DriverStation.isDSAttached()) {
+                isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
+                isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+            } else {
+                isBlue = false;
+                isRed = false;
+            }
+        }
+
+        final Pose3d blueHub = VisionConstants.blueHub;
+        final Pose3d redHub = VisionConstants.redHub;
+
+        if (isRed) {
+            return redHub;
+
+        } else {
+            return blueHub;
+        }
+    }
+
+    public Rotation2d getTrenchAngle(final double x) {
+        if (Field.isBlue()) {
+            if (x > 4.63) {
+                return new Rotation2d(Math.toRadians(0));
+            } else {
+                return new Rotation2d(Math.toRadians(180));
+            }
+        } else {
+            if (x > 11.91) {
+                return new Rotation2d(Math.toRadians(180));
+            } else {
+                return new Rotation2d(Math.toRadians(0));
+            }
+        }
+    }
+
+    public boolean isTagHub(final PhotonPipelineResult result) {
+        if (result == null) {
+            return false;
+        }
+        final int tagId = result.getBestTarget().getFiducialId();
+        if (Set.of(18, 19, 20, 21, 24, 25, 26, 27).contains(tagId) && Field.isBlue()) {
+            return true;
+        } else if (Set.of(8, 9, 10, 11, 2, 3, 4, 5).contains(tagId) && Field.isRed()) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void periodic() {
+        switch (this.camProcessorCounter % 4) {
+            case 0:
+                this.processVision(this.FLO_camera, this.FLO_Estimator);
+                break;
+            case 1:
+                this.processVision(this.FLI_camera, this.FLI_Estimator);
+                break;
+            case 2:
+                this.processVision(this.FRI_camera, this.FRI_Estimator);
+                break;
+            case 3:
+                this.processVision(this.FRO_camera, this.FRO_Estimator);
+                break;
+        }
+        this.camProcessorCounter++;
     }
 }

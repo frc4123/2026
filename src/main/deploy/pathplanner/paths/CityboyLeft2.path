@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.168074281295487,
-        "y": 5.177326
+        "x": 8.168672671033478,
+        "y": 5.2889256959607
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.32997958742722,
-        "y": 5.047774631550219
+        "x": 7.115855792849345,
+        "y": 5.60472588018559
       },
       "isLocked": false,
       "linkedName": "CityBoyLeft 1-2"
     },
     {
       "anchor": {
-        "x": 2.2100073917394467,
-        "y": 5.789326
+        "x": 2.4489144946324597,
+        "y": 5.632301673944687
       },
       "prevControl": {
-        "x": 3.943991255003639,
-        "y": 5.77661333242358
+        "x": 3.0172351482896653,
+        "y": 5.612654544213974
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,12 +30,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.26940275493421056,
-      "rotationDegrees": 1.304823067186673
-    },
-    {
-      "waypointRelativePos": 0.48926637883771934,
-      "rotationDegrees": -21.509
+      "waypointRelativePos": 0.5270439281798245,
+      "rotationDegrees": 25.644205631061716
     }
   ],
   "constraintZones": [
@@ -65,13 +61,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -43.802
+    "rotation": -41.74643234718218
   },
   "reversed": false,
   "folder": "Cityboy (L)",
   "idealStartingState": {
-    "velocity": 0.8,
-    "rotation": 64.0
+    "velocity": 0.3,
+    "rotation": 50.673278898676465
   },
   "useDefaultConstraints": true
 }

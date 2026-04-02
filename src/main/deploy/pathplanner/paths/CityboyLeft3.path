@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2100073917394467,
-        "y": 5.789326
+        "x": 4.091658854166667,
+        "y": 7.48204615162037
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.112587563682678,
-        "y": 5.813414301310044
+        "x": 8.4401072143377,
+        "y": 7.911889446744097
       },
       "isLocked": false,
-      "linkedName": "CityBoyLeft 2-3"
+      "linkedName": "CityBoyLeft 2.5-3"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "Stop Shooting",
-      "waypointRelativePos": 0.3028846153846154,
+      "waypointRelativePos": 0.03097024204244033,
       "endWaypointRelativePos": 1.0,
       "command": {
         "type": "race",
@@ -93,7 +93,7 @@
   "folder": "Cityboy (L)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -43.802
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

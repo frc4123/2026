@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Quest;
-
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
@@ -24,6 +23,7 @@ public class Oculus extends SubsystemBase{
     private final Transform3d robotToQuest;
     private int loopLimiter = 0;
     private PoseFrame[] unreadFrames;
+    private static Boolean trustQuest;
     StructPublisher<Pose2d> posePub;
 
     private double lastVisionUpdateTime = 0;
@@ -31,6 +31,7 @@ public class Oculus extends SubsystemBase{
     QuestNav quest = new QuestNav();
 
     public Oculus() {
+        trustQuest = true;
 
         robotToQuest = new Transform3d(
             new Translation3d(
@@ -141,6 +142,10 @@ public class Oculus extends SubsystemBase{
         //     }
         // }
     }
+
+    public static Boolean trustQuest(){
+        return trustQuest;
+    }
     
     public void publishQuestStatus(){
         OptionalInt questBattery = quest.getBatteryPercent();
@@ -168,11 +173,13 @@ public class Oculus extends SubsystemBase{
     public void periodic() {
 
         publishQuestStatus();
+        trustQuest = SmartDashboard.getBoolean("Trust Quest", false);
         unreadFrames = quest.getAllUnreadPoseFrames();
-
         if (isQuestNavConnected()) {
             setRobotPose();
-            updateSwerve();
+            if(trustQuest) {  
+                updateSwerve();
+            }
         }
 
         loopLimiter++;

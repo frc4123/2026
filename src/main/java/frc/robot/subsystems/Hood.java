@@ -39,6 +39,13 @@ public class Hood extends SubsystemBase{
             HoodConstants.acceleration
         );
 
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagicFree =
+        new DynamicMotionMagicTorqueCurrentFOC(
+            HoodConstants.stowPosition,
+            HoodConstants.slowVelocity,
+            HoodConstants.acceleration
+        );
+
     public Hood() {
         configureMotor();
         hoodCANdi.optimizeBusUtilization();
@@ -89,6 +96,16 @@ public class Hood extends SubsystemBase{
     public void lowerHood() {
         hoodMotor.setControl(motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees)));
     }
+
+    public void lowerHoodFree() {
+        hoodMotor.setControl(motionMagicFree.withPosition(HoodConstants.ZERO_HOOD_ANGLE.in(Degrees)));
+
+    }
+
+    // public void manualReset() {
+    //     SmartDashboard.put
+    //     hoodMotor.setPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees));
+    // }
 
     // public double getHoodDegrees(){
     //     return hoodPosition.getValueAsDouble();

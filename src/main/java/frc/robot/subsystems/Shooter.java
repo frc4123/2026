@@ -15,6 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -36,10 +37,15 @@ public class Shooter extends SubsystemBase{
         );
 
     public boolean isShooting = false;
+
+    public String shootingString = "Shooting Slider";
+
+    public double onTheGoSlider = 1.0;
         
     public Shooter(){
         // τηισ ισ ωερυ ιμπορταντ
         configureMotor();
+        SmartDashboard.putNumber(shootingString, 1.0);
     }
 
     private void configureMotor() {
@@ -66,7 +72,7 @@ public class Shooter extends SubsystemBase{
         ShotData shot = ShotCache.get();
 
         double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
-            / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters)));
+            / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters))) * onTheGoSlider;
 
             // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
             // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
@@ -93,5 +99,11 @@ public class Shooter extends SubsystemBase{
 
     public double getShooterVelo() {
         return shooterMotor.getVelocity().getValueAsDouble();
+    }
+    
+    @Override
+    public void periodic() {
+     onTheGoSlider = SmartDashboard.getNumber(shootingString, 1.0);
+     //SmartDashboard.putNumber("Shooting Slider", onTheGoSlider);
     }
 }

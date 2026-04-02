@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Oculus;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
 import frc.robot.utils.ShotCache;
@@ -59,7 +60,9 @@ public class Robot extends LoggedRobot {
             SmartDashboard.putNumber("Match Data/MatchTime", DriverStation.getMatchTime());
             SmartDashboard.putBoolean("Match Data/InShift", ShiftHelpers.currentShiftIsYours());
             SmartDashboard.putNumber("Match Data/TimeLeftInShift",
-                    ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime()));
+                    ShiftHelpers.timeLeftInShiftSeconds(LoggedRobot.defaultPeriodSecs));
+            SmartDashboard.putBoolean("Trust Quest", Oculus.trustQuest());
+            ShiftHelpers.timeLeftInShiftSeconds(DriverStation.getMatchTime());
         }
     }
 
