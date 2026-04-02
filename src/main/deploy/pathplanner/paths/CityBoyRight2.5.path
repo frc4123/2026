@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2100073917394467,
-        "y": 2.279773301037118
+        "x": 2.5007346643518527,
+        "y": 2.305375144675926
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2474123987268526,
-        "y": 1.1011594328703713
+        "x": 2.5381396713392586,
+        "y": 1.1267612765091797
       },
       "isLocked": false,
       "linkedName": "CityBoy 2-2.5"
@@ -48,7 +48,7 @@
   "folder": "Cityboy (R)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 43.80189897113155
+    "rotation": 15.206249401323529
   },
   "useDefaultConstraints": false
 }

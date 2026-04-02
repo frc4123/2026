@@ -48,7 +48,7 @@
   "folder": "Cityboy (R)",
   "idealStartingState": {
     "velocity": 0.8,
-    "rotation": 50.031698391872276
+    "rotation": 29.162018965807064
   },
   "useDefaultConstraints": true
 }
