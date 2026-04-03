@@ -9,60 +9,58 @@ public class Target {
 
     private static CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-    public static Translation3d getTarget(){
+    public static Translation3d getTarget() {
 
-        double x = swerve.getState().Pose.getX();
-        double y = swerve.getState().Pose.getY();
+        final double x = swerve.getState().Pose.getX();
+        final double y = swerve.getState().Pose.getY();
 
-        if(Field.isBlue()) {
-            if(x < Constants.VisionConstants.blueHub.getX()){
-                return Constants.VisionConstants.blueHubTranslation3d;
-            // Past hub - match the Y zones from Turret.targetAngle()
+        if (Field.isBlue()) {
+            if (x < Constants.VisionConstants.BLUE_HUB.getX()) {
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot.getTranslation(); // blueDepot   Convert Pose2d to Translation3d
+                return Constants.VisionConstants.blueDepot.getTranslation(); // blueDepot Convert Pose2d to
+                                                                             // Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
-                return Constants.VisionConstants.blueDepot.getTranslation(); //blueLeftBumpCorner.
+                return Constants.VisionConstants.blueDepot.getTranslation(); // blueLeftBumpCorner.
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
-                return Constants.VisionConstants.blueAimThreshold.getTranslation(); //blueRIghtBumpCorner
+                return Constants.VisionConstants.BLUE_AIM_THRESHOLD.getTranslation(); // blueRIghtBumpCorner
             } else {
                 // Bottom zone - aim threshold
-                return Constants.VisionConstants.blueAimThreshold.getTranslation(); //blueAimThreshold
+                return Constants.VisionConstants.BLUE_AIM_THRESHOLD.getTranslation(); // blueAimThreshold
             }
-        }
-        else if(Field.isRed()) {
-            if(x > Constants.VisionConstants.redHub.getX()){
+        } else if (Field.isRed()) {
+            if (x > Constants.VisionConstants.RED_HUB.getX()) {
                 return Constants.VisionConstants.redHubTranslation3d;
-            // Past hub - match the Y zones from Turret.targetAngle()
+                // Past hub - match the Y zones from Turret.targetAngle()
             } else if (y >= 5.029) {
                 // Top zone - aim threshold
-                return Constants.VisionConstants.redAimThreshold.getTranslation(); // redAimThreshold
+                return Constants.VisionConstants.RED_AIM_THRESHOLD.getTranslation(); // redAimThreshold
             } else if (y > 4.044) {
                 // Upper middle zone - right bump corner
-                return Constants.VisionConstants.redAimThreshold.getTranslation(); // redRightBumpCorner
+                return Constants.VisionConstants.RED_AIM_THRESHOLD.getTranslation(); // redRightBumpCorner
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
-                return Constants.VisionConstants.redDepot.getTranslation(); //redLeftBumpCorner
+                return Constants.VisionConstants.redDepot.getTranslation(); // redLeftBumpCorner
             } else {
                 // Bottom zone - depot
-                return Constants.VisionConstants.redDepot.getTranslation(); //redDepot
+                return Constants.VisionConstants.redDepot.getTranslation(); // redDepot
             }
         }
-    
+
         return Constants.VisionConstants.blueHubTranslation3d;
     }
 
-    public static Rotation2d getTrenchAngle(double x) {
+    public static Rotation2d getTrenchAngle(final double x) {
         if (Field.isBlue()) {
-            if (x > 4.63){
+            if (x > 4.63) {
                 return new Rotation2d(Math.toRadians(0));
             } else {
                 return new Rotation2d(Math.toRadians(180));
             }
         } else {
-            if (x > 11.91){
+            if (x > 11.91) {
                 return new Rotation2d(Math.toRadians(180));
             } else {
                 return new Rotation2d(Math.toRadians(0));
@@ -70,15 +68,15 @@ public class Target {
         }
     }
 
-    public static Rotation2d getBumpAngle(double x) {
+    public static Rotation2d getBumpAngle(final double x) {
         if (Field.isBlue()) {
-            if (x > 4.63){
+            if (x > 4.63) {
                 return new Rotation2d(Math.toRadians(135));
             } else {
                 return new Rotation2d(Math.toRadians(45));
             }
         } else {
-            if (x > 11.91){
+            if (x > 11.91) {
                 return new Rotation2d(Math.toRadians(45));
             } else {
                 return new Rotation2d(Math.toRadians(135));

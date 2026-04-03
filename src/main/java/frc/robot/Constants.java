@@ -89,9 +89,9 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final int kDriverControllerPort0 = 0;
-        public static final int kDriverControllerPort1 = 1;
-        public static final int kDriverControllerPort2 = 2;
+        public static final int DRIVER_CONTROLLER_PORT_0 = 0;
+        public static final int DRIVER_CONTROLLER_PORT_1 = 1;
+        public static final int DRIVER_CONTROLLER_PORT_2 = 2;
         public static final boolean FIELD_ORIENTATION = true;
         public static final double DEADBAND = 0.028;
     }
@@ -143,25 +143,25 @@ public class Constants {
             IntakeArmConstants.intakeCANdi.optimizeBusUtilization();
         }
 
-        public static final double outPosition = 0;
-        public static final double stowPosition = 0.33;
-        public static final double midPosition = IntakeArmConstants.stowPosition / 1.7;
+        public static final double OUT_POSITION = 0;
+        public static final double STOW_POSITION = 0.33;
+        public static final double MID_POSITION = IntakeArmConstants.STOW_POSITION / 1.7;
 
-        public static final double sensorToMechanismRatio = 25.0;
-        public static final double currentCancelationThreshold = 80;
+        public static final double SENSOR_TO_MECHANISM_RATIO = 25.0;
+        public static final double CURRENT_CANCELATION_THRESHOLD = 80;
 
-        public static final double kP = 1000.0;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kS = 2.5;
-        public static final double kV = 0;
-        public static final double kA = 0;
-        public static final double kG = 6.14123;
+        public static final double P = 1000.0;
+        public static final double I = 0;
+        public static final double D = 0;
+        public static final double S = 2.5;
+        public static final double V = 0;
+        public static final double A = 0;
+        public static final double G = 6.14123;
 
-        public static final double velocity = 3.5; //2.5
-        public static final double slowVelocity = 0.11;
-        public static final double midVelocity = 0.33; 
-        public static final double acceleration = 4.0; //3.5
+        public static final double VELOCITY = 3.5; // 2.5
+        public static final double SLOW_VELOCITY = 0.11;
+        public static final double MID_VELOCITY = 0.33;
+        public static final double ACCELERATION = 4.0; // 3.5
     }
 
     public static class IntakeRollerConstants {
@@ -179,17 +179,17 @@ public class Constants {
         // final
         // velocity
 
-        public static final double zeroVelo = 0;
-        public static final double intakeVelo = 60; // was 60, 31
-        public static final double reverseVelo = -20;
-        public static final double intakeAcc = 120; // was 90
+        public static final double ZERO_VELO = 0;
+        public static final double INTAKE_VELO = 60; // was 60, 31
+        public static final double REVERSE_VELO = -20;
+        public static final double INTAKE_ACCEL = 120; // was 90
 
-        public static final double kP = 0.426;
-        public static final double kI = 0; // was 0.0441
-        public static final double kD = 0;
-        public static final double kS = 0;
-        public static final double kV = 0.118; // try this 0;
-        public static final double kA = 0;
+        public static final double P = 0.426;
+        public static final double I = 0; // was 0.0441
+        public static final double D = 0;
+        public static final double S = 0;
+        public static final double V = 0.118; // try this 0;
+        public static final double A = 0;
     }
 
     public static class SevenElevenConstants {
@@ -400,16 +400,16 @@ public class Constants {
         }
 
         // Front Forward Camera Translation and Angle
-        public static final double frontX = Units.inchesToMeters(12.5);// 12.5 // 7.495 7.176364 -7.176364 //12.75
-        public static final double frontY = Units.inchesToMeters(-9.5); // -9 //-9.498
-        public static final double frontZ = Units.inchesToMeters(10); // 10// 7.02 //10
+        public static final double X = Units.inchesToMeters(12.5);// 12.5 // 7.495 7.176364 -7.176364 //12.75
+        public static final double Y = Units.inchesToMeters(-9.5); // -9 //-9.498
+        public static final double Z = Units.inchesToMeters(10); // 10// 7.02 //10
 
-        public static final double frontRoll = Math.toRadians(0);
-        public static final double frontPitch = Math.toRadians(0); // negative pitch is up according to 25 code
-        public static final double frontYaw = Math.toRadians(0);
+        public static final double ROLL = Math.toRadians(0);
+        public static final double PITCH = Math.toRadians(0); // negative pitch is up according to 25 code
+        public static final double YAW = Math.toRadians(0);
 
         public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1.6, 1.6, 3.2);
-        public static final double questUpdate = 10.00; // 30
+        public static final double QUEST_UPDATE = 10.00; // 30
     }
 
     public static final class VisionConstants {
@@ -417,53 +417,51 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double ambiguityThreshold = 0.06;// 0.06
+        public static final double AMBIGUITY_THRESHOLD = 0.06;// 0.06
 
         // FLO = Front_Left_Outside camera
-        public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
-        public static final double FLO_frontY = Units.inchesToMeters(11.097);
-        public static final double FLO_frontZ = Units.inchesToMeters(7.826); // 7.02
+        public static final double FLO_X = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
+        public static final double FLO_Y = Units.inchesToMeters(11.097);
+        public static final double FLO_Z = Units.inchesToMeters(7.826); // 7.02
 
-        public static final double FLO_frontRoll = Math.toRadians(0);
-        public static final double FLO_frontPitch = Math.toRadians(-15.0); // -75.0 negative pitch is up according to 25
-                                                                           // code
-        public static final double FLO_frontYaw = Math.toRadians(132.273);
+        public static final double FLO_ROLL = Math.toRadians(0);
+        // -75.0 negative pitch is up according to 25 code
+        public static final double FLO_PITCH = Math.toRadians(-15.0);
+        public static final double FLO_YAW = Math.toRadians(132.273);
 
         // FLI = Front_Left_Inside camera
-        public static final double FLI_frontX = Units.inchesToMeters(10.836); // 7.495 7.176364 -7.176364
-        public static final double FLI_frontY = Units.inchesToMeters(9.396);
-        public static final double FLI_frontZ = Units.inchesToMeters(7.979); // 7.02
+        public static final double FLI_X = Units.inchesToMeters(10.836); // 7.495 7.176364 -7.176364
+        public static final double FLI_Y = Units.inchesToMeters(9.396);
+        public static final double FLI_Z = Units.inchesToMeters(7.979); // 7.02
 
-        public static final double FLI_frontRoll = Math.toRadians(0);
-        public static final double FLI_frontPitch = Math.toRadians(-30.0); // -60 negative pitch is up according to 25
-                                                                           // code
-        public static final double FLI_frontYaw = Math.toRadians(30);
+        public static final double FLI_ROLL = Math.toRadians(0);
+        // -60 negative pitch is up according to 25 code
+        public static final double FLI_PITCH = Math.toRadians(-30.0);
+        public static final double FLI_YAW = Math.toRadians(30);
 
         // FRI = Front_Right_Inside camera
-        public static final double FRI_frontX = Units.inchesToMeters(10.229); // 7.495 7.176364 -7.176364
-        public static final double FRI_frontY = Units.inchesToMeters(-10.140);
-        public static final double FRI_frontZ = Units.inchesToMeters(7.825761); // 7.02
+        public static final double FRI_X = Units.inchesToMeters(10.229); // 7.495 7.176364 -7.176364
+        public static final double FRI_Y = Units.inchesToMeters(-10.140);
+        public static final double FRI_Z = Units.inchesToMeters(7.825761); // 7.02
 
-        public static final double FRI_frontRoll = Math.toRadians(0);
-        public static final double FRI_frontPitch = Math.toRadians(-15.0); // -75.0 negative pitch is up according to 25
-                                                                           // code
-        public static final double FRI_frontYaw = Math.toRadians(-131.987);
+        public static final double FRI_ROLL = Math.toRadians(0);
+        public static final double FRI_PITCH = Math.toRadians(-15.0);
+        public static final double FRI_YAW = Math.toRadians(-131.987);
 
         // FRO = Front_Right_Outside camera
-        public static final double FRO_frontX = Units.inchesToMeters(9.411); // 7.495 7.176364 -7.176364
-        public static final double FRO_frontY = Units.inchesToMeters(-10.998);
-        public static final double FRO_frontZ = Units.inchesToMeters(13.929); // 7.02
+        public static final double FRO_X = Units.inchesToMeters(9.411); // 7.495 7.176364 -7.176364
+        public static final double FRO_Y = Units.inchesToMeters(-10.998);
+        public static final double FRO_Z = Units.inchesToMeters(13.929); // 7.02
 
-        public static final double FRO_frontRoll = Math.toRadians(0);
-        public static final double FRO_frontPitch = Math.toRadians(-15); // -75.0 negative pitch is up according to 25
-                                                                         // code
-        public static final double FRO_frontYaw = Math.toRadians(0);
+        public static final double FRO_ROLL = Math.toRadians(0);
+        public static final double FRO_PITCH = Math.toRadians(-15);
+        public static final double FRO_YAW = Math.toRadians(0);
 
         // blueHub translations
-        public static final Pose3d blueHub = new Pose3d(4.625, 4.035, 1.4304264/* 1.828 */, new Rotation3d());
-        public static final Translation2d blueHubTranslation2d = VisionConstants.blueHub.getTranslation()
+        public static final Pose3d BLUE_HUB = new Pose3d(4.625, 4.035, 1.4304264/* 1.828 */, new Rotation3d());
+        public static final Translation2d blueHubTranslation2d = VisionConstants.BLUE_HUB.getTranslation()
                 .toTranslation2d();
-        public static final Translation3d blueHubTranslation3d = VisionConstants.blueHub.getTranslation();
+        public static final Translation3d blueHubTranslation3d = VisionConstants.BLUE_HUB.getTranslation();
 
         // blueDepot pose
         public static final Pose3d blueDepot = new Pose3d(-1.5, 6.0, 0.2, new Rotation3d());
@@ -477,40 +475,34 @@ public class Constants {
         // Rotation3d()); //x4.03 and y was -1
 
         // redAimThreshold pose
-        public static final Pose3d blueAimThreshold = new Pose3d(-1.5, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d BLUE_AIM_THRESHOLD = new Pose3d(-1.5, 2.080, 0.2, new Rotation3d());
 
-        // redHub translations
-        public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264/* 1.828 */, new Rotation3d());
-        public static final Translation2d redHubTranslation2d = VisionConstants.redHub.getTranslation()
+        public static final Pose3d RED_HUB = new Pose3d(11.920, 4.035, 1.4304264/* 1.828 */, new Rotation3d());
+        public static final Translation2d redHubTranslation2d = VisionConstants.RED_HUB.getTranslation()
                 .toTranslation2d();
-        public static final Translation3d redHubTranslation3d = VisionConstants.redHub.getTranslation();
+        public static final Translation3d redHubTranslation3d = VisionConstants.RED_HUB.getTranslation();
 
-        // redAimThreshold pose
-        public static final Pose3d redAimThreshold = new Pose3d(18.5, 6.0, 0.2, new Rotation3d());
-
-        // redRightBumpCorner pose
-        public static final Pose3d redRightBumpCorner = new Pose3d(13.5, 7, 0.2, new Rotation3d()); // 12.505 and y was
-                                                                                                    // + 1
-
-        // redRightBumpCorner pose
-        public static final Pose3d redLeftBumpCorner = new Pose3d(13.5, 1, 0.2, new Rotation3d()); // 12.505 and y was
-                                                                                                   // -1
+        public static final Pose3d RED_AIM_THRESHOLD = new Pose3d(18.5, 6.0, 0.2, new Rotation3d());
+        // 12.505 and y was + 1
+        public static final Pose3d redRightBumpCorner = new Pose3d(13.5, 7, 0.2, new Rotation3d());
+        // 12.505 and y was -1
+        public static final Pose3d redLeftBumpCorner = new Pose3d(13.5, 1, 0.2, new Rotation3d());
 
         // blueDepot pose
         public static final Pose3d redDepot = new Pose3d(18.5, 2.080, 0.2, new Rotation3d());
 
         // threshold for how close we are to the blue bump/trench for auto rotation
-        public static final double blueLeftBumpOrTrenchThreshold = 2.5;
-        public static final double blueRightBumpOrTrenchThreshold = 7.25;
+        public static final double BLUE_LEFT_BUMP_OR_TRENCH_THRESHOLD = 2.5;
+        public static final double BLUE_RIGHT_BUMP_OR_TENCH_THRESHOLD = 7.25;
 
         // threshold for how close we are to the bump/trench for auto rotation
-        public static final double redLeftBumpOrTrenchThreshold = 10.0;
-        public static final double redRightBumpOrTrenchThreshold = 14.0;
+        public static final double RED_LEFT_BUMP_OR_TRENCH_THRESHOLD = 10.0;
+        public static final double RED_RIGHT_BUMP_OR_TENCH_THRESHOLD = 14.0;
 
-        public static final double topBumpTrenchEdge = 6.627;
-        public static final double bottomBumpTrenchEdge = 1.43;
+        public static final double TOP_BUMP_TRENCH_EDGE = 6.627;
+        public static final double BOTTOM_BUMP_TRENCH_EDGE = 1.43;
 
-        // Max acceptable roll and pitch to recieve photon data
+        // Max acceptable roll and pitch to receive photon data
         public static final double MAX_ACCEPTABLE_PITCH = 5;
         public static final double MAX_ACCEPTABLE_ROLL = 5;
     }

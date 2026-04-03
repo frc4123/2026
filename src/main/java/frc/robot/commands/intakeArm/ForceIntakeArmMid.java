@@ -1,25 +1,25 @@
-package frc.robot.commands.intakeArm;
+package frc.robot.commands.intakearm;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.subsystems.IntakeArm;
 
-public class ForceIntakeArmMid extends Command{
+public class ForceIntakeArmMid extends Command {
 
     IntakeArm intakeArm;
 
-    public ForceIntakeArmMid(IntakeArm intakeArm) {
+    public ForceIntakeArmMid(final IntakeArm intakeArm) {
         this.intakeArm = intakeArm;
-        addRequirements(intakeArm);
+        this.addRequirements(intakeArm);
     }
 
     @Override
     public void execute() {
-        intakeArm.setIntakePosition(IntakeArmConstants.midPosition);
+        this.intakeArm.setIntakePosition(IntakeArmConstants.MID_POSITION);
     }
-    
+
     @Override
-    public void end(boolean interrupted) {
-        //intakeArm.setIntakePosition(IntakeArmConstants.stowPosition);
+    public void end(final boolean interrupted) {
+        // intakeArm.setIntakePosition(IntakeArmConstants.stowPosition);
     }
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -39,22 +40,21 @@ import frc.robot.commands.autos.mtest;
 import frc.robot.commands.autos.orbit;
 import frc.robot.commands.hood.AvoidDecapitation;
 import frc.robot.commands.hood.HoodAim;
-import frc.robot.commands.intakeArm.ForceIntakeArmMid;
-import frc.robot.commands.intakeArm.IntakeArmIn;
-import frc.robot.commands.intakeArm.IntakeArmInMid;
-import frc.robot.commands.intakeArm.IntakeArmInSlow;
-import frc.robot.commands.intakeArm.IntakeArmMid;
-import frc.robot.commands.intakeArm.IntakeArmOut;
-import frc.robot.commands.intakeRoller.AutoIntakeRollerIn;
-import frc.robot.commands.intakeRoller.IntakeReverse;
-//import frc.robot.commands.intakeArm.IntakeShimmy;
-import frc.robot.commands.intakeRoller.IntakeRollerIn;
-import frc.robot.commands.intakeRoller.IntakeRollerShimmy;
-import frc.robot.commands.intakeRoller.IntakeRollerStop;
-import frc.robot.commands.sevenEleven.RollReverse;
-// import frc.robot.commands.sevenEleven.RollHigh;
-// import frc.robot.commands.sevenEleven.RollLow;
-// import frc.robot.commands.sevenEleven.RollMid;
+import frc.robot.commands.intakearm.ForceIntakeArmMid;
+import frc.robot.commands.intakearm.IntakeArmIn;
+import frc.robot.commands.intakearm.IntakeArmInMid;
+import frc.robot.commands.intakearm.IntakeArmInSlow;
+import frc.robot.commands.intakearm.IntakeArmMid;
+import frc.robot.commands.intakearm.IntakeArmOut;
+import frc.robot.commands.intakeroller.AutoIntakeRollerIn;
+import frc.robot.commands.intakeroller.IntakeReverse;
+import frc.robot.commands.intakeroller.IntakeRollerIn;
+import frc.robot.commands.intakeroller.IntakeRollerShimmy;
+import frc.robot.commands.intakeroller.IntakeRollerStop;
+import frc.robot.commands.seveneleven.RollReverse;
+// import frc.robot.commands.seveneleven.RollHigh;
+// import frc.robot.commands.seveneleven.RollLow;
+// import frc.robot.commands.seveneleven.RollMid;
 import frc.robot.commands.shooter.SetShooterVelocity;
 // import frc.robot.commands.swerve.DriveToClimb;
 import frc.robot.commands.turret.Aim;
@@ -78,108 +78,132 @@ import frc.robot.utils.ShiftHelpers;
 import frc.robot.utils.Target;
 
 public class RobotContainer {
-        private final double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(Units.MetersPerSecond); // kSpeedAt12Volts
-                                                                                                        // desired top
-                                                                                                        // speed
-        private final double MaxAngularRate = Units.RotationsPerSecond.of(0.75).in(Units.RadiansPerSecond); // 3/4 of a
-                                                                                                            // rotation
-                                                                                                            // per
-                                                                                                            // second
-                                                                                                            // max
-                                                                                                            // angular
-                                                                                                            // velocity
+        // =========================
+        // DRIVETRAIN / CORE CONTROL
+        // =========================
+
+        // kSpeedAt12Volts desired top speed
+        private final double maxSpeed = TunerConstants.kSpeedAt12Volts.in(Units.MetersPerSecond);
+
+        // 3/4 of a rotation per second max angular velocity
+        private final double maxAngularRate = Units.RotationsPerSecond.of(0.75).in(Units.RadiansPerSecond);
 
         final Rotation2d[] snappedAngle = { new Rotation2d() };
 
-        /* Setting up bindings for necessary control of the swerve drive platform */
+        // =========================
+        // SWERVE REQUESTS
+        // =========================
+
+        // Using a 10% deadband
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-                        .withDeadband(this.MaxSpeed * 0.05).withRotationalDeadband(this.MaxAngularRate * 0.05) // Add a
-                                                                                                               // 10%
-                                                                                                               // deadband
+                        .withDeadband(this.maxSpeed * 0.05)
+                        .withRotationalDeadband(this.maxAngularRate * 0.05)
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
         // Use open-loop control for drive motors
         private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-        // private final SwerveRequest.PointWheelsAt point = new
-        // SwerveRequest.PointWheelsAt();
 
         private final SwerveRequest.FieldCentricFacingAngle faceAngle = new SwerveRequest.FieldCentricFacingAngle()
                         .withDriveRequestType(DriveRequestType.Velocity)
                         .withSteerRequestType(SteerRequestType.Position)
-                        .withDeadband(this.MaxSpeed * 0.05)
-                        .withRotationalDeadband(this.MaxAngularRate * 0.05);
+                        .withDeadband(this.maxSpeed * 0.05)
+                        .withRotationalDeadband(this.maxAngularRate * 0.05);
 
         private final SwerveRequest.FieldCentric robotStrafe = new SwerveRequest.FieldCentric()
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-        // Field-centric strafing request using controller's d-pad
 
-        private final Telemetry logger = new Telemetry(this.MaxSpeed);
+        // =========================
+        // UTIL / TELEMETRY
+        // =========================
+
+        private final Telemetry logger = new Telemetry(this.maxSpeed);
 
         private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
-        private final CommandXboxController joystick = new CommandXboxController(InputConstants.kDriverControllerPort0);
-        private final CommandGenericHID m_buttonBoard = new CommandGenericHID(InputConstants.kDriverControllerPort1);
+        // =========================
+        // INPUT DEVICES
+        // =========================
+
+        private final CommandXboxController joystick = new CommandXboxController(
+                        InputConstants.DRIVER_CONTROLLER_PORT_0);
+
+        private final CommandGenericHID buttonBoard = new CommandGenericHID(InputConstants.DRIVER_CONTROLLER_PORT_1);
+
+        // =========================
+        // HARDWARE / SUBSYSTEMS
+        // =========================
+
+        private final CANdi candi = new CANdi(Constants.CanIdCanivore.INTAKE_CANDI, Constants.CanIdCanivore.CARNIVORE);
 
         private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
         private final Oculus oculus = new Oculus();
+
         // private final Vision vision = new Vision();
+
         private final Turret turret = new Turret(this.drivetrain);
+
         private final TurretVisSim turretVisSim = new TurretVisSim(() -> new Pose3d(this.drivetrain.getState().Pose),
                         this.turret);
+
         private final IntakeRoller intakeRollers = new IntakeRoller();
+
         private final SevenEleven sevenEleven = new SevenEleven();
-        private final IntakeArm intakeArm = new IntakeArm();
-        private final Hood hood = new Hood();
+
+        private final IntakeArm intakeArm = new IntakeArm(this.candi);
+
+        private final Hood hood = new Hood(this.candi);
+
         private final Shooter shooter = new Shooter();
+
         private final Uptake uptake = new Uptake();
-        // private final Climb climb = new Climb();
+
+        // =========================
+        // COMMANDS
+        // =========================
 
         private final Aim aim = new Aim(this.turret, this.drivetrain);
-        // private final DriveToClimb leftDriveToClimb = new DriveToClimb(drivetrain,
-        // 0);
-        // private final DriveToClimb rightDriveToClimb = new DriveToClimb(drivetrain,
-        // 1);
+
         private final IntakeRollerIn intakeRollersIn = new IntakeRollerIn(this.intakeRollers, this.intakeArm);
+
         private final AutoIntakeRollerIn autoIntakeRollerIn = new AutoIntakeRollerIn(this.intakeRollers,
                         this.intakeArm);
+
         private final IntakeRollerStop intakeRollersStop = new IntakeRollerStop(this.intakeRollers);
+
         private final IntakeReverse intakeReverse = new IntakeReverse(this.intakeRollers, this.intakeArm);
-        // private final IntakeRollerShimmy intakeRollerShimmy = new
-        // IntakeRollerShimmy(intakeRollers, intakeArm);
-        // private final Roll roll = new Roll(sevenEleven);
-        // private final RollLow rollLow = new RollLow(sevenEleven);
-        // private final RollMid rollMid = new RollMid(sevenEleven);
-        // private final RollHigh rollHigh = new RollHigh(sevenEleven);
-        // private final RepeatCommand rollerPulse =
-        // new RepeatCommand(
-        // rollLow.withTimeout(0.5)
-        // .andThen(rollMid.withTimeout(0.5))
-        // .andThen(rollHigh.withTimeout(1)
-        // )
-        // );
+
         private final IntakeArmIn intakeArmIn = new IntakeArmIn(this.intakeArm, this.intakeRollers);
+
         private final IntakeArmInSlow intakeArmInSlow = new IntakeArmInSlow(this.intakeArm, this.intakeRollers);
+
         private final IntakeArmInMid intakeArmInMid = new IntakeArmInMid(this.intakeArm, this.intakeRollers);
+
         private final IntakeArmOut intakeArmOut = new IntakeArmOut(this.intakeArm);
-        // private final IntakeArmMid intakeArmMid = new IntakeArmMid(intakeArm,
-        // intakeRollers);
+
         private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(this.intakeArm);
-        // private final IntakeShimmy intakeShimmy = new IntakeShimmy(intakeArm,
-        // intakeRollers);
+
         private final RollReverse rollReverse = new RollReverse(this.sevenEleven);
+
         private final HoodAim hoodAim = new HoodAim(this.hood);
+
         private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(this.hood);
+
         private final SetShooterVelocity setShooterVelocity = new SetShooterVelocity(this.shooter);
+
         private final UptakeUp uptakeUp = new UptakeUp(this.uptake, this.turret, this.sevenEleven, this.shooter);
+
         private final UptakeStop uptakeStop = new UptakeStop(this.uptake, this.shooter);
-        // private final UptakeReverse uptakeReverse = new UptakeReverse(uptake);
-        // private final ClimbUp climbUp = new ClimbUp(climb);
-        // private final ClimbDown climbDown = new ClimbDown(climb);
-        // private final ClimbTest climbTest = new ClimbTest(climb);
+
+        // =========================
+        // STATE
+        // =========================
 
         public final double currentAngle = this.drivetrain.getState().Pose.getRotation().getDegrees();
 
         public RobotContainer() {
                 this.configureBindings();
+                this.candi.optimizeBusUtilization();
 
                 this.drivetrain.setOnPoseResetCallback(pose -> {
                         if (this.oculus.isQuestNavConnected()) {
@@ -221,10 +245,45 @@ public class RobotContainer {
                 NamedCommands.registerCommand("Uptake", this.uptakeUp);
                 NamedCommands.registerCommand("HoodDown", this.avoidDecapitation);
                 NamedCommands.registerCommand("UptakeStop", this.uptakeStop);
-                // NamedCommands.registerCommand("ClimbUp", climbUp);
-                // NamedCommands.registerCommand("ClimbDown", climbDown);
-
                 this.initializeAutoChooser();
+        }
+
+        public void initializeAutoChooser() {
+                this.autoChooser.setDefaultOption("super secret auto",
+                                new WaitCommand(3)
+                                                .andThen(new ParallelRaceGroup(
+                                                                new IntakeArmOut(this.intakeArm),
+                                                                new IntakeRollerIn(this.intakeRollers, this.intakeArm),
+                                                                new WaitCommand(2)
+
+                                                ))
+                                                .andThen(new UptakeUp(this.uptake, this.turret, this.sevenEleven,
+                                                                this.shooter)));
+
+                this.autoChooser.addOption("City Boy Left", new ParallelCommandGroup(
+                                new WaitCommand(0.01),
+                                new SequentialCommandGroup(new CityBoyLeft().cityBoyLeft())));
+
+                this.autoChooser.addOption("City Boy Right", new ParallelCommandGroup(
+                                new WaitCommand(0.01),
+                                new SequentialCommandGroup(new CityBoyRight().cityBoyRight())));
+
+                this.autoChooser.addOption("MadTown Left", new ParallelCommandGroup(
+                                new WaitCommand(0.01),
+                                new SequentialCommandGroup(new MadTown().madTownLeft())));
+
+                this.autoChooser.addOption("Orbit Right", new ParallelCommandGroup(
+                                new WaitCommand(0.01),
+                                new SequentialCommandGroup(new orbit().orbitRight())));
+                this.autoChooser.addOption("5m test", new ParallelCommandGroup(
+                                new WaitCommand(0.01),
+                                new SequentialCommandGroup(new mtest().metertest())));
+
+                SmartDashboard.putData("Auto Selector", this.autoChooser);
+        }
+
+        public Command getAutonomousCommand() {
+                return this.autoChooser.getSelected();
         }
 
         private double applyDeadband(final double value, final double deadband) {
@@ -240,14 +299,14 @@ public class RobotContainer {
                                 this.drivetrain.applyRequest(() -> this.drive
                                                 .withVelocityX(-this.applyDeadband(this.joystick.getLeftY(),
                                                                 SwerveConstants.DRIVER_DEADBAND)
-                                                                * this.MaxSpeed)
+                                                                * this.maxSpeed)
                                                 .withVelocityY(-this.applyDeadband(this.joystick.getLeftX(),
                                                                 SwerveConstants.DRIVER_DEADBAND)
-                                                                * this.MaxSpeed)
+                                                                * this.maxSpeed)
                                                 .withRotationalRate(
                                                                 -this.applyDeadband(this.joystick.getRightX(),
                                                                                 SwerveConstants.DRIVER_DEADBAND)
-                                                                                * this.MaxAngularRate)));
+                                                                                * this.maxAngularRate)));
 
                 // Idle while the robot is disabled. This ensures the configured
                 // neutral mode is applied to the drive motors while disabled.
@@ -259,12 +318,14 @@ public class RobotContainer {
                 this.joystick.x().whileTrue(
                                 this.drivetrain
                                                 .applyRequest(() -> this.drive
-                                                                .withVelocityX(-this.joystick.getLeftY() * this.MaxSpeed
+                                                                .withVelocityX(-this.joystick.getLeftY()
+                                                                                * this.maxSpeed
                                                                                 / 10)
-                                                                .withVelocityY(-this.joystick.getLeftX() * this.MaxSpeed
+                                                                .withVelocityY(-this.joystick.getLeftX()
+                                                                                * this.maxSpeed
                                                                                 / 10)
                                                                 .withRotationalRate(-this.joystick.getRightX()
-                                                                                * this.MaxAngularRate / 10)));
+                                                                                * this.maxAngularRate / 10)));
 
                 // joystick.leftBumper().whileTrue(leftDriveToClimb);
                 // joystick.rightBumper().whileTrue(rightDriveToClimb);
@@ -272,15 +333,13 @@ public class RobotContainer {
                 // Snapshot angle on press, store it
 
                 this.joystick.b().onTrue(
-                                Commands.runOnce(() -> {
-                                        this.snappedAngle[0] = Target.getTrenchAngle(
-                                                        this.drivetrain.getState().Pose.getTranslation().getX());
-                                }));
+                                Commands.runOnce(() -> this.snappedAngle[0] = Target.getTrenchAngle(
+                                                this.drivetrain.getState().Pose.getTranslation().getX())));
 
                 this.joystick.b().whileTrue(
                                 this.drivetrain.applyRequest(() -> this.faceAngle
-                                                .withVelocityX(-this.joystick.getLeftY() * this.MaxSpeed / 2)
-                                                .withVelocityY(-this.joystick.getLeftX() * this.MaxSpeed / 2)
+                                                .withVelocityX(-this.joystick.getLeftY() * this.maxSpeed / 2)
+                                                .withVelocityY(-this.joystick.getLeftX() * this.maxSpeed / 2)
                                                 .withTargetDirection(this.snappedAngle[0])));
 
                 // joystick.y().onTrue(
@@ -326,9 +385,9 @@ public class RobotContainer {
                                                                 this.joystick.getLeftX());
 
                                                 return this.faceAngle
-                                                                .withVelocityX(leftY * this.MaxSpeed * 0.54123) // was
+                                                                .withVelocityX(leftY * this.maxSpeed * 0.54123) // was
                                                                                                                 // 0.6
-                                                                .withVelocityY(leftX * this.MaxSpeed * 0.54123) // was
+                                                                .withVelocityY(leftX * this.maxSpeed * 0.54123) // was
                                                                                                                 // 0.6
                                                                 .withTargetDirection(targetDirection);
 
@@ -341,19 +400,19 @@ public class RobotContainer {
                                 }));
 
                 this.joystick.povLeft().whileTrue(this.drivetrain.applyRequest(() -> this.robotStrafe
-                                .withVelocityY(0.1 * this.MaxSpeed)
+                                .withVelocityY(0.1 * this.maxSpeed)
                                 .withVelocityX(0)));
 
                 this.joystick.povRight().whileTrue(this.drivetrain.applyRequest(() -> this.robotStrafe
-                                .withVelocityY(-0.1 * this.MaxSpeed)
+                                .withVelocityY(-0.1 * this.maxSpeed)
                                 .withVelocityX(0)));
 
                 this.joystick.povUp().whileTrue(this.drivetrain.applyRequest(() -> this.robotStrafe
-                                .withVelocityX(0.1 * this.MaxSpeed)
+                                .withVelocityX(0.1 * this.maxSpeed)
                                 .withVelocityY(0)));
 
                 this.joystick.povDown().whileTrue(this.drivetrain.applyRequest(() -> this.robotStrafe
-                                .withVelocityX(-0.1 * this.MaxSpeed)
+                                .withVelocityX(-0.1 * this.maxSpeed)
                                 .withVelocityY(0)));
 
                 this.drivetrain.registerTelemetry(this.logger::telemeterize);
@@ -388,24 +447,24 @@ public class RobotContainer {
 
                 // ---------- Buttonboard Commands ------------ //
 
-                this.m_buttonBoard.button(1).onTrue(this.uptakeUp);
-                this.m_buttonBoard.button(1).onFalse(this.uptakeStop);
+                this.buttonBoard.button(1).onTrue(this.uptakeUp);
+                this.buttonBoard.button(1).onFalse(this.uptakeStop);
 
-                this.m_buttonBoard.button(2).onTrue(this.intakeReverse);
-                this.m_buttonBoard.button(2).onTrue(this.rollReverse);
-                this.m_buttonBoard.button(2).onTrue(this.intakeArmOut);
-                this.m_buttonBoard.button(2).onFalse(this.intakeRollersStop);
-                this.m_buttonBoard.button(2).onFalse(this.uptakeStop);
+                this.buttonBoard.button(2).onTrue(this.intakeReverse);
+                this.buttonBoard.button(2).onTrue(this.rollReverse);
+                this.buttonBoard.button(2).onTrue(this.intakeArmOut);
+                this.buttonBoard.button(2).onFalse(this.intakeRollersStop);
+                this.buttonBoard.button(2).onFalse(this.uptakeStop);
 
-                this.m_buttonBoard.button(3).onTrue(this.uptakeUp);
-                this.m_buttonBoard.button(3).onFalse(this.intakeArmOut);
-                this.m_buttonBoard.button(3).onFalse(this.uptakeStop);
-                this.m_buttonBoard.button(3).onTrue(this.intakeArmInMid);
+                this.buttonBoard.button(3).onTrue(this.uptakeUp);
+                this.buttonBoard.button(3).onFalse(this.intakeArmOut);
+                this.buttonBoard.button(3).onFalse(this.uptakeStop);
+                this.buttonBoard.button(3).onTrue(this.intakeArmInMid);
 
-                this.m_buttonBoard.button(4).onTrue(this.uptakeUp);
-                this.m_buttonBoard.button(4).onFalse(this.uptakeStop);
-                this.m_buttonBoard.button(4).onFalse(this.intakeArmOut);
-                this.m_buttonBoard.button(4)
+                this.buttonBoard.button(4).onTrue(this.uptakeUp);
+                this.buttonBoard.button(4).onFalse(this.uptakeStop);
+                this.buttonBoard.button(4).onFalse(this.intakeArmOut);
+                this.buttonBoard.button(4)
                                 .whileTrue(new WaitCommand(1.5)
                                                 .andThen(new IntakeArmInSlow(this.intakeArm, this.intakeRollers))
                                                 .andThen(new WaitCommand(0.75))
@@ -496,43 +555,5 @@ public class RobotContainer {
                 })
                                 .withName("Reset Fuel")
                                 .ignoringDisable(true));
-        }
-
-        public void initializeAutoChooser() {
-                this.autoChooser.setDefaultOption("super secret auto",
-                                new WaitCommand(3)
-                                                .andThen(new ParallelRaceGroup(
-                                                                new IntakeArmOut(this.intakeArm),
-                                                                new IntakeRollerIn(this.intakeRollers, this.intakeArm),
-                                                                new WaitCommand(2)
-
-                                                ))
-                                                .andThen(new UptakeUp(this.uptake, this.turret, this.sevenEleven,
-                                                                this.shooter)));
-
-                this.autoChooser.addOption("City Boy Left", new ParallelCommandGroup(
-                                new WaitCommand(0.01),
-                                new SequentialCommandGroup(new CityBoyLeft().cityBoyLeft())));
-
-                this.autoChooser.addOption("City Boy Right", new ParallelCommandGroup(
-                                new WaitCommand(0.01),
-                                new SequentialCommandGroup(new CityBoyRight().cityBoyRight())));
-
-                this.autoChooser.addOption("MadTown Left", new ParallelCommandGroup(
-                                new WaitCommand(0.01),
-                                new SequentialCommandGroup(new MadTown().madTownLeft())));
-
-                this.autoChooser.addOption("Orbit Right", new ParallelCommandGroup(
-                                new WaitCommand(0.01),
-                                new SequentialCommandGroup(new orbit().orbitRight())));
-                this.autoChooser.addOption("5m test", new ParallelCommandGroup(
-                                new WaitCommand(0.01),
-                                new SequentialCommandGroup(new mtest().metertest())));
-
-                SmartDashboard.putData("Auto Selector", this.autoChooser);
-        }
-
-        public Command getAutonomousCommand() {
-                return this.autoChooser.getSelected();
         }
 }

@@ -1,20 +1,20 @@
-package frc.robot.commands.sevenEleven;
+package frc.robot.commands.seveneleven;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SevenElevenConstants;
 import frc.robot.subsystems.SevenEleven;
 
-public class RollReverse extends Command{
+public class RollMid extends Command {
 
     SevenEleven sevenEleven;
 
-    public RollReverse(SevenEleven sevenEleven) {
+    public RollMid(final SevenEleven sevenEleven) {
         this.sevenEleven = sevenEleven;
-        addRequirements((sevenEleven));
+        this.addRequirements((sevenEleven));
     }
 
     @Override
     public void execute() {
-        sevenEleven.setSevenElevenVelo(SevenElevenConstants.sevenElevenReverseVelo);
+        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.sevenElevenMidVelo);
     }
 }

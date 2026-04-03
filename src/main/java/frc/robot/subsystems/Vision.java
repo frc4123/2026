@@ -72,81 +72,81 @@ public class Vision extends SubsystemBase {
     // This is too much voodoo
     private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-    private final Transform3d FLO_robotToCam;
-    private final Transform3d FLI_robotToCam;
-    private final Transform3d FRI_robotToCam;
-    private final Transform3d FRO_robotToCam;
+    private final Transform3d floRobotToCam;
+    private final Transform3d fliRobotToCam;
+    private final Transform3d friRobotToCam;
+    private final Transform3d froRobotToCam;
 
-    private final PhotonCamera FLO_camera = new PhotonCamera("Front_Left_Outside");
-    private final PhotonCamera FLI_camera = new PhotonCamera("Front_Left_Inside");
-    private final PhotonCamera FRI_camera = new PhotonCamera("Front_Right_Inside");
-    private final PhotonCamera FRO_camera = new PhotonCamera("Front_Right_Outside");
+    private final PhotonCamera floCamera = new PhotonCamera("Front_Left_Outside");
+    private final PhotonCamera fliCamera = new PhotonCamera("Front_Left_Inside");
+    private final PhotonCamera friCamera = new PhotonCamera("Front_Right_Inside");
+    private final PhotonCamera froCamera = new PhotonCamera("Front_Right_Outside");
 
-    private final PhotonPoseEstimator FLO_Estimator;
-    private final PhotonPoseEstimator FLI_Estimator;
-    private final PhotonPoseEstimator FRI_Estimator;
-    private final PhotonPoseEstimator FRO_Estimator;
+    private final PhotonPoseEstimator floEstimator;
+    private final PhotonPoseEstimator fliEstimator;
+    private final PhotonPoseEstimator friEstimator;
+    private final PhotonPoseEstimator froEstimator;
 
     public Vision() {
         this.aprilTagFieldLayout = Vision.loadAprilTagFieldLayout("/fields/2026Welded.json");
 
         // Camera transforms
-        this.FLO_robotToCam = new Transform3d(
+        this.floRobotToCam = new Transform3d(
                 new Translation3d(
-                        VisionConstants.FLO_frontX,
-                        VisionConstants.FLO_frontY,
-                        VisionConstants.FLO_frontZ),
+                        VisionConstants.FLO_X,
+                        VisionConstants.FLO_Y,
+                        VisionConstants.FLO_Z),
                 new Rotation3d(
-                        VisionConstants.FLO_frontRoll,
-                        VisionConstants.FLO_frontPitch,
-                        VisionConstants.FLO_frontYaw));
+                        VisionConstants.FLO_ROLL,
+                        VisionConstants.FLO_PITCH,
+                        VisionConstants.FLO_YAW));
 
-        this.FLI_robotToCam = new Transform3d(
+        this.fliRobotToCam = new Transform3d(
                 new Translation3d(
-                        VisionConstants.FLI_frontX,
-                        VisionConstants.FLI_frontY,
-                        VisionConstants.FLI_frontZ),
+                        VisionConstants.FLI_X,
+                        VisionConstants.FLI_Y,
+                        VisionConstants.FLI_Z),
                 new Rotation3d(
-                        VisionConstants.FLI_frontRoll,
-                        VisionConstants.FLI_frontPitch,
-                        VisionConstants.FLI_frontYaw));
+                        VisionConstants.FLI_ROLL,
+                        VisionConstants.FLI_PITCH,
+                        VisionConstants.FLI_YAW));
 
-        this.FRI_robotToCam = new Transform3d(
+        this.friRobotToCam = new Transform3d(
                 new Translation3d(
-                        VisionConstants.FRI_frontX,
-                        VisionConstants.FRI_frontY,
-                        VisionConstants.FRI_frontZ),
+                        VisionConstants.FRI_X,
+                        VisionConstants.FRI_Y,
+                        VisionConstants.FRI_Z),
                 new Rotation3d(
-                        VisionConstants.FRI_frontRoll,
-                        VisionConstants.FRI_frontPitch,
-                        VisionConstants.FRI_frontYaw));
+                        VisionConstants.FRI_ROLL,
+                        VisionConstants.FRI_PITCH,
+                        VisionConstants.FRI_YAW));
 
-        this.FRO_robotToCam = new Transform3d(
+        this.froRobotToCam = new Transform3d(
                 new Translation3d(
-                        VisionConstants.FRO_frontX,
-                        VisionConstants.FRO_frontY,
-                        VisionConstants.FRO_frontZ),
+                        VisionConstants.FRO_X,
+                        VisionConstants.FRO_Y,
+                        VisionConstants.FRO_Z),
                 new Rotation3d(
-                        VisionConstants.FRO_frontRoll,
-                        VisionConstants.FRO_frontPitch,
-                        VisionConstants.FRO_frontYaw));
+                        VisionConstants.FRO_ROLL,
+                        VisionConstants.FRO_PITCH,
+                        VisionConstants.FRO_YAW));
 
         // front camera estimator (new 2026 syntax)
-        this.FLO_Estimator = new PhotonPoseEstimator(
+        this.floEstimator = new PhotonPoseEstimator(
                 this.aprilTagFieldLayout,
-                this.FLO_robotToCam);
+                this.floRobotToCam);
 
-        this.FLI_Estimator = new PhotonPoseEstimator(
+        this.fliEstimator = new PhotonPoseEstimator(
                 this.aprilTagFieldLayout,
-                this.FLI_robotToCam);
+                this.fliRobotToCam);
 
-        this.FRI_Estimator = new PhotonPoseEstimator(
+        this.friEstimator = new PhotonPoseEstimator(
                 this.aprilTagFieldLayout,
-                this.FRI_robotToCam);
+                this.friRobotToCam);
 
-        this.FRO_Estimator = new PhotonPoseEstimator(
+        this.froEstimator = new PhotonPoseEstimator(
                 this.aprilTagFieldLayout,
-                this.FRO_robotToCam);
+                this.froRobotToCam);
 
         // Initialize NetworkTables publishers
         // NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -192,7 +192,7 @@ public class Vision extends SubsystemBase {
             final PhotonTrackedTarget best = result.getBestTarget();
 
             if (best != null &&
-                    best.getPoseAmbiguity() < VisionConstants.ambiguityThreshold) {
+                    best.getPoseAmbiguity() < VisionConstants.AMBIGUITY_THRESHOLD) {
                 estimatedPose = singleTagPose;
             }
         }
@@ -216,7 +216,7 @@ public class Vision extends SubsystemBase {
         for (final PhotonTrackedTarget target : result.getTargets()) {
 
             // this is reallllly tiny
-            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+            if (target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD) {
                 continue;
             }
 
@@ -232,11 +232,7 @@ public class Vision extends SubsystemBase {
 
         for (final PhotonTrackedTarget target : targets) {
             final Optional<Pose3d> tagPose = this.aprilTagFieldLayout.getTagPose(target.getFiducialId());
-            if (tagPose.isEmpty())
-                continue;
-
-            // Reject low-ambiguity threshold — tune this
-            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold)
+            if (tagPose.isEmpty() || target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD)
                 continue;
 
             numTags++;
@@ -278,16 +274,16 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         switch (this.camProcessorCounter % 4) { // NOSONAR
             case 0:
-                this.processVision(this.FLO_camera, this.FLO_Estimator);
+                this.processVision(this.floCamera, this.floEstimator);
                 break;
             case 1:
-                this.processVision(this.FLI_camera, this.FLI_Estimator);
+                this.processVision(this.fliCamera, this.fliEstimator);
                 break;
             case 2:
-                this.processVision(this.FRI_camera, this.FRI_Estimator);
+                this.processVision(this.friCamera, this.friEstimator);
                 break;
             case 3:
-                this.processVision(this.FRO_camera, this.FRO_Estimator);
+                this.processVision(this.froCamera, this.froEstimator);
                 break;
         }
         this.camProcessorCounter++;

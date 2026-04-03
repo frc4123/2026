@@ -24,47 +24,47 @@ public class IntakeArm extends SubsystemBase {
             Constants.CanIdCanivore.INTAKE_ARM,
             Constants.CanIdCanivore.CARNIVORE);
 
-    private final CANdi intakeCANdi = IntakeArmConstants.intakeCANdi;
+    private final CANdi candi;
 
-    private final StatusSignal<Boolean> isSwitchNotPressed = this.intakeCANdi.getS1Closed();
+    private final StatusSignal<Boolean> isSwitchNotPressed;
 
     private boolean hasZeroed = false;
 
-    // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            IntakeArmConstants.stowPosition,
-            IntakeArmConstants.velocity,
-            IntakeArmConstants.acceleration);
+            IntakeArmConstants.STOW_POSITION,
+            IntakeArmConstants.VELOCITY,
+            IntakeArmConstants.ACCELERATION);
 
     private final DynamicMotionMagicTorqueCurrentFOC slowMotionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            IntakeArmConstants.stowPosition,
-            IntakeArmConstants.slowVelocity,
-            IntakeArmConstants.acceleration);
+            IntakeArmConstants.STOW_POSITION,
+            IntakeArmConstants.SLOW_VELOCITY,
+            IntakeArmConstants.ACCELERATION);
 
     private final DynamicMotionMagicTorqueCurrentFOC midMotionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            IntakeArmConstants.stowPosition,
-            IntakeArmConstants.midVelocity,
-            IntakeArmConstants.acceleration);
+            IntakeArmConstants.STOW_POSITION,
+            IntakeArmConstants.MID_VELOCITY,
+            IntakeArmConstants.ACCELERATION);
 
-    public IntakeArm() {
-        // τηισ ισ ωερυ ιμπορταντ
+    public IntakeArm(final CANdi candi) {
+        this.candi = candi;
         this.configureMotor();
+        this.isSwitchNotPressed = this.candi.getS1Closed();
     }
 
     private void configureMotor() {
         this.intakeArmMotor.setNeutralMode(NeutralModeValue.Brake);
 
         final FeedbackConfigs feedbackUnits = new FeedbackConfigs()
-                .withSensorToMechanismRatio(IntakeArmConstants.sensorToMechanismRatio);
+                .withSensorToMechanismRatio(IntakeArmConstants.SENSOR_TO_MECHANISM_RATIO);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(IntakeArmConstants.kP)
-                .withKI(IntakeArmConstants.kI)
-                .withKD(IntakeArmConstants.kD)
-                .withKS(IntakeArmConstants.kS)
-                .withKV(IntakeArmConstants.kV)
-                .withKA(IntakeArmConstants.kA)
-                .withKG(IntakeArmConstants.kG)
+                .withKP(IntakeArmConstants.P)
+                .withKI(IntakeArmConstants.I)
+                .withKD(IntakeArmConstants.D)
+                .withKS(IntakeArmConstants.S)
+                .withKV(IntakeArmConstants.V)
+                .withKA(IntakeArmConstants.A)
+                .withKG(IntakeArmConstants.G)
                 .withGravityType(GravityTypeValue.Arm_Cosine)
                 .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
@@ -100,7 +100,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void zeroIntake() {
-        this.intakeArmMotor.setPosition(IntakeArmConstants.stowPosition);
+        this.intakeArmMotor.setPosition(IntakeArmConstants.STOW_POSITION);
     }
 
     public boolean isSwitchPressed() {

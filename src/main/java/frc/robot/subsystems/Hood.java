@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -15,7 +16,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
-import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
@@ -28,9 +28,9 @@ public class Hood extends SubsystemBase {
             Constants.CanIdCanivore.CARNIVORE);
 
     // why is this hoodcandi pointing to intakecandi?
-    private static final CANdi HOOD_CANDI = IntakeArmConstants.intakeCANdi;
-
-    private final StatusSignal<Boolean> s2Signal = this.HOOD_CANDI.getS2Closed();
+    // private static final CANdi HOOD_CANDI = IntakeArmConstants.intakeCANdi;
+    private final CANdi candi;
+    private final StatusSignal<Boolean> s2Signal;
 
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
             HoodConstants.STOW_POSITION,
@@ -42,9 +42,10 @@ public class Hood extends SubsystemBase {
             HoodConstants.slowVelocity,
             HoodConstants.acceleration);
 
-    public Hood() {
+    public Hood(final CANdi candi) {
+        this.candi = candi;
         this.configureMotor();
-        this.HOOD_CANDI.optimizeBusUtilization();
+        this.s2Signal = this.candi.getS2Closed();
     }
 
     private void configureMotor() {
@@ -118,7 +119,7 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic() {
-        StatusSignal.refreshAll(this.s2Signal);
+        BaseStatusSignal.refreshAll(this.s2Signal);
 
         // SmartDashboard.putNumber("Real Hood Angle", getHoodDegrees());
 

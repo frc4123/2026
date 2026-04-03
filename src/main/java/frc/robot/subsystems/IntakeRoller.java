@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.IntakeRollerConstants.intakeVelo;
+import static frc.robot.Constants.IntakeRollerConstants.INTAKE_VELO;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -19,9 +19,9 @@ public class IntakeRoller extends SubsystemBase {
     // Motion Magic controller object
 
     private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(
-            IntakeRollerConstants.zeroVelo)
-            .withVelocity(IntakeRollerConstants.intakeVelo)
-            .withAcceleration(IntakeRollerConstants.intakeAcc);
+            IntakeRollerConstants.ZERO_VELO)
+            .withVelocity(IntakeRollerConstants.INTAKE_VELO)
+            .withAcceleration(IntakeRollerConstants.INTAKE_ACCEL);
 
     public IntakeRoller() {
         // τηισ ισ ωερυ ιμπορταντ
@@ -32,12 +32,12 @@ public class IntakeRoller extends SubsystemBase {
         this.intakeRollerMotor.setNeutralMode(NeutralModeValue.Brake);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(IntakeRollerConstants.kP)
-                .withKI(IntakeRollerConstants.kI)
-                .withKD(IntakeRollerConstants.kD)
-                .withKS(IntakeRollerConstants.kS)
-                .withKV(IntakeRollerConstants.kV)
-                .withKA(IntakeRollerConstants.kA);
+                .withKP(IntakeRollerConstants.P)
+                .withKI(IntakeRollerConstants.I)
+                .withKD(IntakeRollerConstants.D)
+                .withKS(IntakeRollerConstants.S)
+                .withKV(IntakeRollerConstants.V)
+                .withKA(IntakeRollerConstants.A);
 
         this.intakeRollerMotor.getConfigurator().apply(pid);
     }
@@ -48,7 +48,7 @@ public class IntakeRoller extends SubsystemBase {
     }
 
     public boolean isIntaking() {
-        return this.intakeRollerMotor.getVelocity().getValueAsDouble() > intakeVelo * 0.3;
+        return this.intakeRollerMotor.getVelocity().getValueAsDouble() > INTAKE_VELO * 0.3;
     }
 
     public double getIntakeVelo() {

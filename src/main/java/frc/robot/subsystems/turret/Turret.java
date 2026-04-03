@@ -320,7 +320,7 @@ public class Turret extends SubsystemBase {
         final double y = robotPose.getY();
 
         if (Turret.isBlue) {
-            if (x < VisionConstants.blueHub.getX()) {
+            if (x < VisionConstants.BLUE_HUB.getX()) {
                 return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
                 // Check Y zones from top to bottom
             } else if (y >= 5.029) {
@@ -339,7 +339,7 @@ public class Turret extends SubsystemBase {
 
         } else if (Turret.isRed) {
             // Check Y zones from top to bottom
-            if (x > VisionConstants.redHub.getX()) {
+            if (x > VisionConstants.RED_HUB.getX()) {
                 return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
                 // Check Y zones from top to bottom
             } else if (y >= 5.029) {
