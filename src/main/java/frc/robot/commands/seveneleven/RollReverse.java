@@ -15,6 +15,6 @@ public class RollReverse extends Command {
 
     @Override
     public void execute() {
-        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.sevenElevenReverseVelo);
+        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.SEVEN_ELEVEN_REVERSE_VELO);
     }
 }

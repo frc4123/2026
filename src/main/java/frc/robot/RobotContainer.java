@@ -497,9 +497,9 @@ public class RobotContainer {
                 final FuelSim instance = FuelSim.getInstance();
                 instance.spawnStartingFuel();
                 instance.registerRobot(
-                                Constants.Sim.fullWidth,
-                                Constants.Sim.fullLength,
-                                Constants.Sim.fullHeight,
+                                Constants.Sim.FULL_WIDTH,
+                                Constants.Sim.FULL_LENGTH,
+                                Constants.Sim.FULL_HEIGHT,
                                 () -> this.drivetrain.getState().Pose,
                                 () -> this.drivetrain.getState().Speeds);
                 // instance.registerIntake(
@@ -517,10 +517,10 @@ public class RobotContainer {
                 // () -> turretVisSim.canIntake(),
                 // () -> turretVisSim.intakeFuel());
                 instance.registerIntake(
-                                -Constants.Sim.fullLength / 2,
-                                -Constants.Sim.fullLength,
-                                -Constants.Sim.fullWidth / 2,
-                                Constants.Sim.fullWidth / 2,
+                                -Constants.Sim.FULL_LENGTH / 2,
+                                -Constants.Sim.FULL_LENGTH,
+                                -Constants.Sim.FULL_WIDTH / 2,
+                                Constants.Sim.FULL_WIDTH / 2,
                                 this.turretVisSim::canIntake,
                                 this.turretVisSim::intakeFuel);
 

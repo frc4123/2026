@@ -317,6 +317,8 @@ public class Constants {
                 TurretConstants.robotToTurret.getRotation().toRotation2d());
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(6); // was 20
+        public static final double MIN_CUMULATIVE_ANGLE = TurretConstants.MECHANISM_MIN_RANGE * 360.0;
+        public static final double MAX_CUMULATIVE_ANGLE = TurretConstants.MECHANISM_MAX_RANGE * 360.0;
     }
 
     public static final class ShooterConstants {

@@ -31,28 +31,27 @@ public class Shooter extends SubsystemBase {
             ShooterConstants.MIN_SPEED.in(MetersPerSecond))
             .withAcceleration(ShooterConstants.SLOW_ACCELERATION);
 
-    public boolean isShooting = false;
+    private boolean isShooting = false;
 
-    public String shootingString = "Shooting Slider";
+    private static String shootingString = "Shooting Slider";
 
-    public double onTheGoSlider = 1.0;
+    private double onTheGoSlider = 1.0;
 
     public Shooter() {
-        // τηισ ισ ωερυ ιμπορταντ
         this.configureMotor();
-        SmartDashboard.putNumber(this.shootingString, 1.0);
+        SmartDashboard.putNumber(Shooter.shootingString, 1.0);
     }
 
     private void configureMotor() {
         this.shooterMotor.setNeutralMode(NeutralModeValue.Coast);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(ShooterConstants.kP)
-                .withKI(ShooterConstants.kI)
-                .withKD(ShooterConstants.kD)
-                .withKS(ShooterConstants.kS)
-                .withKV(ShooterConstants.kV)
-                .withKA(ShooterConstants.kA);
+                .withKP(ShooterConstants.P)
+                .withKI(ShooterConstants.I)
+                .withKD(ShooterConstants.D)
+                .withKS(ShooterConstants.S)
+                .withKV(ShooterConstants.V)
+                .withKA(ShooterConstants.A);
 
         final MotorOutputConfigs motorOutput = new MotorOutputConfigs()
                 .withInverted(InvertedValue.Clockwise_Positive);
@@ -84,7 +83,7 @@ public class Shooter extends SubsystemBase {
 
     }
 
-    public void isShooting(final boolean isShooting) {
+    public void setShooting(final boolean isShooting) {
         this.isShooting = isShooting;
     }
 
@@ -102,7 +101,6 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        this.onTheGoSlider = SmartDashboard.getNumber(this.shootingString, 1.0);
-        // SmartDashboard.putNumber("Shooting Slider", onTheGoSlider);
+        this.onTheGoSlider = SmartDashboard.getNumber(Shooter.shootingString, 1.0);
     }
 }

@@ -21,9 +21,9 @@ public class Uptake extends SubsystemBase {
             Constants.CanIdCanivore.UPTAKE,
             Constants.CanIdCanivore.CARNIVORE);
 
-    private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(UptakeConstants.zeroVelo)
-            .withVelocity(UptakeConstants.uptakeVelo)
-            .withAcceleration(UptakeConstants.uptakeAcc);
+    private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(UptakeConstants.ZERO_VELO)
+            .withVelocity(UptakeConstants.UPTAKE_VELO)
+            .withAcceleration(UptakeConstants.UPTAKE_ACCELERATION);
 
     public Uptake() {
         // τηισ ισ ωερυ ιμπορταντ
@@ -34,12 +34,12 @@ public class Uptake extends SubsystemBase {
         this.uptakeMotor.setNeutralMode(NeutralModeValue.Brake);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(UptakeConstants.kP)
-                .withKI(UptakeConstants.kI)
-                .withKD(UptakeConstants.kD)
-                .withKS(UptakeConstants.kS)
-                .withKV(UptakeConstants.kV)
-                .withKA(UptakeConstants.kA);
+                .withKP(UptakeConstants.P)
+                .withKI(UptakeConstants.I)
+                .withKD(UptakeConstants.D)
+                .withKS(UptakeConstants.S)
+                .withKV(UptakeConstants.V)
+                .withKA(UptakeConstants.A);
 
         this.uptakeMotor.getConfigurator().apply(pid);
     }

@@ -15,6 +15,6 @@ public class RollHigh extends Command {
 
     @Override
     public void execute() {
-        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.sevenElevenHighVelo);
+        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.SEVEN_ELEVEN_HIGH_VELO);
     }
 }

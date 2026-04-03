@@ -34,13 +34,13 @@ public class Hood extends SubsystemBase {
 
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
             HoodConstants.STOW_POSITION,
-            HoodConstants.velocity,
-            HoodConstants.acceleration);
+            HoodConstants.VELOCITY,
+            HoodConstants.ACCELERATION);
 
     private final DynamicMotionMagicTorqueCurrentFOC motionMagicFree = new DynamicMotionMagicTorqueCurrentFOC(
             HoodConstants.STOW_POSITION,
-            HoodConstants.slowVelocity,
-            HoodConstants.acceleration);
+            HoodConstants.SLOW_VELOCITY,
+            HoodConstants.ACCELERATION);
 
     public Hood(final CANdi candi) {
         this.candi = candi;
@@ -54,12 +54,12 @@ public class Hood extends SubsystemBase {
         this.hoodMotor.setNeutralMode(NeutralModeValue.Coast);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(HoodConstants.kP)
-                .withKI(HoodConstants.kI)
-                .withKD(HoodConstants.kD)
-                .withKS(HoodConstants.kS)
-                .withKV(HoodConstants.kV)
-                .withKA(HoodConstants.kA);
+                .withKP(HoodConstants.P)
+                .withKI(HoodConstants.I)
+                .withKD(HoodConstants.D)
+                .withKS(HoodConstants.S)
+                .withKV(HoodConstants.V)
+                .withKA(HoodConstants.A);
 
         final SoftwareLimitSwitchConfigs softLimits = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)

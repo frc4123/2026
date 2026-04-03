@@ -15,9 +15,10 @@ public class SevenEleven extends SubsystemBase {
             Constants.CanIdCanivore.SEVEN_ELEVEN,
             Constants.CanIdCanivore.CARNIVORE);
 
-    private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(SevenElevenConstants.zeroVelo)
-            .withVelocity(SevenElevenConstants.sevenElevenMidVelo)
-            .withAcceleration(SevenElevenConstants.sevenElevenAcc);
+    private final MotionMagicVelocityVoltage motionMagic = new MotionMagicVelocityVoltage(
+            SevenElevenConstants.ZERO_VELO)
+            .withVelocity(SevenElevenConstants.SEVEN_ELEVEN_MID_VELO)
+            .withAcceleration(SevenElevenConstants.SEVEN_ELEVEN_ACCELERATION);
 
     public SevenEleven() {
         // τηισ ισ ωερυ ιμπορταντ
@@ -28,12 +29,12 @@ public class SevenEleven extends SubsystemBase {
         this.sevenElevenMotor.setNeutralMode(NeutralModeValue.Coast);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(SevenElevenConstants.kP)
-                .withKI(SevenElevenConstants.kI)
-                .withKD(SevenElevenConstants.kD)
-                .withKS(SevenElevenConstants.kS)
-                .withKV(SevenElevenConstants.kV)
-                .withKA(SevenElevenConstants.kA);
+                .withKP(SevenElevenConstants.P)
+                .withKI(SevenElevenConstants.I)
+                .withKD(SevenElevenConstants.D)
+                .withKS(SevenElevenConstants.S)
+                .withKV(SevenElevenConstants.V)
+                .withKA(SevenElevenConstants.A);
 
         this.sevenElevenMotor.getConfigurator().apply(pid);
     }

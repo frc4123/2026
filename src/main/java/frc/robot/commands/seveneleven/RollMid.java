@@ -15,6 +15,6 @@ public class RollMid extends Command {
 
     @Override
     public void execute() {
-        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.sevenElevenMidVelo);
+        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.SEVEN_ELEVEN_MID_VELO);
     }
 }

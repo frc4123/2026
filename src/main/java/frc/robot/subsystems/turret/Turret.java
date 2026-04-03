@@ -62,7 +62,7 @@ public class Turret extends SubsystemBase {
     // get alliance color
 
     private boolean hasAbsoluteZero = false;
-    private double targetRotations = 0;
+
     private double targetCumulative = 0;
 
     private double initOffsetDegrees = 0.0; // Encoder rotations from zero at boot
@@ -93,8 +93,6 @@ public class Turret extends SubsystemBase {
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal =
     // turretEncoder1.getVelocity();
     // Physical turret limits relative to turret zero
-    private final double minCumulativeAngle = TurretConstants.MECHANISM_MIN_RANGE * 360.0;
-    private final double maxCumulativeAngle = TurretConstants.MECHANISM_MAX_RANGE * 360.0;
 
     // Cumulative turret angle tracking
     private double cumulativeAngle;
@@ -148,12 +146,12 @@ public class Turret extends SubsystemBase {
         feedbackUnits.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(TurretConstants.kP)
-                .withKI(TurretConstants.kI)
-                .withKD(TurretConstants.kD)
-                .withKS(TurretConstants.kS)
-                .withKV(TurretConstants.kV)
-                .withKA(TurretConstants.kA)
+                .withKP(TurretConstants.P)
+                .withKI(TurretConstants.I)
+                .withKD(TurretConstants.D)
+                .withKS(TurretConstants.S)
+                .withKV(TurretConstants.V)
+                .withKA(TurretConstants.A)
                 .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
         final MotorOutputConfigs motorOutput = new MotorOutputConfigs()
@@ -247,9 +245,7 @@ public class Turret extends SubsystemBase {
         // easyCrt.getUniqueCoverage();
 
         // Create the solver:
-        final var easyCrtSolver = new EasyCRT(easyCrt);
-
-        return easyCrtSolver;
+        return new EasyCRT(easyCrt);
     }
 
     private void tryResolveAbsolute() {
@@ -306,10 +302,10 @@ public class Turret extends SubsystemBase {
     }
 
     public Rotation2d targetAngle(final Pose2d robotPose) {
-        if (Turret.isBlue == false && Turret.isRed == false) {
+        if (!Turret.isBlue && !Turret.isRed) {
             if (DriverStation.isDSAttached()) {
-                Turret.isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                Turret.isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
+                Turret.isBlue = DriverStation.getAlliance().get() == Alliance.Blue;
+                Turret.isRed = DriverStation.getAlliance().get() == Alliance.Red;
             } else {
                 Turret.isBlue = false;
                 Turret.isRed = false;
@@ -369,6 +365,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void setFieldAngle(final Rotation2d targetFieldAngle) {
+        double targetRotations = 0;
 
         // Clamp vision offset
         // cameraOffset = Math.max(-2.0, Math.min(2.0, cameraOffset));
@@ -394,11 +391,11 @@ public class Turret extends SubsystemBase {
         this.targetCumulative = this.cumulativeAngle + delta; // + cameraOffset;
 
         // Clamp to physical limits
-        while (this.targetCumulative > this.maxCumulativeAngle) {
+        while (this.targetCumulative > TurretConstants.MAX_CUMULATIVE_ANGLE) {
             this.targetCumulative -= 360.0;
             ShotHelper.isWrapping(true);
         }
-        while (this.targetCumulative < this.minCumulativeAngle) {
+        while (this.targetCumulative < TurretConstants.MIN_CUMULATIVE_ANGLE) {
             this.targetCumulative += 360.0;
             ShotHelper.isWrapping(true);
         }
@@ -406,14 +403,14 @@ public class Turret extends SubsystemBase {
         // targetCumulative));
 
         // Convert position target to motor rotations
-        this.targetRotations = (this.targetCumulative - this.initOffsetDegrees) / 360.0;
+        targetRotations = (this.targetCumulative - this.initOffsetDegrees) / 360.0;
 
         // Command Motion Magic with combined velocity feedforward
         // SmartDashboard.putNumber("TargetAngle", targetRotations * 360);
-        SmartDashboard.putNumber("MotionMagicAngle ", (this.targetRotations * 360) + this.initOffsetDegrees);
+        SmartDashboard.putNumber("MotionMagicAngle ", (targetRotations * 360) + this.initOffsetDegrees);
         this.turretMotor.setControl(
                 this.motionMagic
-                        .withPosition(this.targetRotations)
+                        .withPosition(targetRotations)
         // .withFeedForward(feedforwardVolts)
         // .withFeedForward(0)
         );

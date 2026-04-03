@@ -15,6 +15,6 @@ public class RollLow extends Command {
 
     @Override
     public void execute() {
-        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.sevenElevenLowVelo);
+        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.SEVEN_ELEVEN_LOW_VELO);
     }
 }

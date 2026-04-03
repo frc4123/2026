@@ -17,9 +17,9 @@ public class Climb extends SubsystemBase {
 
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            ClimbConstants.downPosition,
-            ClimbConstants.velocity,
-            ClimbConstants.acceleration);
+            ClimbConstants.DOWN_POSITION,
+            ClimbConstants.VELOCITY,
+            ClimbConstants.ACCELERATION);
 
     public Climb() {
         // τηισ ισ ωερυ ιμπορταντ
@@ -30,13 +30,13 @@ public class Climb extends SubsystemBase {
         this.climbMotor.setNeutralMode(NeutralModeValue.Brake);
 
         final Slot0Configs pid = new Slot0Configs()
-                .withKP(ClimbConstants.kP)
-                .withKI(ClimbConstants.kI)
-                .withKD(ClimbConstants.kD)
-                .withKS(ClimbConstants.kS)
-                .withKV(ClimbConstants.kV)
-                .withKA(ClimbConstants.kA)
-                .withKG(ClimbConstants.kG);
+                .withKP(ClimbConstants.P)
+                .withKI(ClimbConstants.I)
+                .withKD(ClimbConstants.D)
+                .withKS(ClimbConstants.S)
+                .withKV(ClimbConstants.V)
+                .withKA(ClimbConstants.A)
+                .withKG(ClimbConstants.G);
 
         this.climbMotor.getConfigurator().apply(pid);
     }
