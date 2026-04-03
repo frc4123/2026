@@ -25,15 +25,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-//import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.utils.ShotCache;
 import frc.robot.utils.ShotHelper;
@@ -56,10 +52,6 @@ public class Turret extends SubsystemBase {
             Constants.CanIdCanivore.CARNIVORE);
     private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.TURRET_ENCODER_2,
             Constants.CanIdCanivore.CARNIVORE);
-
-    private static boolean isBlue = false;
-    private static boolean isRed = false;
-    // get alliance color
 
     private boolean hasAbsoluteZero = false;
 
@@ -227,9 +219,9 @@ public class Turret extends SubsystemBase {
                         Units.Rotations.of(TurretConstants.ENCODER_2_CRT_OFFSET)) // WE ALREADY FLASHED OFFSETS
                 .withMechanismRange(Units.Rotations.of(TurretConstants.MECHANISM_MIN_RANGE - 0.07),
                         Units.Rotations.of(TurretConstants.MECHANISM_MAX_RANGE + 0.07))
-                .withMatchTolerance(Units.Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio im not sure
-                                                              // about this so prolly js keep tts as it is or research
-                                                              // //TODO: research
+                // TODO ~1.08 deg at encoder2 for the example ratio im not sure about this so
+                // prolly js keep tts as it is or research
+                .withMatchTolerance(Units.Rotations.of(0.06))
                 .withAbsoluteEncoderInversions(false, false);
         // .withCrtGearRecommendationConstraints(
         // /* coverageMargin */ TurretConstants.coverageMargin,
@@ -302,63 +294,13 @@ public class Turret extends SubsystemBase {
     }
 
     public Rotation2d targetAngle(final Pose2d robotPose) {
-        if (!Turret.isBlue && !Turret.isRed) {
-            if (DriverStation.isDSAttached()) {
-                Turret.isBlue = DriverStation.getAlliance().get() == Alliance.Blue;
-                Turret.isRed = DriverStation.getAlliance().get() == Alliance.Red;
-            } else {
-                Turret.isBlue = false;
-                Turret.isRed = false;
-            }
-        }
-
-        final double x = robotPose.getX();
-        final double y = robotPose.getY();
-
-        if (Turret.isBlue) {
-            if (x < VisionConstants.BLUE_HUB.getX()) {
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-                // Check Y zones from top to bottom
-            } else if (y >= 5.029) {
-                // Top zone - face depot
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            } else if (y > 4.044) {
-                // Upper middle zone - face left bump corner
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            } else if (y > 3.059) {
-                // Lower middle zone - face right bump corner
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            } else {
-                // Bottom zone - face aim threshold
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            }
-
-        } else if (Turret.isRed) {
-            // Check Y zones from top to bottom
-            if (x > VisionConstants.RED_HUB.getX()) {
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-                // Check Y zones from top to bottom
-            } else if (y >= 5.029) {
-                // Top zone - face aim threshold
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            } else if (y > 4.044) {
-                // Upper middle zone - face right bump corner
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            } else if (y > 3.059) {
-                // Lower middle zone - face left bump corner
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            } else {
-                // Bottom zone - face depot
-                return this.getAngleToTarget(robotPose, ShotCache.get().getTarget().toTranslation2d());
-            }
-        }
-
-        return new Rotation2d(0);
+        final Translation2d target = ShotCache.get().getTarget().toTranslation2d();
+        return this.getAngleToTarget(robotPose, target);
     }
 
     private Rotation2d getAngleToTarget(final Pose2d robotPose, final Translation2d target) {
 
-        final Pose2d turretPose = robotPose.plus(TurretConstants.robotToTurretTransform);
+        final Pose2d turretPose = robotPose.plus(TurretConstants.ROBOT_TO_TURRET_TRANSFORM);
 
         final Translation2d delta = target.minus(turretPose.getTranslation());
         return delta.getAngle();
@@ -429,22 +371,9 @@ public class Turret extends SubsystemBase {
         return this.normalizeAngle(fieldRelativeAngle);
     }
 
-    public void checkDS() {
-        if (Turret.isBlue == false && Turret.isRed == false) {
-            if (DriverStation.isDSAttached()) {
-                Turret.isBlue = DriverStation.getAlliance().get() == Alliance.Blue ? true : false;
-                Turret.isRed = DriverStation.getAlliance().get() == Alliance.Red ? true : false;
-            } else {
-                Turret.isBlue = false;
-                Turret.isRed = false;
-            }
-        }
-    }
-
     @Override
     public void periodic() {
         this.refreshStatusSignals();
-        this.checkDS();
         if (this.hasAbsoluteZero) {
             this.updateCumulativeAngle();
         }

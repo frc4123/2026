@@ -306,15 +306,15 @@ public class Constants {
         public static final List<Integer> VALID_TURRET_TAGS_BLUE = List.of(21, 26, 18);
         public static final List<Integer> VALID_TURRET_TAGS_RED = List.of(2, 5, 10);
 
-        public static final Translation2d turretOffset = new Translation2d(TurretConstants.OFFSET_X,
+        public static final Translation2d TURRET_OFFSET = new Translation2d(TurretConstants.OFFSET_X,
                 TurretConstants.OFFSET_Y);
-        public static final Pose3d robotToTurret = new Pose3d(TurretConstants.OFFSET_X, TurretConstants.OFFSET_Y,
+        public static final Pose3d ROBOT_TO_TURRET = new Pose3d(TurretConstants.OFFSET_X, TurretConstants.OFFSET_Y,
                 TurretConstants.OFFSET_Z, new Rotation3d());
-        public static final Transform3d transform3D = new Transform3d(TurretConstants.robotToTurret, new Pose3d());
+        public static final Transform3d transform3D = new Transform3d(TurretConstants.ROBOT_TO_TURRET, new Pose3d());
 
-        public static final Transform2d robotToTurretTransform = new Transform2d(
-                TurretConstants.robotToTurret.getTranslation().toTranslation2d(),
-                TurretConstants.robotToTurret.getRotation().toRotation2d());
+        public static final Transform2d ROBOT_TO_TURRET_TRANSFORM = new Transform2d(
+                TurretConstants.ROBOT_TO_TURRET.getTranslation().toTranslation2d(),
+                TurretConstants.ROBOT_TO_TURRET.getRotation().toRotation2d());
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(6); // was 20
         public static final double MIN_CUMULATIVE_ANGLE = TurretConstants.MECHANISM_MIN_RANGE * 360.0;

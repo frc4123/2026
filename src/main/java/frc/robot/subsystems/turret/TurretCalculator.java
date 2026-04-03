@@ -41,7 +41,7 @@ public class TurretCalculator {
 
     public static Distance getDistanceToTarget(final Pose2d robot, final Translation3d target) {
         final Translation2d turretPos = robot.getTranslation().plus(
-                Constants.TurretConstants.turretOffset.rotateBy(robot.getRotation()));
+                Constants.TurretConstants.TURRET_OFFSET.rotateBy(robot.getRotation()));
 
         return Meters.of(turretPos.getDistance(target.toTranslation2d()));
     }
