@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -201,6 +203,8 @@ public class Vision extends SubsystemBase {
         if (estimatedPose.isPresent()) {
             EstimatedRobotPose est = estimatedPose.get();
 
+            if(isEstOffField(est)){return;}
+
             Matrix<N3, N1> stdDevs = calculateStdDevs(est, validTargets);
 
             swerve.addVisionMeasurement(
@@ -211,11 +215,21 @@ public class Vision extends SubsystemBase {
         }
     }
 
+    public boolean isEstOffField(EstimatedRobotPose est){
+        if ((est.estimatedPose.getX() < 0) || (est.estimatedPose.getX() > Field.fieldLength.in(Meters))) {
+            return true;
+        } else if ((est.estimatedPose.getY() < 0) || (est.estimatedPose.getY() > Field.fieldWidth.in(Meters))) {
+            return true;
+        }
+
+        return false;
+    }
+
     private ArrayList<PhotonTrackedTarget> getValidTargets(PhotonPipelineResult result, PhotonPoseEstimator estimator) {
         ArrayList<PhotonTrackedTarget> validTargets = new ArrayList<PhotonTrackedTarget>();
         for (PhotonTrackedTarget target : result.getTargets()) {
-
-            if (target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) {
+            double area = target.getArea(); // PhotonVision gives this as % of image
+            if ((target.getPoseAmbiguity() > VisionConstants.ambiguityThreshold) && (area < VisionConstants.tagAreaThreshold)) {
                 continue;
             }
             

@@ -22,13 +22,13 @@ import lombok.Getter;
  */
 public class Field {
     @Getter
-    public static final double fieldLength = Units.inchesToMeters(651.2);
+    public static final Distance fieldLength = Inches.of(651.2);
     @Getter
-    private static final double halfLength = fieldLength / 2.0;
+    private static final Distance halfLength = Inches.of(fieldLength.in(Inches) / 2.0);
     @Getter
-    public static final double fieldWidth = Units.inchesToMeters(317.7);
+    public static final Distance fieldWidth = Inches.of(317.7);
     @Getter
-    private static final double halfWidth = fieldWidth / 2.0;
+    private static final Distance halfWidth = Inches.of(fieldWidth.in(Inches) / 2.0);
 
     @Getter
     private static final Pose2d centerField = new Pose2d(halfLength, halfWidth, new Rotation2d());
@@ -46,7 +46,7 @@ public class Field {
         public static final double innerOpeningHeight = Units.inchesToMeters(56.5);
 
         public static final double centerX = tag26X + width / 2.0;
-        public static final double centerY = fieldWidth / 2.0;
+        public static final double centerY = fieldWidth.in(Inches) / 2.0;
 
         public static final Translation3d topCenter = new Translation3d(centerX, centerY, totalHeight);
         public static final Translation3d innerCenter = new Translation3d(centerX, centerY, innerOpeningHeight);
@@ -66,14 +66,14 @@ public class Field {
         public static final Translation2d nearLeftCorner = 
             new Translation2d(
                 BlueHub.centerX - BlueBumps.depth / 2.0,
-                fieldWidth - BlueTrench.openingWidth);
+                fieldWidth.in(Inches) - BlueTrench.openingWidth);
 
         public static final Translation2d nearRightCorner = BlueHub.nearLeftCorner;
 
         public static final Translation2d farLeftCorner =  
             new Translation2d(
                 BlueHub.centerX + BlueBumps.depth / 2.0,
-                fieldWidth - BlueTrench.openingWidth);
+                fieldWidth.in(Inches) - BlueTrench.openingWidth);
 
         public static final Translation2d farRightCorner = BlueHub.farLeftCorner;
 
@@ -111,12 +111,12 @@ public class Field {
     }
 
     public static class LeftBlueTrench {
-        public static final Translation3d openingTopLeft = new Translation3d(BlueHub.centerX, fieldWidth,
+        public static final Translation3d openingTopLeft = new Translation3d(BlueHub.centerX, fieldWidth.in(Inches),
                 BlueTrench.openingHeight);
 
         public static final Translation3d openingTopRight = new Translation3d(
                 BlueHub.centerX,
-                fieldWidth - BlueTrench.openingWidth,
+                fieldWidth.in(Inches) - BlueTrench.openingWidth,
                 BlueTrench.openingHeight);
     }
 
@@ -139,7 +139,7 @@ public class Field {
         public static final double midRungZ = Units.inchesToMeters(45.0);
         public static final double highRungZ = Units.inchesToMeters(63.0);
 
-        public static final double tag31Y = Units.inchesToMeters(fieldWidth / 2);
+        public static final double tag31Y = Units.inchesToMeters(fieldWidth.in(Inches) / 2);
 
         // Fixed X location
         public static final double frontFaceX = Units.inchesToMeters(43.51);
@@ -164,17 +164,17 @@ public class Field {
 
         public static final Translation3d center = new Translation3d(
                 depth,
-                fieldWidth / 2.0 + distanceFromCenterY,
+                fieldWidth.in(Inches) / 2.0 + distanceFromCenterY,
                 height);
 
         public static final Translation3d leftCorner = new Translation3d(
                 depth,
-                fieldWidth / 2.0 + distanceFromCenterY + width / 2.0,
+                fieldWidth.in(Inches) / 2.0 + distanceFromCenterY + width / 2.0,
                 height);
 
         public static final Translation3d rightCorner = new Translation3d(
                 depth,
-                fieldWidth / 2.0 + distanceFromCenterY - width / 2.0,
+                fieldWidth.in(Inches) / 2.0 + distanceFromCenterY - width / 2.0,
                 height);
     }
 
@@ -191,19 +191,19 @@ public class Field {
 
     public static Translation3d BlueToRed(Translation3d translation) {
         return new Translation3d(
-                Field.fieldLength - translation.getX(),
+                Field.fieldLength.in(Inches) - translation.getX(),
                 translation.getY(),
                 translation.getZ());
     }
 
     public static Translation2d BlueToRed(Translation2d translation) {
         return new Translation2d(
-                Field.fieldLength - translation.getX(),
+                Field.fieldLength.in(Inches) - translation.getX(),
                 translation.getY());
     }
 
     public static double BlueToRed(double translation) {
-        return Field.fieldLength - translation;
+        return Field.fieldLength.in(Inches) - translation;
     }
 
     @Getter

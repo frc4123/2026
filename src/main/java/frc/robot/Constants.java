@@ -96,7 +96,7 @@ public class Constants {
 
         public static final double driverDeadband = 0.05;
 
-        public static final double shootOnTheMoveError = 1.1; // .675, 1.75
+        public static final double shootOnTheMoveError = 1.1; // 1.675
 
         public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id 31
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
@@ -351,7 +351,8 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        public static final double ambiguityThreshold = 0.06;// 0.06
+        public static final double ambiguityThreshold = 0.03;// 0.06
+        public static final double tagAreaThreshold = 0.025;
 
         //FLO = Front_Left_Outside camera
         public static final double FLO_frontX = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
