@@ -88,8 +88,8 @@ public class DriveToClimb extends SequentialCommandGroup {
     }
 
     public Pose2d addRobotCentricToFieldCentric(final Pose2d robotPose, final int right, final boolean isRedAlliance) {
-        double xOffset = Constants.SwerveConstants.ADDITIONS[right][0];
-        double yOffset = Constants.SwerveConstants.ADDITIONS[right][1];
+        double xOffset = Constants.SwerveConstants.getAdditions(right, 0);
+        double yOffset = Constants.SwerveConstants.getAdditions(right, 1);
 
         // Flip the X and Y offsets for the red alliance
         if (isRedAlliance) {

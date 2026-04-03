@@ -118,12 +118,16 @@ public class Constants {
         public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626,
                 new Rotation2d(0 * Math.PI / 180.0)); // id 15
 
-        public static final double[][] ADDITIONS = {
+        private static final double[][] additions = {
                 { 1.0549228, 1.0422874 }, // LEFT ADDITION // {0.342, 0} //0.385
                 { 1.0549228, -1.0297126 } // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w
                                           // advantagescope
                 // driver relative -> {+forward/back-, +left/right-}
         };
+
+        public static double getAdditions(final int index, final int axis) {
+            return additions[index][axis];
+        }
 
         public static final Pose2d robotToClimber = new Pose2d(Units.inchesToMeters(2),
                 Units.inchesToMeters(27.5 / 2.0), new Rotation2d());
@@ -197,20 +201,20 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double zeroVelo = 0;
-        public static final double sevenElevenLowVelo = 25; // 9
-        public static final double sevenElevenMidVelo = 37; // 12
-        public static final double sevenElevenHighVelo = 60; // 90, 5
-        public static final double sevenElevenReverseVelo = -20;
+        public static final double ZERO_VELO = 0;
+        public static final double SEVEN_ELEVEN_LOW_VELO = 25; // 9
+        public static final double SEVEN_ELEVEN_MID_VELO = 37; // 12
+        public static final double SEVEN_ELEVEN_HIGH_VELO = 60; // 90, 5
+        public static final double SEVEN_ELEVEN_REVERSE_VELO = -20;
 
-        public static final double sevenElevenAcc = 60;// 25 //7, //30
+        public static final double SEVEN_ELEVEN_ACCELERATION = 60;// 25 //7, //30
 
-        public static final double kP = 0.426;
-        public static final double kI = 0; // was 0.0441
-        public static final double kD = 0;
-        public static final double kS = 0.05;
-        public static final double kV = 0.118; // try this 0;
-        public static final double kA = 0;
+        public static final double P = 0.426;
+        public static final double I = 0; // was 0.0441
+        public static final double D = 0;
+        public static final double S = 0.05;
+        public static final double V = 0.118; // try this 0;
+        public static final double A = 0;
     }
 
     public static class UptakeConstants {
@@ -218,17 +222,17 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double zeroVelo = 0;
-        public static final double uptakeVelo = 60; // 40 was 55, but change to 45 if bad
-        public static final double reverseVelo = -45;
-        public static final double uptakeAcc = UptakeConstants.uptakeVelo * 5.0;
+        public static final double ZERO_VELO = 0;
+        public static final double UPTAKE_VELO = 60; // 40 was 55, but change to 45 if bad
+        public static final double REVERSE_VELO = -45;
+        public static final double UPTAKE_ACCELERATION = UptakeConstants.UPTAKE_VELO * 5.0;
 
-        public static final double kP = 0.426;
-        public static final double kI = 0; // was 0.0441
-        public static final double kD = 0;
-        public static final double kS = 0;
-        public static final double kV = 0.118; // try this 0;
-        public static final double kA = 0;
+        public static final double P = 0.426;
+        public static final double I = 0; // was 0.0441
+        public static final double D = 0;
+        public static final double S = 0;
+        public static final double V = 0.118; // try this 0;
+        public static final double A = 0;
     }
 
     public static final class TurretConstants {
@@ -242,13 +246,14 @@ public class Constants {
 
         public static final double DRAG_COEFF = 1.14123;
 
-        public static final double kP = 20; // 20 //either p is too low
-        public static final double kI = 1.5; // or I is too high
-        public static final double kD = 20; // or D is too high? lower d and increase i first thing tmr
-        public static final double kS = 3;// 3
-        public static final double kV = 5.5;// 6; //5.75 //check if turret velo is below what it is set in velocity 4 to
-                                            // see if kv is too low
-        public static final double kA = 1;// 1.4123;
+        public static final double P = 20; // 20 //either p is too low
+        public static final double I = 1.5; // or I is too high
+        public static final double D = 20; // or D is too high? lower d and increase i first thing tmr
+        public static final double S = 3;// 3
+        // 6; 5.75 check if turret velo is below what it is set in velocity 4 to see if
+        // kv is too low
+        public static final double V = 5.5;
+        public static final double A = 1;// 1.4123;
 
         // IN ROTATIONS //
         public static final double MECHANISM_MIN_RANGE = -37.0 / 72.0; // -1 is -360 degrees
@@ -335,12 +340,12 @@ public class Constants {
                                                                                     // 0.21
                                                                                     // 0.225 0.275, 0.2, 0.15
 
-        public static final double kP = 12;
-        public static final double kI = 0;
-        public static final double kD = 0.0035; // 0.0025
-        public static final double kS = 4.00025;
-        public static final double kV = 0.114123;
-        public static final double kA = 0;
+        public static final double P = 12;
+        public static final double I = 0;
+        public static final double D = 0.0035; // 0.0025
+        public static final double S = 4.00025;
+        public static final double V = 0.114123;
+        public static final double A = 0;
 
         public static final double ACCELERATION = 1300;
         public static final double SLOW_ACCELERATION = 9;
@@ -359,16 +364,16 @@ public class Constants {
 
         public static final double SENSOR_TO_MECHANISM_RATIO = 136.0 / 1.0;
 
-        public static final double kP = 13;
-        public static final double kI = 0.051;
-        public static final double kD = 0.6;
-        public static final double kS = 2.1;
-        public static final double kV = 0;
-        public static final double kA = 0;
+        public static final double P = 13;
+        public static final double I = 0.051;
+        public static final double D = 0.6;
+        public static final double S = 2.1;
+        public static final double V = 0;
+        public static final double A = 0;
 
-        public static final double slowVelocity = 40;
-        public static final double velocity = 140;
-        public static final double acceleration = 300;
+        public static final double SLOW_VELOCITY = 40;
+        public static final double VELOCITY = 140;
+        public static final double ACCELERATION = 300;
 
         public static final double STOW_POSITION = HoodConstants.MAX_HOOD_ANGLE.in(Degrees);
     }
@@ -378,20 +383,20 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double downPosition = 0;
-        public static final double upPosition = 50;
-        public static final double testPosition = ClimbConstants.upPosition * 0.1;
+        public static final double DOWN_POSITION = 0;
+        public static final double UP_POSITION = 50;
+        public static final double TEST_POSITION = ClimbConstants.UP_POSITION * 0.1;
 
-        public static final double kP = 65;
-        public static final double kI = 0;
-        public static final double kD = 1.5;
-        public static final double kS = 2;
-        public static final double kV = 0.5;
-        public static final double kA = 0;
-        public static final double kG = 0;
+        public static final double P = 65;
+        public static final double I = 0;
+        public static final double D = 1.5;
+        public static final double S = 2;
+        public static final double V = 0.5;
+        public static final double A = 0;
+        public static final double G = 0;
 
-        public static final double velocity = 100;
-        public static final double acceleration = 200;
+        public static final double VELOCITY = 100;
+        public static final double ACCELERATION = 200;
     }
 
     public static final class Quest {
@@ -522,9 +527,9 @@ public class Constants {
 
         public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 
-        public static final double fullWidth = Units.inchesToMeters(27);
-        public static final double fullLength = Units.inchesToMeters(27);
-        public static final double fullHeight = Units.inchesToMeters(22);
+        public static final double FULL_WIDTH = Units.inchesToMeters(27);
+        public static final double FULL_LENGTH = Units.inchesToMeters(27);
+        public static final double FULL_HEIGHT = Units.inchesToMeters(22);
     }
 
     public static final class FieldConstants {
