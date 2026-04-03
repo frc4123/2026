@@ -158,10 +158,10 @@ public class Constants {
         public static final double kA = 0;
         public static final double kG = 6.14123;
 
-        public static final double velocity = 2.5;
+        public static final double velocity = 3.5; //2.5
         public static final double slowVelocity = 0.11;
-        public static final double midVelocity = 0.33;
-        public static final double acceleration = 3.5;
+        public static final double midVelocity = 0.33; 
+        public static final double acceleration = 4.0; //3.5
     }
 
     public static class IntakeRollerConstants {
