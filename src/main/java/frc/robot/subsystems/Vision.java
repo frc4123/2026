@@ -69,6 +69,7 @@ public class Vision extends SubsystemBase {
     private final PhotonPoseEstimator FRO_Estimator;
 
     private int camProcessorCounter = 0;
+    private int camToChoose = 0;
 
     private static boolean isBlue = false;
     private static boolean isRed = false;
@@ -328,14 +329,35 @@ public class Vision extends SubsystemBase {
         return false;
     }
 
+    public int avoidDisconnectedCams(int camToChoose){
+        if(camToChoose == 0 && !FLO_camera.isConnected()){
+            camToChoose++;
+        }
+        if(camToChoose == 1 && !FLI_camera.isConnected()){
+            camToChoose++;
+        }
+        if(camToChoose == 2 && !FRI_camera.isConnected()){
+            camToChoose++;
+        }
+        if(camToChoose == 3 && !FRO_camera.isConnected()){
+            camToChoose++;
+        }
+        return camToChoose;
+    }
+
     @Override
     public void periodic() {
-        switch(camProcessorCounter % 4) {
+        camToChoose = camProcessorCounter % 4;
+        camToChoose = avoidDisconnectedCams(camToChoose);
+
+        switch(camToChoose) {
             case 0: processVision(FLO_camera, FLO_Estimator); break;
             case 1: processVision(FLI_camera, FLI_Estimator); break;
             case 2: processVision(FRI_camera, FRI_Estimator); break;
             case 3: processVision(FRO_camera, FRO_Estimator); break;
+            case 4: break; // all cams are disconnected oh shoot
         }
+        
         camProcessorCounter++;
     }
 }
