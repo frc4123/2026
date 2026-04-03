@@ -113,7 +113,7 @@ spotless {
             exclude '**/build/**', '**/build-*/**', '**/bin/**'
       }
       toggleOffOn()
-      googleJavaFormat().aosp()
+      eclipse().configFile('eclipse-formatter.xml')
       importOrder()
       removeUnusedImports()
       trimTrailingWhitespace()
