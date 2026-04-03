@@ -52,22 +52,23 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final double width = Units.inchesToMeters(47.0);
-                public static final double totalHeight = Units.inchesToMeters(72.0);
-                public static final double innerOpeningWidth = Units.inchesToMeters(41.7);
-                public static final double innerOpeningHeight = Units.inchesToMeters(56.5);
+                public static final double WIDTH = Units.inchesToMeters(47.0);
+                public static final double TOTAL_HEIGHT = Units.inchesToMeters(72.0);
+                public static final double INNER_OPENING_WIDTH = Units.inchesToMeters(41.7);
+                public static final double INNER_OPENING_HEIGHT = Units.inchesToMeters(56.5);
 
-                public static final double centerX = TAG_26_X + width / 2.0;
-                public static final double centerY = FIELD_WIDTH / 2.0;
+                public static final double CENTER_X = TAG_26_X + WIDTH / 2.0;
+                public static final double CENTER_Y = FIELD_WIDTH / 2.0;
 
-                public static final Translation3d topCenter = new Translation3d(centerX, centerY, totalHeight);
-                public static final Translation3d innerCenter = new Translation3d(centerX, centerY, innerOpeningHeight);
-                public static final Translation2d nearLeftCorner = new Translation2d(TAG_26_X, centerY + width / 2.0);
-                public static final Translation2d nearRightCorner = new Translation2d(TAG_26_X, centerY - width / 2.0);
-                public static final Translation2d farLeftCorner = new Translation2d(TAG_26_X + width,
-                                centerY + width / 2.0);
-                public static final Translation2d farRightCorner = new Translation2d(TAG_26_X + width,
-                                centerY - width / 2.0);
+                public static final Translation3d topCenter = new Translation3d(CENTER_X, CENTER_Y, TOTAL_HEIGHT);
+                public static final Translation3d innerCenter = new Translation3d(CENTER_X, CENTER_Y,
+                                INNER_OPENING_HEIGHT);
+                public static final Translation2d nearLeftCorner = new Translation2d(TAG_26_X, CENTER_Y + WIDTH / 2.0);
+                public static final Translation2d nearRightCorner = new Translation2d(TAG_26_X, CENTER_Y - WIDTH / 2.0);
+                public static final Translation2d farLeftCorner = new Translation2d(TAG_26_X + WIDTH,
+                                CENTER_Y + WIDTH / 2.0);
+                public static final Translation2d farRightCorner = new Translation2d(TAG_26_X + WIDTH,
+                                CENTER_Y - WIDTH / 2.0);
         }
 
         public static class BlueBumps {
@@ -75,9 +76,9 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final double width = Units.inchesToMeters(73.0);
-                public static final double depth = Units.inchesToMeters(44.4);
-                public static final double height = Units.inchesToMeters(6.513);
+                public static final double WIDTH = Units.inchesToMeters(73.0);
+                public static final double DEPTH = Units.inchesToMeters(44.4);
+                public static final double HEIGHT = Units.inchesToMeters(6.513);
         }
 
         public static class LeftBlueBump {
@@ -86,14 +87,14 @@ public class Field {
                 }
 
                 public static final Translation2d nearLeftCorner = new Translation2d(
-                                BlueHub.centerX - BlueBumps.depth / 2.0,
-                                FIELD_WIDTH - BlueTrench.openingWidth);
+                                BlueHub.CENTER_X - BlueBumps.DEPTH / 2.0,
+                                FIELD_WIDTH - BlueTrench.OPENING_WIDTH);
 
                 public static final Translation2d nearRightCorner = BlueHub.nearLeftCorner;
 
                 public static final Translation2d farLeftCorner = new Translation2d(
-                                BlueHub.centerX + BlueBumps.depth / 2.0,
-                                FIELD_WIDTH - BlueTrench.openingWidth);
+                                BlueHub.CENTER_X + BlueBumps.DEPTH / 2.0,
+                                FIELD_WIDTH - BlueTrench.OPENING_WIDTH);
 
                 public static final Translation2d farRightCorner = BlueHub.farLeftCorner;
 
@@ -112,14 +113,14 @@ public class Field {
                 public static final Translation2d nearLeftCorner = BlueHub.nearRightCorner;
 
                 public static final Translation2d nearRightCorner = new Translation2d(
-                                BlueHub.centerX - BlueBumps.depth / 2.0,
-                                BlueTrench.openingWidth);
+                                BlueHub.CENTER_X - BlueBumps.DEPTH / 2.0,
+                                BlueTrench.OPENING_WIDTH);
 
                 public static final Translation2d farLeftCorner = BlueHub.farRightCorner;
 
                 public static final Translation2d farRightCorner = new Translation2d(
-                                BlueHub.centerX + BlueBumps.depth / 2.0,
-                                BlueTrench.openingWidth);
+                                BlueHub.CENTER_X + BlueBumps.DEPTH / 2.0,
+                                BlueTrench.OPENING_WIDTH);
 
                 public static final Translation2d centerPose = new Translation2d(
                                 (nearLeftCorner.getX() + nearRightCorner.getX() + farLeftCorner.getX()
@@ -133,11 +134,11 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final double width = Units.inchesToMeters(65.65);
-                public static final double depth = Units.inchesToMeters(47.0);
-                public static final double height = Units.inchesToMeters(40.25);
-                public static final double openingWidth = Units.inchesToMeters(50.34);
-                public static final double openingHeight = Units.inchesToMeters(22.25);
+                public static final double WIDTH = Units.inchesToMeters(65.65);
+                public static final double DEPTH = Units.inchesToMeters(47.0);
+                public static final double HEIGHT = Units.inchesToMeters(40.25);
+                public static final double OPENING_WIDTH = Units.inchesToMeters(50.34);
+                public static final double OPENING_HEIGHT = Units.inchesToMeters(22.25);
         }
 
         public static class LeftBlueTrench {
@@ -145,13 +146,13 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final Translation3d openingTopLeft = new Translation3d(BlueHub.centerX, FIELD_WIDTH,
-                                BlueTrench.openingHeight);
+                public static final Translation3d openingTopLeft = new Translation3d(BlueHub.CENTER_X, FIELD_WIDTH,
+                                BlueTrench.OPENING_HEIGHT);
 
                 public static final Translation3d openingTopRight = new Translation3d(
-                                BlueHub.centerX,
-                                FIELD_WIDTH - BlueTrench.openingWidth,
-                                BlueTrench.openingHeight);
+                                BlueHub.CENTER_X,
+                                FIELD_WIDTH - BlueTrench.OPENING_WIDTH,
+                                BlueTrench.OPENING_HEIGHT);
         }
 
         public static class RightBlueTrench {
@@ -159,12 +160,12 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final Translation3d openingTopLeft = new Translation3d(BlueHub.centerX,
-                                BlueTrench.openingWidth,
-                                BlueTrench.openingHeight);
+                public static final Translation3d openingTopLeft = new Translation3d(BlueHub.CENTER_X,
+                                BlueTrench.OPENING_WIDTH,
+                                BlueTrench.OPENING_HEIGHT);
 
-                public static final Translation3d openingTopRight = new Translation3d(BlueHub.centerX, 0.0,
-                                BlueTrench.openingHeight);
+                public static final Translation3d openingTopRight = new Translation3d(BlueHub.CENTER_X, 0.0,
+                                BlueTrench.OPENING_HEIGHT);
         }
 
         public static class BlueTower {
@@ -172,31 +173,31 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final double width = Units.inchesToMeters(49.25);
-                public static final double depth = Units.inchesToMeters(45.0);
-                public static final double height = Units.inchesToMeters(78.25);
-                public static final double innerOpeningWidth = Units.inchesToMeters(32.25);
-                public static final double uprightHeight = Units.inchesToMeters(72.1);
+                public static final double WIDTH = Units.inchesToMeters(49.25);
+                public static final double DEPTH = Units.inchesToMeters(45.0);
+                public static final double HEIGHT = Units.inchesToMeters(78.25);
+                public static final double INNER_OPENING_WIDTH = Units.inchesToMeters(32.25);
+                public static final double UPRIGHT_HEIGHT = Units.inchesToMeters(72.1);
 
-                public static final double lowRungZ = Units.inchesToMeters(27.0);
-                public static final double midRungZ = Units.inchesToMeters(45.0);
-                public static final double highRungZ = Units.inchesToMeters(63.0);
+                public static final double LOW_RUNG_Z = Units.inchesToMeters(27.0);
+                public static final double MID_RUNG_Z = Units.inchesToMeters(45.0);
+                public static final double HIGH_RUNG_Z = Units.inchesToMeters(63.0);
 
-                public static final double tag31Y = Units.inchesToMeters(FIELD_WIDTH / 2);
+                public static final double TAG_31_Y = Units.inchesToMeters(FIELD_WIDTH / 2);
 
                 // Fixed X location
-                public static final double frontFaceX = Units.inchesToMeters(43.51);
+                public static final double FRONT_FACE_X = Units.inchesToMeters(43.51);
 
                 // Reference points
-                public static final Translation2d center = new Translation2d(frontFaceX, tag31Y);
+                public static final Translation2d center = new Translation2d(FRONT_FACE_X, TAG_31_Y);
 
                 public static final Translation2d leftUpright = new Translation2d(
-                                frontFaceX,
-                                tag31Y + innerOpeningWidth / 2.0 + Units.inchesToMeters(0.75));
+                                FRONT_FACE_X,
+                                TAG_31_Y + INNER_OPENING_WIDTH / 2.0 + Units.inchesToMeters(0.75));
 
                 public static final Translation2d rightUpright = new Translation2d(
-                                frontFaceX,
-                                tag31Y - innerOpeningWidth / 2.0 - Units.inchesToMeters(0.75));
+                                FRONT_FACE_X,
+                                TAG_31_Y - INNER_OPENING_WIDTH / 2.0 - Units.inchesToMeters(0.75));
         }
 
         public static class BlueDepot {
@@ -204,25 +205,25 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final double width = Units.inchesToMeters(42.0);
-                public static final double depth = Units.inchesToMeters(27.0);
-                public static final double height = Units.inchesToMeters(1.125);
-                public static final double distanceFromCenterY = Units.inchesToMeters(75.93);
+                public static final double WIDTH = Units.inchesToMeters(42.0);
+                public static final double DEPTH = Units.inchesToMeters(27.0);
+                public static final double HEIGHT = Units.inchesToMeters(1.125);
+                public static final double DISTANCE_FROM_CENTER_Y = Units.inchesToMeters(75.93);
 
                 public static final Translation3d center = new Translation3d(
-                                depth,
-                                FIELD_WIDTH / 2.0 + distanceFromCenterY,
-                                height);
+                                DEPTH,
+                                FIELD_WIDTH / 2.0 + DISTANCE_FROM_CENTER_Y,
+                                HEIGHT);
 
                 public static final Translation3d leftCorner = new Translation3d(
-                                depth,
-                                FIELD_WIDTH / 2.0 + distanceFromCenterY + width / 2.0,
-                                height);
+                                DEPTH,
+                                FIELD_WIDTH / 2.0 + DISTANCE_FROM_CENTER_Y + WIDTH / 2.0,
+                                HEIGHT);
 
                 public static final Translation3d rightCorner = new Translation3d(
-                                depth,
-                                FIELD_WIDTH / 2.0 + distanceFromCenterY - width / 2.0,
-                                height);
+                                DEPTH,
+                                FIELD_WIDTH / 2.0 + DISTANCE_FROM_CENTER_Y - WIDTH / 2.0,
+                                HEIGHT);
         }
 
         public static class BlueOutpost {
@@ -230,14 +231,14 @@ public class Field {
                         /* This utility class should not be instantiated */
                 }
 
-                public static final double openingWidth = Units.inchesToMeters(31.8);
-                public static final double openingHeight = Units.inchesToMeters(7.0);
-                public static final double openingZ = Units.inchesToMeters(28.1);
+                public static final double OPENING_WIDTH = Units.inchesToMeters(31.8);
+                public static final double OPENING_HEIGHT = Units.inchesToMeters(7.0);
+                public static final double OPENING_Z = Units.inchesToMeters(28.1);
 
-                public static final double tag29Y = Units.inchesToMeters(26.22);
+                public static final double TAG_29_Y = Units.inchesToMeters(26.22);
 
                 // Reference point
-                public static final Translation2d center = new Translation2d(0.0, tag29Y);
+                public static final Translation2d center = new Translation2d(0.0, TAG_29_Y);
         }
 
         public static Translation3d blueToRed(final Translation3d translation) {
