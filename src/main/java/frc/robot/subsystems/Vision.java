@@ -330,18 +330,10 @@ public class Vision extends SubsystemBase {
     }
 
     public int avoidDisconnectedCams(int camToChoose){
-        if(camToChoose == 0 && !FLO_camera.isConnected()){
-            camToChoose++;
-        }
-        if(camToChoose == 1 && !FLI_camera.isConnected()){
-            camToChoose++;
-        }
-        if(camToChoose == 2 && !FRI_camera.isConnected()){
-            camToChoose++;
-        }
-        if(camToChoose == 3 && !FRO_camera.isConnected()){
-            camToChoose++;
-        }
+        if(camToChoose == 0 && !FLO_camera.isConnected()){camToChoose++;}
+        if(camToChoose == 1 && !FLI_camera.isConnected()){camToChoose++;}
+        if(camToChoose == 2 && !FRI_camera.isConnected()){camToChoose++;}
+        if(camToChoose == 3 && !FRO_camera.isConnected()){camToChoose++;}
         return camToChoose;
     }
 
@@ -357,7 +349,7 @@ public class Vision extends SubsystemBase {
             case 3: processVision(FRO_camera, FRO_Estimator); break;
             case 4: break; // all cams are disconnected oh shoot
         }
-        
+
         camProcessorCounter++;
     }
 }
