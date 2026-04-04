@@ -7,6 +7,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -241,13 +242,25 @@ public class Vision extends SubsystemBase {
     }
 
     public boolean isTagOurHub(final int tagId) {
-        // if (result == null) {
-        // return false;
-        // }
-        // final int tagId = result.getBestTarget().getFiducialId();
         final var blueBlue = FieldConstants.BLUE_HUB_TAG_IDS.contains(tagId) && Field.isBlue();
         final var redRed = FieldConstants.RED_HUB_TAG_IDS.contains(tagId) && Field.isRed();
         return blueBlue || redRed;
+    }
+
+    public Rotation2d getTrenchAngle(final double x) {
+        if (Field.isBlue()) {
+            if (x > 4.63) {
+                return new Rotation2d(Math.toRadians(0));
+            } else {
+                return new Rotation2d(Math.toRadians(180));
+            }
+        } else {
+            if (x > 11.91) {
+                return new Rotation2d(Math.toRadians(180));
+            } else {
+                return new Rotation2d(Math.toRadians(0));
+            }
+        }
     }
 
     public int avoidDisconnectedCams(int camToChoose) {
@@ -263,6 +276,7 @@ public class Vision extends SubsystemBase {
         if (camToChoose == 3 && !this.froCamera.isConnected()) {
             camToChoose++;
         }
+
         return camToChoose;
     }
 
