@@ -27,20 +27,16 @@ public class Field {
         /* This utility class should not be instantiated */
     }
 
-    @Getter public static final double FIELD_LENGTH = Units.inchesToMeters(651.2);
-    @Getter private static final double HALF_LENGTH = FIELD_LENGTH / 2.0;
-    @Getter public static final double FIELD_WIDTH = Units.inchesToMeters(317.7);
-    @Getter private static final double HALF_WIDTH = FIELD_WIDTH / 2.0;
+    @Getter public static final Distance FIELD_LENGTH = Inches.of(651.2);
+    @Getter private static final Distance HALF_LENGTH = Inches.of(FIELD_LENGTH.in(Inches) / 2.0);
+    @Getter public static final Distance FIELD_WIDTH = Inches.of(317.7);
+    @Getter private static final Distance HALF_WIDTH = Inches.of(FIELD_WIDTH.in(Inches) / 2.0);
 
     @Getter
     private static final Pose2d centerField = new Pose2d(HALF_LENGTH, HALF_WIDTH, new Rotation2d());
 
-    @Getter
-    public static final double STARTING_LINE_X = Units.inchesToMeters(299.438); // Measured from
-
-    // the inside of
-    // starting
-    // line
+    // Measured from the inside of the starting line
+    @Getter public static final double STARTING_LINE_X = Units.inchesToMeters(299.438);
 
     public static final double TAG_26_X = Units.inchesToMeters(158.61);
 
@@ -55,7 +51,7 @@ public class Field {
         public static final double INNER_OPENING_HEIGHT = Units.inchesToMeters(56.5);
 
         public static final double CENTER_X = TAG_26_X + WIDTH / 2.0;
-        public static final double CENTER_Y = FIELD_WIDTH / 2.0;
+        public static final double CENTER_Y = FIELD_WIDTH.in(Inches) / 2.0;
 
         public static final Translation3d topCenter =
                 new Translation3d(CENTER_X, CENTER_Y, TOTAL_HEIGHT);
@@ -89,14 +85,14 @@ public class Field {
         public static final Translation2d nearLeftCorner =
                 new Translation2d(
                         BlueHub.CENTER_X - BlueBumps.DEPTH / 2.0,
-                        FIELD_WIDTH - BlueTrench.OPENING_WIDTH);
+                        FIELD_WIDTH.in(Inches) - BlueTrench.OPENING_WIDTH);
 
         public static final Translation2d nearRightCorner = BlueHub.nearLeftCorner;
 
         public static final Translation2d farLeftCorner =
                 new Translation2d(
                         BlueHub.CENTER_X + BlueBumps.DEPTH / 2.0,
-                        FIELD_WIDTH - BlueTrench.OPENING_WIDTH);
+                        FIELD_WIDTH.in(Inches) - BlueTrench.OPENING_WIDTH);
 
         public static final Translation2d farRightCorner = BlueHub.farLeftCorner;
 
@@ -163,12 +159,13 @@ public class Field {
         }
 
         public static final Translation3d openingTopLeft =
-                new Translation3d(BlueHub.CENTER_X, FIELD_WIDTH, BlueTrench.OPENING_HEIGHT);
+                new Translation3d(
+                        BlueHub.CENTER_X, FIELD_WIDTH.in(Inches), BlueTrench.OPENING_HEIGHT);
 
         public static final Translation3d openingTopRight =
                 new Translation3d(
                         BlueHub.CENTER_X,
-                        FIELD_WIDTH - BlueTrench.OPENING_WIDTH,
+                        FIELD_WIDTH.in(Inches) - BlueTrench.OPENING_WIDTH,
                         BlueTrench.OPENING_HEIGHT);
     }
 
@@ -200,7 +197,7 @@ public class Field {
         public static final double MID_RUNG_Z = Units.inchesToMeters(45.0);
         public static final double HIGH_RUNG_Z = Units.inchesToMeters(63.0);
 
-        public static final double TAG_31_Y = Units.inchesToMeters(FIELD_WIDTH / 2);
+        public static final double TAG_31_Y = Units.inchesToMeters(FIELD_WIDTH.in(Inches) / 2);
 
         // Fixed X location
         public static final double FRONT_FACE_X = Units.inchesToMeters(43.51);
@@ -230,15 +227,20 @@ public class Field {
         public static final double DISTANCE_FROM_CENTER_Y = Units.inchesToMeters(75.93);
 
         public static final Translation3d center =
-                new Translation3d(DEPTH, FIELD_WIDTH / 2.0 + DISTANCE_FROM_CENTER_Y, HEIGHT);
+                new Translation3d(
+                        DEPTH, FIELD_WIDTH.in(Inches) / 2.0 + DISTANCE_FROM_CENTER_Y, HEIGHT);
 
         public static final Translation3d leftCorner =
                 new Translation3d(
-                        DEPTH, FIELD_WIDTH / 2.0 + DISTANCE_FROM_CENTER_Y + WIDTH / 2.0, HEIGHT);
+                        DEPTH,
+                        FIELD_WIDTH.in(Inches) / 2.0 + DISTANCE_FROM_CENTER_Y + WIDTH / 2.0,
+                        HEIGHT);
 
         public static final Translation3d rightCorner =
                 new Translation3d(
-                        DEPTH, FIELD_WIDTH / 2.0 + DISTANCE_FROM_CENTER_Y - WIDTH / 2.0, HEIGHT);
+                        DEPTH,
+                        FIELD_WIDTH.in(Inches) / 2.0 + DISTANCE_FROM_CENTER_Y - WIDTH / 2.0,
+                        HEIGHT);
     }
 
     public static class BlueOutpost {
@@ -258,15 +260,14 @@ public class Field {
 
     public static Translation3d blueToRed(final Translation3d translation) {
         return new Translation3d(
-                Field.FIELD_LENGTH - translation.getX(), translation.getY(), translation.getZ());
+                Field.FIELD_LENGTH.in(Inches) - translation.getX(),
+                translation.getY(),
+                translation.getZ());
     }
 
     public static Translation2d blueToRed(final Translation2d translation) {
-        return new Translation2d(Field.FIELD_LENGTH - translation.getX(), translation.getY());
-    }
-
-    public static double blueToRed(final double translation) {
-        return Field.FIELD_LENGTH - translation;
+        return new Translation2d(
+                Field.FIELD_LENGTH.in(Inches) - translation.getX(), translation.getY());
     }
 
     @Getter public static final Distance fuelRadius = Inches.of(5.91 / 2.0);

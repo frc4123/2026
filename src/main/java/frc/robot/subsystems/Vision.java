@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
@@ -154,59 +156,56 @@ public class Vision extends SubsystemBase {
     private void processVision(final PhotonCamera camera, final PhotonPoseEstimator estimator) {
 
         final PhotonPipelineResult result = getLatestResults(camera);
-        if (result == null) return;
+        // I don't think this logic was reached before, but i think it's what is intended
+        if (result == null || !result.hasTargets()) return;
 
-        final List<PhotonTrackedTarget> validTargets = this.getValidTargets(result, estimator);
-
-        // if (validTargets.isEmpty()) return;
-
-        Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
-
-        /*
-         * if (result.getMultiTagResult().isPresent() && validTargets.size() > 1) {
-         * estimatedPose = estimator.estimateCoprocMultiTagPose(result);
-         * } else {
-         */
-        if (result.hasTargets()) {
-            final var tagId = result.getBestTarget().getFiducialId();
-            if (!this.isTagOurHub(tagId)) {
-                return;
-            }
-        } else {
-            // I don't think this logic was reached before, but i think it's what is
-            // intended
+        if (result.getBestTarget().getPoseAmbiguity() >= VisionConstants.AMBIGUITY_THRESHOLD) {
+            return;
+        }
+        // TODO Again, I feel like this is weird to have to do. Perhaps wrap this in a shuffleboard
+        // boolean and play around with the vision system
+        if (!this.isTagOurHub(result.getBestTarget().getFiducialId())) {
             return;
         }
 
-        final Optional<EstimatedRobotPose> singleTagPose =
+        final Optional<EstimatedRobotPose> estPoseOpt =
                 estimator.estimateLowestAmbiguityPose(result);
-
-        if (singleTagPose.isPresent()) {
-            final PhotonTrackedTarget best = result.getBestTarget();
-
-            if (best != null && best.getPoseAmbiguity() < VisionConstants.AMBIGUITY_THRESHOLD) {
-                estimatedPose = singleTagPose;
-            }
+        if (estPoseOpt.isEmpty()) {
+            return;
         }
-        // }
+        final EstimatedRobotPose estPose = estPoseOpt.get();
 
-        if (estimatedPose.isPresent()) {
-            final EstimatedRobotPose est = estimatedPose.get();
-
-            final Matrix<N3, N1> stdDevs = this.calculateStdDevs(est, validTargets);
-
-            this.swerve.addVisionMeasurement(
-                    est.estimatedPose.toPose2d(), est.timestampSeconds, stdDevs);
+        if (this.isEstOffField(estPose)) {
+            return;
         }
+
+        final List<PhotonTrackedTarget> validTargets = this.getValidTargets(result);
+        final Matrix<N3, N1> stdDevs = this.calculateStdDevs(estPose, validTargets);
+
+        // TODO Swerve should supply a consumer that we feed datapoints into--shouldn't have to
+        // keep an instance in our class
+        this.swerve.addVisionMeasurement(
+                estPose.estimatedPose.toPose2d(), estPose.timestampSeconds, stdDevs);
     }
 
-    private List<PhotonTrackedTarget> getValidTargets(
-            final PhotonPipelineResult result, final PhotonPoseEstimator estimator) {
+    public boolean isEstOffField(final EstimatedRobotPose est) {
+        final double x = est.estimatedPose.getX();
+        final double y = est.estimatedPose.getY();
+
+        final boolean isOutsideX = (x < 0) || (x > Field.FIELD_LENGTH.in(Meters));
+        final boolean isOutsideY = (y < 0) || (y > Field.FIELD_WIDTH.in(Meters));
+
+        return isOutsideX || isOutsideY;
+    }
+
+    private List<PhotonTrackedTarget> getValidTargets(final PhotonPipelineResult result) {
         final List<PhotonTrackedTarget> validTargets = new ArrayList<>();
         for (final PhotonTrackedTarget target : result.getTargets()) {
-
-            // this is reallllly tiny
-            if (target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD) {
+            final double area = target.getArea();
+            // If the tag takes up less than (TAG_AREA_THRESHOLD *100)% of the screen, do not
+            // consider it
+            if ((target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD)
+                    && (area < VisionConstants.TAG_AREA_THRESHOLD)) {
                 continue;
             }
 
@@ -224,8 +223,7 @@ public class Vision extends SubsystemBase {
         for (final PhotonTrackedTarget target : targets) {
             final Optional<Pose3d> tagPose =
                     this.aprilTagFieldLayout.getTagPose(target.getFiducialId());
-            if (tagPose.isEmpty()
-                    || target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD) continue;
+            if (tagPose.isEmpty()) continue;
 
             numTags++;
             totalDistance +=
@@ -235,24 +233,11 @@ public class Vision extends SubsystemBase {
                             .getDistance(est.estimatedPose.toPose2d().getTranslation());
         }
 
-        if (numTags == 0)
-            return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        if (numTags == 0) return this.singleTagStdDevs;
 
         final double avgDistance = totalDistance / numTags;
-
-        // Hard reject if too far — tags beyond 4m are unreliable
-        if (avgDistance > 4.0)
-            return VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-
-        final Matrix<N3, N1> baseDevs = this.singleTagStdDevs;
-
-        // Aggressive cubic scaling instead of quadratic
-        double scalar = 1 + (avgDistance * avgDistance * avgDistance / 15.0);
-
-        // extra penalty
-        scalar *= 3.0;
-
-        return baseDevs.times(scalar);
+        final Matrix<N3, N1> baseDevs = numTags >= 2 ? this.multiTagStdDevs : this.singleTagStdDevs;
+        return baseDevs.times(0.2 + (avgDistance * avgDistance / 20));
     }
 
     public boolean isTagOurHub(final int tagId) {
@@ -265,9 +250,27 @@ public class Vision extends SubsystemBase {
         return blueBlue || redRed;
     }
 
+    public int avoidDisconnectedCams(int camToChoose) {
+        if (camToChoose == 0 && !this.floCamera.isConnected()) {
+            camToChoose++;
+        }
+        if (camToChoose == 1 && !this.fliCamera.isConnected()) {
+            camToChoose++;
+        }
+        if (camToChoose == 2 && !this.friCamera.isConnected()) {
+            camToChoose++;
+        }
+        if (camToChoose == 3 && !this.froCamera.isConnected()) {
+            camToChoose++;
+        }
+        return camToChoose;
+    }
+
     @Override
     public void periodic() {
-        switch (this.camProcessorCounter % 4) { // NOSONAR
+        int camToChoose = this.camProcessorCounter % 4;
+        camToChoose = this.avoidDisconnectedCams(camToChoose);
+        switch (camToChoose) {
             case 0:
                 this.processVision(this.floCamera, this.floEstimator);
                 break;
@@ -279,6 +282,8 @@ public class Vision extends SubsystemBase {
                 break;
             case 3:
                 this.processVision(this.froCamera, this.froEstimator);
+                break;
+            default:
                 break;
         }
         this.camProcessorCounter++;

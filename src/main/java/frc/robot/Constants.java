@@ -109,7 +109,7 @@ public class Constants {
 
         public static final double DRIVER_DEADBAND = 0.05;
 
-        public static final double SHOOT_ON_THE_MOVE_ERROR = 1.1; // .675, 1.75
+        public static final double SHOOT_ON_THE_MOVE_ERROR = 1.1; // 1.675
 
         public static final Pose2d BLUE_CLIMB_POSE =
                 new Pose2d(
@@ -283,10 +283,14 @@ public class Constants {
 
         public static final double ROTOR_TO_ENCODER_1_RATION =
                 (TurretConstants.FIFTY_TOOTH_GEAR
-                        / TurretConstants.TURRET_DRIVE_GEAR_TEETH); // 48.0 / 9.0;
+                        / TurretConstants.TURRET_DRIVE_GEAR_TEETH); // 48.0
+        // /
+        // 9.0;
         public static final double SENSOR_TO_MECHANISM_RATIO =
                 (TurretConstants.MECHANISM_GEAR_TEETH
-                        / TurretConstants.ENCODER_1_GEAR_TEETH); // 180.0 / 24.0;
+                        / TurretConstants.ENCODER_1_GEAR_TEETH); // 180.0
+        // /
+        // 24.0;
         public static final double SENSOR_2_TO_MECHANISM_RATIO =
                 ((TurretConstants.MECHANISM_GEAR_TEETH / TurretConstants.ENCODER_1_GEAR_TEETH)
                         * (TurretConstants.FIFTY_TOOTH_GEAR
@@ -452,7 +456,8 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double AMBIGUITY_THRESHOLD = 0.06; // 0.06
+        public static final double AMBIGUITY_THRESHOLD = 0.03; // 0.06
+        public static final double TAG_AREA_THRESHOLD = 0.025;
 
         // FLO = Front_Left_Outside camera
         public static final double FLO_X = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
