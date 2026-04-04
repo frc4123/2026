@@ -1,22 +1,6 @@
 package frc.robot.subsystems;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -30,6 +14,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.Field;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision extends SubsystemBase {
 
@@ -91,62 +88,58 @@ public class Vision extends SubsystemBase {
         this.aprilTagFieldLayout = Vision.loadAprilTagFieldLayout("/fields/2026Welded.json");
 
         // Camera transforms
-        this.floRobotToCam = new Transform3d(
-                new Translation3d(
-                        VisionConstants.FLO_X,
-                        VisionConstants.FLO_Y,
-                        VisionConstants.FLO_Z),
-                new Rotation3d(
-                        VisionConstants.FLO_ROLL,
-                        VisionConstants.FLO_PITCH,
-                        VisionConstants.FLO_YAW));
+        this.floRobotToCam =
+                new Transform3d(
+                        new Translation3d(
+                                VisionConstants.FLO_X,
+                                VisionConstants.FLO_Y,
+                                VisionConstants.FLO_Z),
+                        new Rotation3d(
+                                VisionConstants.FLO_ROLL,
+                                VisionConstants.FLO_PITCH,
+                                VisionConstants.FLO_YAW));
 
-        this.fliRobotToCam = new Transform3d(
-                new Translation3d(
-                        VisionConstants.FLI_X,
-                        VisionConstants.FLI_Y,
-                        VisionConstants.FLI_Z),
-                new Rotation3d(
-                        VisionConstants.FLI_ROLL,
-                        VisionConstants.FLI_PITCH,
-                        VisionConstants.FLI_YAW));
+        this.fliRobotToCam =
+                new Transform3d(
+                        new Translation3d(
+                                VisionConstants.FLI_X,
+                                VisionConstants.FLI_Y,
+                                VisionConstants.FLI_Z),
+                        new Rotation3d(
+                                VisionConstants.FLI_ROLL,
+                                VisionConstants.FLI_PITCH,
+                                VisionConstants.FLI_YAW));
 
-        this.friRobotToCam = new Transform3d(
-                new Translation3d(
-                        VisionConstants.FRI_X,
-                        VisionConstants.FRI_Y,
-                        VisionConstants.FRI_Z),
-                new Rotation3d(
-                        VisionConstants.FRI_ROLL,
-                        VisionConstants.FRI_PITCH,
-                        VisionConstants.FRI_YAW));
+        this.friRobotToCam =
+                new Transform3d(
+                        new Translation3d(
+                                VisionConstants.FRI_X,
+                                VisionConstants.FRI_Y,
+                                VisionConstants.FRI_Z),
+                        new Rotation3d(
+                                VisionConstants.FRI_ROLL,
+                                VisionConstants.FRI_PITCH,
+                                VisionConstants.FRI_YAW));
 
-        this.froRobotToCam = new Transform3d(
-                new Translation3d(
-                        VisionConstants.FRO_X,
-                        VisionConstants.FRO_Y,
-                        VisionConstants.FRO_Z),
-                new Rotation3d(
-                        VisionConstants.FRO_ROLL,
-                        VisionConstants.FRO_PITCH,
-                        VisionConstants.FRO_YAW));
+        this.froRobotToCam =
+                new Transform3d(
+                        new Translation3d(
+                                VisionConstants.FRO_X,
+                                VisionConstants.FRO_Y,
+                                VisionConstants.FRO_Z),
+                        new Rotation3d(
+                                VisionConstants.FRO_ROLL,
+                                VisionConstants.FRO_PITCH,
+                                VisionConstants.FRO_YAW));
 
         // front camera estimator (new 2026 syntax)
-        this.floEstimator = new PhotonPoseEstimator(
-                this.aprilTagFieldLayout,
-                this.floRobotToCam);
+        this.floEstimator = new PhotonPoseEstimator(this.aprilTagFieldLayout, this.floRobotToCam);
 
-        this.fliEstimator = new PhotonPoseEstimator(
-                this.aprilTagFieldLayout,
-                this.fliRobotToCam);
+        this.fliEstimator = new PhotonPoseEstimator(this.aprilTagFieldLayout, this.fliRobotToCam);
 
-        this.friEstimator = new PhotonPoseEstimator(
-                this.aprilTagFieldLayout,
-                this.friRobotToCam);
+        this.friEstimator = new PhotonPoseEstimator(this.aprilTagFieldLayout, this.friRobotToCam);
 
-        this.froEstimator = new PhotonPoseEstimator(
-                this.aprilTagFieldLayout,
-                this.froRobotToCam);
+        this.froEstimator = new PhotonPoseEstimator(this.aprilTagFieldLayout, this.froRobotToCam);
 
         // Initialize NetworkTables publishers
         // NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -161,8 +154,7 @@ public class Vision extends SubsystemBase {
     private void processVision(final PhotonCamera camera, final PhotonPoseEstimator estimator) {
 
         final PhotonPipelineResult result = getLatestResults(camera);
-        if (result == null)
-            return;
+        if (result == null) return;
 
         final List<PhotonTrackedTarget> validTargets = this.getValidTargets(result, estimator);
 
@@ -186,13 +178,13 @@ public class Vision extends SubsystemBase {
             return;
         }
 
-        final Optional<EstimatedRobotPose> singleTagPose = estimator.estimateLowestAmbiguityPose(result);
+        final Optional<EstimatedRobotPose> singleTagPose =
+                estimator.estimateLowestAmbiguityPose(result);
 
         if (singleTagPose.isPresent()) {
             final PhotonTrackedTarget best = result.getBestTarget();
 
-            if (best != null &&
-                    best.getPoseAmbiguity() < VisionConstants.AMBIGUITY_THRESHOLD) {
+            if (best != null && best.getPoseAmbiguity() < VisionConstants.AMBIGUITY_THRESHOLD) {
                 estimatedPose = singleTagPose;
             }
         }
@@ -204,14 +196,12 @@ public class Vision extends SubsystemBase {
             final Matrix<N3, N1> stdDevs = this.calculateStdDevs(est, validTargets);
 
             this.swerve.addVisionMeasurement(
-                    est.estimatedPose.toPose2d(),
-                    est.timestampSeconds,
-                    stdDevs);
+                    est.estimatedPose.toPose2d(), est.timestampSeconds, stdDevs);
         }
     }
 
-    private List<PhotonTrackedTarget> getValidTargets(final PhotonPipelineResult result,
-            final PhotonPoseEstimator estimator) {
+    private List<PhotonTrackedTarget> getValidTargets(
+            final PhotonPipelineResult result, final PhotonPoseEstimator estimator) {
         final List<PhotonTrackedTarget> validTargets = new ArrayList<>();
         for (final PhotonTrackedTarget target : result.getTargets()) {
 
@@ -226,18 +216,23 @@ public class Vision extends SubsystemBase {
         return validTargets;
     }
 
-    private Matrix<N3, N1> calculateStdDevs(final EstimatedRobotPose est, final List<PhotonTrackedTarget> targets) {
+    private Matrix<N3, N1> calculateStdDevs(
+            final EstimatedRobotPose est, final List<PhotonTrackedTarget> targets) {
         int numTags = 0;
         double totalDistance = 0;
 
         for (final PhotonTrackedTarget target : targets) {
-            final Optional<Pose3d> tagPose = this.aprilTagFieldLayout.getTagPose(target.getFiducialId());
-            if (tagPose.isEmpty() || target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD)
-                continue;
+            final Optional<Pose3d> tagPose =
+                    this.aprilTagFieldLayout.getTagPose(target.getFiducialId());
+            if (tagPose.isEmpty()
+                    || target.getPoseAmbiguity() > VisionConstants.AMBIGUITY_THRESHOLD) continue;
 
             numTags++;
-            totalDistance += tagPose.get().toPose2d().getTranslation()
-                    .getDistance(est.estimatedPose.toPose2d().getTranslation());
+            totalDistance +=
+                    tagPose.get()
+                            .toPose2d()
+                            .getTranslation()
+                            .getDistance(est.estimatedPose.toPose2d().getTranslation());
         }
 
         if (numTags == 0)

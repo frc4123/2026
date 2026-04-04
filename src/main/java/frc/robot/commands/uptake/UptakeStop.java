@@ -20,5 +20,4 @@ public class UptakeStop extends Command {
         this.shooter.setShooting(false);
         this.uptake.zeroUptakeVelo();
     }
-
 }

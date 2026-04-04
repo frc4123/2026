@@ -7,12 +7,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.util.List;
-import java.util.Set;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.CANdi;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,6 +27,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.List;
+import java.util.Set;
 
 public class Constants {
     private Constants() {
@@ -113,24 +111,31 @@ public class Constants {
 
         public static final double SHOOT_ON_THE_MOVE_ERROR = 1.1; // .675, 1.75
 
-        public static final Pose2d BLUE_CLIMB_POSE = new Pose2d(0.0080772, 3.7457125999999996,
-                new Rotation2d(0 * Math.PI / 180.0)); // id 31
-        public static final Pose2d RED_CLIMB_POSE = new Pose2d(16.53296166, 4.3235626,
-                new Rotation2d(0 * Math.PI / 180.0)); // id 15
+        public static final Pose2d BLUE_CLIMB_POSE =
+                new Pose2d(
+                        0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id
+        // 31
+        public static final Pose2d RED_CLIMB_POSE =
+                new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
 
         private static final double[][] additions = {
-                { 1.0549228, 1.0422874 }, // LEFT ADDITION // {0.342, 0} //0.385
-                { 1.0549228, -1.0297126 } // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in odometry w
-                                          // advantagescope
-                // driver relative -> {+forward/back-, +left/right-}
+            {1.0549228, 1.0422874}, // LEFT ADDITION //
+            // {0.342, 0} //0.385
+            {1.0549228, -1.0297126} // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in
+            // odometry w
+            // advantagescope
+            // driver relative -> {+forward/back-, +left/right-}
         };
 
         public static double getAdditions(final int index, final int axis) {
             return additions[index][axis];
         }
 
-        public static final Pose2d robotToClimber = new Pose2d(Units.inchesToMeters(2),
-                Units.inchesToMeters(27.5 / 2.0), new Rotation2d());
+        public static final Pose2d robotToClimber =
+                new Pose2d(
+                        Units.inchesToMeters(2),
+                        Units.inchesToMeters(27.5 / 2.0),
+                        new Rotation2d());
         // 33.75 bumper width
     }
 
@@ -139,9 +144,8 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final CANdi intakeCANdi = new CANdi(
-                Constants.CanIdCanivore.INTAKE_CANDI,
-                Constants.CanIdCanivore.CARNIVORE);
+        public static final CANdi intakeCANdi =
+                new CANdi(Constants.CanIdCanivore.INTAKE_CANDI, Constants.CanIdCanivore.CARNIVORE);
 
         static {
             IntakeArmConstants.intakeCANdi.optimizeBusUtilization();
@@ -207,7 +211,7 @@ public class Constants {
         public static final double SEVEN_ELEVEN_HIGH_VELO = 60; // 90, 5
         public static final double SEVEN_ELEVEN_REVERSE_VELO = -20;
 
-        public static final double SEVEN_ELEVEN_ACCELERATION = 60;// 25 //7, //30
+        public static final double SEVEN_ELEVEN_ACCELERATION = 60; // 25 //7, //30
 
         public static final double P = 0.426;
         public static final double I = 0; // was 0.0441
@@ -248,36 +252,45 @@ public class Constants {
 
         public static final double P = 20; // 20 //either p is too low
         public static final double I = 1.5; // or I is too high
-        public static final double D = 20; // or D is too high? lower d and increase i first thing tmr
-        public static final double S = 3;// 3
+        public static final double D = 20; // or D is too high? lower d and increase i first thing
+        // tmr
+        public static final double S = 3; // 3
         // 6; 5.75 check if turret velo is below what it is set in velocity 4 to see if
         // kv is too low
         public static final double V = 5.5;
-        public static final double A = 1;// 1.4123;
+        public static final double A = 1; // 1.4123;
 
         // IN ROTATIONS //
         public static final double MECHANISM_MIN_RANGE = -37.0 / 72.0; // -1 is -360 degrees
         public static final double MECHANISM_MAX_RANGE = 37.0 / 72.0; // 1 is +360 degrees
         // this makes total of 720 degrees rotation^^^^
 
-        public static final int MECHANISM_GEAR_TEETH = 85; // drives botrh encoders
-        public static final int ENCODER_1_GEAR_TEETH = 10; // 24.0; // Gear on Hex Shaft A that connects to turret
-        public static final int ENCODER_2_GEAR_TEETH = 22; // 10.0 / (50.0/22.0); // 22.0;
+        // drives botrh encoders
+        public static final int MECHANISM_GEAR_TEETH = 85;
+        // 24.0; Gear on Hex Shaft A that connects to turret
+        public static final int ENCODER_1_GEAR_TEETH = 10;
+        // 10.0 / (50.0/22.0); 22.0;
+        public static final int ENCODER_2_GEAR_TEETH = 22; // 10.0 / (50.0/22.0); 22.0;
         public static final int TURRET_DRIVE_GEAR_TEETH = 10;
         public static final int FIFTY_TOOTH_GEAR = 50;
 
-        public static final double MOTOR_TO_TURRET_RATIO = (TurretConstants.FIFTY_TOOTH_GEAR
-                / (double) TurretConstants.TURRET_DRIVE_GEAR_TEETH)
-                * (TurretConstants.MECHANISM_GEAR_TEETH / (double) TurretConstants.ENCODER_1_GEAR_TEETH);// (48.0/9.0) *
-        // (180.0/24.0);
+        public static final double MOTOR_TO_TURRET_RATIO =
+                (TurretConstants.FIFTY_TOOTH_GEAR
+                                / (double) TurretConstants.TURRET_DRIVE_GEAR_TEETH)
+                        * (TurretConstants.MECHANISM_GEAR_TEETH
+                                / (double) TurretConstants.ENCODER_1_GEAR_TEETH);
+        // (48.0/9.0) * (180.0/24.0);
 
-        public static final double ROTOR_TO_ENCODER_1_RATION = (TurretConstants.FIFTY_TOOTH_GEAR
-                / TurretConstants.TURRET_DRIVE_GEAR_TEETH); // 48.0 / 9.0;
-        public static final double SENSOR_TO_MECHANISM_RATIO = (TurretConstants.MECHANISM_GEAR_TEETH
-                / TurretConstants.ENCODER_1_GEAR_TEETH); // 180.0 / 24.0;
-        public static final double SENSOR_2_TO_MECHANISM_RATIO = ((TurretConstants.MECHANISM_GEAR_TEETH
-                / TurretConstants.ENCODER_1_GEAR_TEETH)
-                * (TurretConstants.FIFTY_TOOTH_GEAR / TurretConstants.ENCODER_2_GEAR_TEETH));
+        public static final double ROTOR_TO_ENCODER_1_RATION =
+                (TurretConstants.FIFTY_TOOTH_GEAR
+                        / TurretConstants.TURRET_DRIVE_GEAR_TEETH); // 48.0 / 9.0;
+        public static final double SENSOR_TO_MECHANISM_RATIO =
+                (TurretConstants.MECHANISM_GEAR_TEETH
+                        / TurretConstants.ENCODER_1_GEAR_TEETH); // 180.0 / 24.0;
+        public static final double SENSOR_2_TO_MECHANISM_RATIO =
+                ((TurretConstants.MECHANISM_GEAR_TEETH / TurretConstants.ENCODER_1_GEAR_TEETH)
+                        * (TurretConstants.FIFTY_TOOTH_GEAR
+                                / TurretConstants.ENCODER_2_GEAR_TEETH));
 
         // public static final double encoder2Ratio = (turretGearTeeth / encoder1Teeth)
         // * (50.0 / encoder2Teeth); // Gear on Hex Shaft B that connects to turret
@@ -306,19 +319,27 @@ public class Constants {
         public static final List<Integer> VALID_TURRET_TAGS_BLUE = List.of(21, 26, 18);
         public static final List<Integer> VALID_TURRET_TAGS_RED = List.of(2, 5, 10);
 
-        public static final Translation2d TURRET_OFFSET = new Translation2d(TurretConstants.OFFSET_X,
-                TurretConstants.OFFSET_Y);
-        public static final Pose3d ROBOT_TO_TURRET = new Pose3d(TurretConstants.OFFSET_X, TurretConstants.OFFSET_Y,
-                TurretConstants.OFFSET_Z, new Rotation3d());
-        public static final Transform3d transform3D = new Transform3d(TurretConstants.ROBOT_TO_TURRET, new Pose3d());
+        public static final Translation2d TURRET_OFFSET =
+                new Translation2d(TurretConstants.OFFSET_X, TurretConstants.OFFSET_Y);
+        public static final Pose3d ROBOT_TO_TURRET =
+                new Pose3d(
+                        TurretConstants.OFFSET_X,
+                        TurretConstants.OFFSET_Y,
+                        TurretConstants.OFFSET_Z,
+                        new Rotation3d());
+        public static final Transform3d transform3D =
+                new Transform3d(TurretConstants.ROBOT_TO_TURRET, new Pose3d());
 
-        public static final Transform2d ROBOT_TO_TURRET_TRANSFORM = new Transform2d(
-                TurretConstants.ROBOT_TO_TURRET.getTranslation().toTranslation2d(),
-                TurretConstants.ROBOT_TO_TURRET.getRotation().toRotation2d());
+        public static final Transform2d ROBOT_TO_TURRET_TRANSFORM =
+                new Transform2d(
+                        TurretConstants.ROBOT_TO_TURRET.getTranslation().toTranslation2d(),
+                        TurretConstants.ROBOT_TO_TURRET.getRotation().toRotation2d());
 
         public static final Distance DISTANCE_ABOVE_FUNNEL = Inches.of(6); // was 20
-        public static final double MIN_CUMULATIVE_ANGLE = TurretConstants.MECHANISM_MIN_RANGE * 360.0;
-        public static final double MAX_CUMULATIVE_ANGLE = TurretConstants.MECHANISM_MAX_RANGE * 360.0;
+        public static final double MIN_CUMULATIVE_ANGLE =
+                TurretConstants.MECHANISM_MIN_RANGE * 360.0;
+        public static final double MAX_CUMULATIVE_ANGLE =
+                TurretConstants.MECHANISM_MAX_RANGE * 360.0;
     }
 
     public static final class ShooterConstants {
@@ -330,17 +351,22 @@ public class Constants {
 
         public static final Distance FLYWHEEL_RADIUS = Inches.of(2.03);
 
-        public static final double METERS_PER_ROTATION = 2.0 * Math.PI
-                * ShooterConstants.FLYWHEEL_RADIUS.in(Meters);
+        public static final double METERS_PER_ROTATION =
+                2.0 * Math.PI * ShooterConstants.FLYWHEEL_RADIUS.in(Meters);
 
         public static final Distance compression = Inches.of(0.25);
 
         public static final double SENSOR_TO_MECHANISM_GEAR_TEETH = 1.0;
 
-        public static final double SHOOTING_TEST_ERROR_RATIO = 1.2355 + 0.25824123; // 0.2624123, 0.2675 0.272, 0.235,
-                                                                                    // 0.245, 0.23, 0.21 0.18, 0.15,
-                                                                                    // 0.21
-                                                                                    // 0.225 0.275, 0.2, 0.15
+        public static final double SHOOTING_TEST_ERROR_RATIO = 1.2355 + 0.25824123; // 0.2624123,
+        // 0.2675 0.272,
+        // 0.235,
+        // 0.245, 0.23,
+        // 0.21 0.18,
+        // 0.15,
+        // 0.21
+        // 0.225 0.275,
+        // 0.2, 0.15
 
         public static final double P = 12;
         public static final double I = 0;
@@ -407,12 +433,14 @@ public class Constants {
         }
 
         // Front Forward Camera Translation and Angle
-        public static final double X = Units.inchesToMeters(12.5);// 12.5 // 7.495 7.176364 -7.176364 //12.75
+        public static final double X = Units.inchesToMeters(12.5); // 12.5 // 7.495 7.176364
+        // -7.176364 //12.75
         public static final double Y = Units.inchesToMeters(-9.5); // -9 //-9.498
         public static final double Z = Units.inchesToMeters(10); // 10// 7.02 //10
 
         public static final double ROLL = Math.toRadians(0);
-        public static final double PITCH = Math.toRadians(0); // negative pitch is up according to 25 code
+        public static final double PITCH = Math.toRadians(0); // negative pitch is up according to
+        // 25 code
         public static final double YAW = Math.toRadians(0);
 
         public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1.6, 1.6, 3.2);
@@ -424,7 +452,7 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final double AMBIGUITY_THRESHOLD = 0.06;// 0.06
+        public static final double AMBIGUITY_THRESHOLD = 0.06; // 0.06
 
         // FLO = Front_Left_Outside camera
         public static final double FLO_X = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
@@ -465,10 +493,12 @@ public class Constants {
         public static final double FRO_YAW = Math.toRadians(0);
 
         // blueHub translations
-        public static final Pose3d BLUE_HUB = new Pose3d(4.625, 4.035, 1.4304264/* 1.828 */, new Rotation3d());
-        public static final Translation2d blueHubTranslation2d = VisionConstants.BLUE_HUB.getTranslation()
-                .toTranslation2d();
-        public static final Translation3d blueHubTranslation3d = VisionConstants.BLUE_HUB.getTranslation();
+        public static final Pose3d BLUE_HUB =
+                new Pose3d(4.625, 4.035, 1.4304264 /* 1.828 */, new Rotation3d());
+        public static final Translation2d blueHubTranslation2d =
+                VisionConstants.BLUE_HUB.getTranslation().toTranslation2d();
+        public static final Translation3d blueHubTranslation3d =
+                VisionConstants.BLUE_HUB.getTranslation();
 
         // blueDepot pose
         public static final Pose3d blueDepot = new Pose3d(-1.5, 6.0, 0.2, new Rotation3d());
@@ -482,12 +512,15 @@ public class Constants {
         // Rotation3d()); //x4.03 and y was -1
 
         // redAimThreshold pose
-        public static final Pose3d BLUE_AIM_THRESHOLD = new Pose3d(-1.5, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d BLUE_AIM_THRESHOLD =
+                new Pose3d(-1.5, 2.080, 0.2, new Rotation3d());
 
-        public static final Pose3d RED_HUB = new Pose3d(11.920, 4.035, 1.4304264/* 1.828 */, new Rotation3d());
-        public static final Translation2d redHubTranslation2d = VisionConstants.RED_HUB.getTranslation()
-                .toTranslation2d();
-        public static final Translation3d redHubTranslation3d = VisionConstants.RED_HUB.getTranslation();
+        public static final Pose3d RED_HUB =
+                new Pose3d(11.920, 4.035, 1.4304264 /* 1.828 */, new Rotation3d());
+        public static final Translation2d redHubTranslation2d =
+                VisionConstants.RED_HUB.getTranslation().toTranslation2d();
+        public static final Translation3d redHubTranslation3d =
+                VisionConstants.RED_HUB.getTranslation();
 
         public static final Pose3d RED_AIM_THRESHOLD = new Pose3d(18.5, 6.0, 0.2, new Rotation3d());
         // 12.505 and y was + 1
@@ -524,7 +557,9 @@ public class Constants {
         public static final RobotMode DS_MODE = RobotMode.COMP;
 
         public enum Mode {
-            REAL, SIM, REPLAY
+            REAL,
+            SIM,
+            REPLAY
         }
 
         public static final Mode CURRENT_MODE = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
@@ -539,9 +574,10 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
-        public static final Set<Integer> BLUE_TAGS = Set.of(17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-                32);
-        public static final Set<Integer> RED_TAGS = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+        public static final Set<Integer> BLUE_TAGS =
+                Set.of(17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
+        public static final Set<Integer> RED_TAGS =
+                Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 
         public static final Set<Integer> RED_HUB_TAG_IDS = Set.of(2, 3, 4, 5, 8, 9, 10, 11);
         public static final Set<Integer> BLUE_HUB_TAG_IDS = Set.of(18, 19, 20, 21, 24, 25, 26, 27);

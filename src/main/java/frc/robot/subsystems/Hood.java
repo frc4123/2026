@@ -12,7 +12,6 @@ import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
@@ -23,24 +22,25 @@ public class Hood extends SubsystemBase {
 
     private boolean wasPressed = false;
 
-    private final TalonFX hoodMotor = new TalonFX(
-            Constants.CanIdCanivore.HOOD,
-            Constants.CanIdCanivore.CARNIVORE);
+    private final TalonFX hoodMotor =
+            new TalonFX(Constants.CanIdCanivore.HOOD, Constants.CanIdCanivore.CARNIVORE);
 
     // why is this hoodcandi pointing to intakecandi?
     // private static final CANdi HOOD_CANDI = IntakeArmConstants.intakeCANdi;
     private final CANdi candi;
     private final StatusSignal<Boolean> s2Signal;
 
-    private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            HoodConstants.STOW_POSITION,
-            HoodConstants.VELOCITY,
-            HoodConstants.ACCELERATION);
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
+            new DynamicMotionMagicTorqueCurrentFOC(
+                    HoodConstants.STOW_POSITION,
+                    HoodConstants.VELOCITY,
+                    HoodConstants.ACCELERATION);
 
-    private final DynamicMotionMagicTorqueCurrentFOC motionMagicFree = new DynamicMotionMagicTorqueCurrentFOC(
-            HoodConstants.STOW_POSITION,
-            HoodConstants.SLOW_VELOCITY,
-            HoodConstants.ACCELERATION);
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagicFree =
+            new DynamicMotionMagicTorqueCurrentFOC(
+                    HoodConstants.STOW_POSITION,
+                    HoodConstants.SLOW_VELOCITY,
+                    HoodConstants.ACCELERATION);
 
     public Hood(final CANdi candi) {
         this.candi = candi;
@@ -53,25 +53,30 @@ public class Hood extends SubsystemBase {
         // Why are we in coast here?
         this.hoodMotor.setNeutralMode(NeutralModeValue.Coast);
 
-        final Slot0Configs pid = new Slot0Configs()
-                .withKP(HoodConstants.P)
-                .withKI(HoodConstants.I)
-                .withKD(HoodConstants.D)
-                .withKS(HoodConstants.S)
-                .withKV(HoodConstants.V)
-                .withKA(HoodConstants.A);
+        final Slot0Configs pid =
+                new Slot0Configs()
+                        .withKP(HoodConstants.P)
+                        .withKI(HoodConstants.I)
+                        .withKD(HoodConstants.D)
+                        .withKS(HoodConstants.S)
+                        .withKV(HoodConstants.V)
+                        .withKA(HoodConstants.A);
 
-        final SoftwareLimitSwitchConfigs softLimits = new SoftwareLimitSwitchConfigs()
-                .withForwardSoftLimitEnable(true)
-                .withForwardSoftLimitThreshold((HoodConstants.MAX_HOOD_ANGLE.in(Degrees))) // rotations
-                .withReverseSoftLimitEnable(true)
-                .withReverseSoftLimitThreshold(HoodConstants.MIN_HOOD_ANGLE.in(Degrees)); // rotations
+        final SoftwareLimitSwitchConfigs softLimits =
+                new SoftwareLimitSwitchConfigs()
+                        .withForwardSoftLimitEnable(true)
+                        .withForwardSoftLimitThreshold(
+                                (HoodConstants.MAX_HOOD_ANGLE.in(Degrees))) // rotations
+                        .withReverseSoftLimitEnable(true)
+                        .withReverseSoftLimitThreshold(
+                                HoodConstants.MIN_HOOD_ANGLE.in(Degrees)); // rotations
 
-        final FeedbackConfigs feedbackUnits = new FeedbackConfigs()
-                .withSensorToMechanismRatio(HoodConstants.SENSOR_TO_MECHANISM_RATIO / 360);
+        final FeedbackConfigs feedbackUnits =
+                new FeedbackConfigs()
+                        .withSensorToMechanismRatio(HoodConstants.SENSOR_TO_MECHANISM_RATIO / 360);
 
-        final TorqueCurrentConfigs torqueDeadband = new TorqueCurrentConfigs()
-                .withTorqueNeutralDeadband(1.2);
+        final TorqueCurrentConfigs torqueDeadband =
+                new TorqueCurrentConfigs().withTorqueNeutralDeadband(1.2);
 
         this.hoodMotor.getConfigurator().apply(pid);
         this.hoodMotor.getConfigurator().apply(softLimits);
@@ -92,12 +97,13 @@ public class Hood extends SubsystemBase {
     }
 
     public void lowerHood() {
-        this.hoodMotor.setControl(this.motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees)));
+        this.hoodMotor.setControl(
+                this.motionMagic.withPosition(HoodConstants.MAX_HOOD_ANGLE.in(Degrees)));
     }
 
     public void lowerHoodFree() {
-        this.hoodMotor.setControl(this.motionMagicFree.withPosition(HoodConstants.ZERO_HOOD_ANGLE.in(Degrees)));
-
+        this.hoodMotor.setControl(
+                this.motionMagicFree.withPosition(HoodConstants.ZERO_HOOD_ANGLE.in(Degrees)));
     }
 
     // public void manualReset() {

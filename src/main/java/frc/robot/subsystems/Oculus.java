@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.OptionalInt;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -16,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Quest;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
+import java.util.OptionalInt;
 
 public class Oculus extends SubsystemBase {
 
@@ -33,19 +32,13 @@ public class Oculus extends SubsystemBase {
     public Oculus() {
         trustQuest = true;
 
-        this.robotToQuest = new Transform3d(
-                new Translation3d(
-                        Quest.X,
-                        Quest.Y,
-                        Quest.Z),
-                new Rotation3d(
-                        Quest.ROLL,
-                        Quest.PITCH,
-                        Quest.YAW));
+        this.robotToQuest =
+                new Transform3d(
+                        new Translation3d(Quest.X, Quest.Y, Quest.Z),
+                        new Rotation3d(Quest.ROLL, Quest.PITCH, Quest.YAW));
 
-        final NetworkTable questTable = NetworkTableInstance.getDefault()
-                .getTable("State")
-                .getSubTable("QuestNav");
+        final NetworkTable questTable =
+                NetworkTableInstance.getDefault().getTable("State").getSubTable("QuestNav");
         this.posePub = questTable.getStructTopic("Pose", Pose2d.struct).publish();
     }
 
@@ -74,8 +67,7 @@ public class Oculus extends SubsystemBase {
     public void setRobotPose() {
         // Transform by the offset to get the Quest pose
         final double now = Timer.getFPGATimestamp();
-        if (now - this.lastVisionUpdateTime < 20)
-            return; // 20s refresh cap
+        if (now - this.lastVisionUpdateTime < 20) return; // 20s refresh cap
 
         this.lastVisionUpdateTime = now;
 
@@ -109,17 +101,18 @@ public class Oculus extends SubsystemBase {
             final Pose3d robotPose = questPose.transformBy(this.robotToQuest.inverse());
 
             // Compare Quest pose against current swerve odometry estimate
-            final double deviation = this.swerve.getState().Pose.getTranslation()
-                    .getDistance(robotPose.toPose2d().getTranslation());
+            final double deviation =
+                    this.swerve
+                            .getState()
+                            .Pose
+                            .getTranslation()
+                            .getDistance(robotPose.toPose2d().getTranslation());
 
             // Hard reject if Quest disagrees with odometry too much
-            if (deviation > 0.5)
-                return;
+            if (deviation > 0.5) return;
 
             this.swerve.addVisionMeasurement(
-                    robotPose.toPose2d(),
-                    timestamp,
-                    Quest.QUESTNAV_STD_DEVS);
+                    robotPose.toPose2d(), timestamp, Quest.QUESTNAV_STD_DEVS);
         }
 
         // for (PoseFrame questFrame : unreadFrames) {

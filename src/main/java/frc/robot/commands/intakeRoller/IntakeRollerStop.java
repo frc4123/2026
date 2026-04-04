@@ -17,5 +17,4 @@ public class IntakeRollerStop extends Command {
     public void execute() {
         this.intakeRollers.setIntakeVelo(IntakeRollerConstants.ZERO_VELO);
     }
-
 }

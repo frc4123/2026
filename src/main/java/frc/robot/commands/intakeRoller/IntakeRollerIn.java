@@ -14,7 +14,7 @@ public class IntakeRollerIn extends Command {
         this.intakeRollers = intakeRollers;
         this.intakeArm = intakeArm;
         this.addRequirements(intakeRollers);
-    }// TODO MAKE CHECK THE STATE OF THE ARM BEFORE ROLLING
+    } // TODO MAKE CHECK THE STATE OF THE ARM BEFORE ROLLING
 
     @Override
     public void execute() {

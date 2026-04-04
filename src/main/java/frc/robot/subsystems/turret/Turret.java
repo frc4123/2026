@@ -1,7 +1,5 @@
 package frc.robot.subsystems.turret;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -18,7 +16,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,25 +30,28 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.utils.ShotCache;
 import frc.robot.utils.ShotHelper;
+import java.util.function.Supplier;
 import yams.units.EasyCRT;
 import yams.units.EasyCRTConfig;
 
 /**
- * Turret subsystem for field-relative aiming.
- * Tracks cumulative angle using CANCoder with unwrapping.
- * Physical range ±360 degrees from turret zero.
- * Uses velocity feedforward to cancel robot yaw motion.
+ * Turret subsystem for field-relative aiming. Tracks cumulative angle using CANCoder with
+ * unwrapping. Physical range ±360 degrees from turret zero. Uses velocity feedforward to cancel
+ * robot yaw motion.
  */
 public class Turret extends SubsystemBase {
 
     // Motor controlling turret rotation
-    private final TalonFX turretMotor = new TalonFX(Constants.CanIdCanivore.TURRET, Constants.CanIdCanivore.CARNIVORE);
+    private final TalonFX turretMotor =
+            new TalonFX(Constants.CanIdCanivore.TURRET, Constants.CanIdCanivore.CARNIVORE);
 
     // Absolute turret encoder
-    private final CANcoder turretEncoder1 = new CANcoder(Constants.CanIdCanivore.TURRET_ENCODER_1,
-            Constants.CanIdCanivore.CARNIVORE);
-    private final CANcoder turretEncoder2 = new CANcoder(Constants.CanIdCanivore.TURRET_ENCODER_2,
-            Constants.CanIdCanivore.CARNIVORE);
+    private final CANcoder turretEncoder1 =
+            new CANcoder(
+                    Constants.CanIdCanivore.TURRET_ENCODER_1, Constants.CanIdCanivore.CARNIVORE);
+    private final CANcoder turretEncoder2 =
+            new CANcoder(
+                    Constants.CanIdCanivore.TURRET_ENCODER_2, Constants.CanIdCanivore.CARNIVORE);
 
     private boolean hasAbsoluteZero = false;
 
@@ -64,10 +64,11 @@ public class Turret extends SubsystemBase {
     private final EasyCRT easyCrtSolver;
 
     // Motion Magic controller object
-    private final DynamicMotionMagicTorqueCurrentFOC motionMagic = new DynamicMotionMagicTorqueCurrentFOC(
-            TurretConstants.STOW_POSITION,
-            TurretConstants.VELOCITY,
-            TurretConstants.ACCELERATION);
+    private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
+            new DynamicMotionMagicTorqueCurrentFOC(
+                    TurretConstants.STOW_POSITION,
+                    TurretConstants.VELOCITY,
+                    TurretConstants.ACCELERATION);
 
     // Make sure these are initialized in your constructor:
     // private final StatusSignal<Angle> motorPositionSignal =
@@ -79,8 +80,10 @@ public class Turret extends SubsystemBase {
 
     private final StatusSignal<Angle> encoder1PositionSignal = this.turretEncoder1.getPosition();
 
-    private final StatusSignal<Angle> encoder1AbsolutePositionSignal = this.turretEncoder1.getAbsolutePosition();
-    private final StatusSignal<Angle> encoder2AbsolutePositionSignal = this.turretEncoder2.getAbsolutePosition();
+    private final StatusSignal<Angle> encoder1AbsolutePositionSignal =
+            this.turretEncoder1.getAbsolutePosition();
+    private final StatusSignal<Angle> encoder2AbsolutePositionSignal =
+            this.turretEncoder2.getAbsolutePosition();
     private final StatusSignal<AngularVelocity> turretVelocity = this.turretMotor.getVelocity();
     // private final StatusSignal<AngularVelocity> encoderVelocitySignal =
     // turretEncoder1.getVelocity();
@@ -137,20 +140,21 @@ public class Turret extends SubsystemBase {
         feedbackUnits.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         feedbackUnits.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        final Slot0Configs pid = new Slot0Configs()
-                .withKP(TurretConstants.P)
-                .withKI(TurretConstants.I)
-                .withKD(TurretConstants.D)
-                .withKS(TurretConstants.S)
-                .withKV(TurretConstants.V)
-                .withKA(TurretConstants.A)
-                .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+        final Slot0Configs pid =
+                new Slot0Configs()
+                        .withKP(TurretConstants.P)
+                        .withKI(TurretConstants.I)
+                        .withKD(TurretConstants.D)
+                        .withKS(TurretConstants.S)
+                        .withKV(TurretConstants.V)
+                        .withKA(TurretConstants.A)
+                        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-        final MotorOutputConfigs motorOutput = new MotorOutputConfigs()
-                .withInverted(InvertedValue.CounterClockwise_Positive);
+        final MotorOutputConfigs motorOutput =
+                new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive);
 
-        final TorqueCurrentConfigs torqueDeadband = new TorqueCurrentConfigs()
-                .withTorqueNeutralDeadband(4);
+        final TorqueCurrentConfigs torqueDeadband =
+                new TorqueCurrentConfigs().withTorqueNeutralDeadband(4);
 
         this.turretMotor.getConfigurator().apply(feedbackUnits);
         this.turretMotor.getConfigurator().apply(pid);
@@ -160,24 +164,30 @@ public class Turret extends SubsystemBase {
 
     private void configureCANcoders() {
         // Configure CANcoder 1
-        final MagnetSensorConfigs magnetConfig1 = new MagnetSensorConfigs()
-                .withAbsoluteSensorDiscontinuityPoint(1.0)
-                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) // TODO: check which is which
-                .withMagnetOffset(TurretConstants.ENCODER_1_OFFSET); // Set the offset here
+        final MagnetSensorConfigs magnetConfig1 =
+                new MagnetSensorConfigs()
+                        .withAbsoluteSensorDiscontinuityPoint(1.0)
+                        .withSensorDirection(
+                                SensorDirectionValue
+                                        .CounterClockwise_Positive) // TODO: check which is which
+                        .withMagnetOffset(TurretConstants.ENCODER_1_OFFSET); // Set the offset here
 
-        final CANcoderConfiguration config1 = new CANcoderConfiguration()
-                .withMagnetSensor(magnetConfig1);
+        final CANcoderConfiguration config1 =
+                new CANcoderConfiguration().withMagnetSensor(magnetConfig1);
 
         this.turretEncoder1.getConfigurator().apply(config1);
 
         // Configure CANcoder 2
-        final MagnetSensorConfigs magnetConfig2 = new MagnetSensorConfigs()
-                .withAbsoluteSensorDiscontinuityPoint(1.0)
-                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive) // TODO: check which is which
-                .withMagnetOffset(TurretConstants.ENCODER_2_OFFSET); // Set the offset here
+        final MagnetSensorConfigs magnetConfig2 =
+                new MagnetSensorConfigs()
+                        .withAbsoluteSensorDiscontinuityPoint(1.0)
+                        .withSensorDirection(
+                                SensorDirectionValue
+                                        .CounterClockwise_Positive) // TODO: check which is which
+                        .withMagnetOffset(TurretConstants.ENCODER_2_OFFSET); // Set the offset here
 
-        final CANcoderConfiguration config2 = new CANcoderConfiguration()
-                .withMagnetSensor(magnetConfig2);
+        final CANcoderConfiguration config2 =
+                new CANcoderConfiguration().withMagnetSensor(magnetConfig2);
 
         this.turretEncoder2.getConfigurator().apply(config2);
     }
@@ -185,44 +195,49 @@ public class Turret extends SubsystemBase {
     // Call this once per periodic loop to refresh all signals
     private void refreshStatusSignals() {
         BaseStatusSignal.refreshAll(
-                this.// motorPositionSignal,
-                // motorVelocitySignal,
-                // voltageSignal,
+                this. // motorPositionSignal,
+                        // motorVelocitySignal,
+                        // voltageSignal,
                         encoder1AbsolutePositionSignal,
                 this.encoder2AbsolutePositionSignal,
                 this.encoder1PositionSignal,
-                this.turretVelocity// ,
-        // encoderVelocitySignal
-        );
+                this.turretVelocity // ,
+                // encoderVelocitySignal
+                );
     }
 
     private double normalizeAngle(double deg) {
         deg %= 360.0;
-        if (deg > 180)
-            deg -= 360;
-        if (deg < -180)
-            deg += 360;
+        if (deg > 180) deg -= 360;
+        if (deg < -180) deg += 360;
         return deg;
     }
 
     public EasyCRT initCRT() {
 
-        final Supplier<Angle> enc1Supplier = () -> Units.Rotations
-                .of(this.encoder1AbsolutePositionSignal.getValueAsDouble());
-        final Supplier<Angle> enc2Supplier = () -> Units.Rotations
-                .of(this.encoder2AbsolutePositionSignal.getValueAsDouble());
+        final Supplier<Angle> enc1Supplier =
+                () -> Units.Rotations.of(this.encoder1AbsolutePositionSignal.getValueAsDouble());
+        final Supplier<Angle> enc2Supplier =
+                () -> Units.Rotations.of(this.encoder2AbsolutePositionSignal.getValueAsDouble());
 
-        final var easyCrt = new EasyCRTConfig(enc1Supplier, enc2Supplier)
-                .withEncoderRatios(TurretConstants.SENSOR_TO_MECHANISM_RATIO,
-                        TurretConstants.SENSOR_2_TO_MECHANISM_RATIO)
-                .withAbsoluteEncoderOffsets(Units.Rotations.of(TurretConstants.ENCODER_1_CRT_OFFSET),
-                        Units.Rotations.of(TurretConstants.ENCODER_2_CRT_OFFSET)) // WE ALREADY FLASHED OFFSETS
-                .withMechanismRange(Units.Rotations.of(TurretConstants.MECHANISM_MIN_RANGE - 0.07),
-                        Units.Rotations.of(TurretConstants.MECHANISM_MAX_RANGE + 0.07))
-                // TODO ~1.08 deg at encoder2 for the example ratio im not sure about this so
-                // prolly js keep tts as it is or research
-                .withMatchTolerance(Units.Rotations.of(0.06))
-                .withAbsoluteEncoderInversions(false, false);
+        final var easyCrt =
+                new EasyCRTConfig(enc1Supplier, enc2Supplier)
+                        .withEncoderRatios(
+                                TurretConstants.SENSOR_TO_MECHANISM_RATIO,
+                                TurretConstants.SENSOR_2_TO_MECHANISM_RATIO)
+                        .withAbsoluteEncoderOffsets(
+                                Units.Rotations.of(TurretConstants.ENCODER_1_CRT_OFFSET),
+                                Units.Rotations.of(
+                                        TurretConstants.ENCODER_2_CRT_OFFSET)) // WE ALREADY FLASHED
+                        // OFFSETS
+                        .withMechanismRange(
+                                Units.Rotations.of(TurretConstants.MECHANISM_MIN_RANGE - 0.07),
+                                Units.Rotations.of(TurretConstants.MECHANISM_MAX_RANGE + 0.07))
+                        // TODO ~1.08 deg at encoder2 for the example ratio im not sure about this
+                        // so
+                        // prolly js keep tts as it is or research
+                        .withMatchTolerance(Units.Rotations.of(0.06))
+                        .withAbsoluteEncoderInversions(false, false);
         // .withCrtGearRecommendationConstraints(
         // /* coverageMargin */ TurretConstants.coverageMargin,
         // /* minTeeth */ TurretConstants.minTeeth,
@@ -241,8 +256,7 @@ public class Turret extends SubsystemBase {
     }
 
     private void tryResolveAbsolute() {
-        if (this.hasAbsoluteZero)
-            return;
+        if (this.hasAbsoluteZero) return;
 
         // Wait 40 loops (~800ms) before trying to resolve
         if (this.bootDelayCounter < 100) {
@@ -250,7 +264,9 @@ public class Turret extends SubsystemBase {
             return;
         }
 
-        BaseStatusSignal.refreshAll(this.encoder1AbsolutePositionSignal, this.encoder2AbsolutePositionSignal,
+        BaseStatusSignal.refreshAll(
+                this.encoder1AbsolutePositionSignal,
+                this.encoder2AbsolutePositionSignal,
                 this.encoder1PositionSignal);
 
         if (!this.encoder1AbsolutePositionSignal.getStatus().isOK()
@@ -260,22 +276,21 @@ public class Turret extends SubsystemBase {
         }
 
         final var angleOpt = this.easyCrtSolver.getAngleOptional();
-        if (angleOpt.isEmpty())
-            return;
+        if (angleOpt.isEmpty()) return;
 
         final Angle mechAngle = angleOpt.get();
 
         this.cumulativeAngle = mechAngle.in(Units.Degrees);
 
         // Constrain to -360° to +360°
-        while (this.cumulativeAngle > 360.0)
-            this.cumulativeAngle -= 360.0;
-        while (this.cumulativeAngle < -360.0)
-            this.cumulativeAngle += 360.0;
+        while (this.cumulativeAngle > 360.0) this.cumulativeAngle -= 360.0;
+        while (this.cumulativeAngle < -360.0) this.cumulativeAngle += 360.0;
 
         // Current encoder reading using THE SAME MATH as updateCumulativeAngle()
-        final double currentEncoderDegrees = this.encoder1PositionSignal.getValueAsDouble() * 360.0
-                / TurretConstants.SENSOR_TO_MECHANISM_RATIO;
+        final double currentEncoderDegrees =
+                this.encoder1PositionSignal.getValueAsDouble()
+                        * 360.0
+                        / TurretConstants.SENSOR_TO_MECHANISM_RATIO;
 
         // Calculate offset: 87° - 3° = 84° offset
         this.initOffsetDegrees = this.cumulativeAngle - currentEncoderDegrees;
@@ -283,14 +298,14 @@ public class Turret extends SubsystemBase {
         this.hasAbsoluteZero = true;
     }
 
-    /**
-     * Unwrap absolute encoder into cumulative turret angle.
-     * Call exactly once per loop.
-     */
+    /** Unwrap absolute encoder into cumulative turret angle. Call exactly once per loop. */
     private void updateCumulativeAngle() {
         // Get total rotations from encoder
-        this.cumulativeAngle = this.initOffsetDegrees
-                + (this.encoder1PositionSignal.getValueAsDouble() * 360.0 / TurretConstants.SENSOR_TO_MECHANISM_RATIO);
+        this.cumulativeAngle =
+                this.initOffsetDegrees
+                        + (this.encoder1PositionSignal.getValueAsDouble()
+                                * 360.0
+                                / TurretConstants.SENSOR_TO_MECHANISM_RATIO);
     }
 
     public Rotation2d targetAngle(final Pose2d robotPose) {
@@ -320,12 +335,13 @@ public class Turret extends SubsystemBase {
         // Compute shortest delta to target
         final double current = this.cumulativeAngle;
 
-        final double robotYawRateDegPerSec = this.drivetrain.getState().Speeds.omegaRadiansPerSecond * 180.0 / Math.PI;
+        final double robotYawRateDegPerSec =
+                this.drivetrain.getState().Speeds.omegaRadiansPerSecond * 180.0 / Math.PI;
         final double predictionTime = 0.15;
-        final Rotation2d predictedRobotHeading = robotHeading.plus(
-                Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime));
-        final double targetTurretAngle = this
-                .normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
+        final Rotation2d predictedRobotHeading =
+                robotHeading.plus(Rotation2d.fromDegrees(robotYawRateDegPerSec * predictionTime));
+        final double targetTurretAngle =
+                this.normalizeAngle(targetFieldAngle.minus(predictedRobotHeading).getDegrees());
 
         final double delta = this.normalizeAngle(targetTurretAngle - current);
 
@@ -349,13 +365,13 @@ public class Turret extends SubsystemBase {
 
         // Command Motion Magic with combined velocity feedforward
         // SmartDashboard.putNumber("TargetAngle", targetRotations * 360);
-        SmartDashboard.putNumber("MotionMagicAngle ", (targetRotations * 360) + this.initOffsetDegrees);
+        SmartDashboard.putNumber(
+                "MotionMagicAngle ", (targetRotations * 360) + this.initOffsetDegrees);
         this.turretMotor.setControl(
-                this.motionMagic
-                        .withPosition(targetRotations)
-        // .withFeedForward(feedforwardVolts)
-        // .withFeedForward(0)
-        );
+                this.motionMagic.withPosition(targetRotations)
+                // .withFeedForward(feedforwardVolts)
+                // .withFeedForward(0)
+                );
     }
 
     public double getCumulativeAngle() {

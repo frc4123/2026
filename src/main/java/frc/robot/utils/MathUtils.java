@@ -11,5 +11,4 @@ public class MathUtils {
     public static boolean withinTolerance(double value, double tolerance) {
         return Math.abs(value) <= Math.abs(tolerance);
     }
-
 }

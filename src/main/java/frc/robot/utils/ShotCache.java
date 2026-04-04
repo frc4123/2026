@@ -25,21 +25,22 @@ public class ShotCache {
 
     public static void update() {
         if (!isPassingShot()) {
-            cachedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
-                    swerve.getState().Pose,
-                    swerve.getState().Speeds,
-                    Target.getTarget(),
-                    13 // was 9, 8, 6, 7, 3
-            );
+            cachedShot =
+                    TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                            swerve.getState().Pose,
+                            swerve.getState().Speeds,
+                            Target.getTarget(),
+                            13 // was 9, 8, 6, 7, 3
+                            );
         } else {
-            cachedShot = TurretCalculator.iterativeMovingPass(
-                    swerve.getState().Pose,
-                    swerve.getState().Speeds,
-                    Target.getTarget(),
-                    13 // was 9, 8, 6, 7, 3
-            );
+            cachedShot =
+                    TurretCalculator.iterativeMovingPass(
+                            swerve.getState().Pose,
+                            swerve.getState().Speeds,
+                            Target.getTarget(),
+                            13 // was 9, 8, 6, 7, 3
+                            );
         }
-
     }
 
     public static ShotData get() {

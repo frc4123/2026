@@ -9,7 +9,6 @@ import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,17 +18,16 @@ import frc.robot.utils.ShotCache;
 
 public class Shooter extends SubsystemBase {
 
-    private final TalonFX shooterMotor = new TalonFX(
-            Constants.CanIdCanivore.SHOOTER,
-            Constants.CanIdCanivore.CARNIVORE);
+    private final TalonFX shooterMotor =
+            new TalonFX(Constants.CanIdCanivore.SHOOTER, Constants.CanIdCanivore.CARNIVORE);
 
-    private final VelocityTorqueCurrentFOC motionMagic = new VelocityTorqueCurrentFOC(
-            ShooterConstants.MIN_SPEED.in(MetersPerSecond))
-            .withAcceleration(ShooterConstants.ACCELERATION);
+    private final VelocityTorqueCurrentFOC motionMagic =
+            new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED.in(MetersPerSecond))
+                    .withAcceleration(ShooterConstants.ACCELERATION);
 
-    private final VelocityTorqueCurrentFOC slowMotionMagic = new VelocityTorqueCurrentFOC(
-            ShooterConstants.MIN_SPEED.in(MetersPerSecond))
-            .withAcceleration(ShooterConstants.SLOW_ACCELERATION);
+    private final VelocityTorqueCurrentFOC slowMotionMagic =
+            new VelocityTorqueCurrentFOC(ShooterConstants.MIN_SPEED.in(MetersPerSecond))
+                    .withAcceleration(ShooterConstants.SLOW_ACCELERATION);
 
     private boolean isShooting = false;
 
@@ -45,16 +43,17 @@ public class Shooter extends SubsystemBase {
     private void configureMotor() {
         this.shooterMotor.setNeutralMode(NeutralModeValue.Coast);
 
-        final Slot0Configs pid = new Slot0Configs()
-                .withKP(ShooterConstants.P)
-                .withKI(ShooterConstants.I)
-                .withKD(ShooterConstants.D)
-                .withKS(ShooterConstants.S)
-                .withKV(ShooterConstants.V)
-                .withKA(ShooterConstants.A);
+        final Slot0Configs pid =
+                new Slot0Configs()
+                        .withKP(ShooterConstants.P)
+                        .withKI(ShooterConstants.I)
+                        .withKD(ShooterConstants.D)
+                        .withKS(ShooterConstants.S)
+                        .withKV(ShooterConstants.V)
+                        .withKA(ShooterConstants.A);
 
-        final MotorOutputConfigs motorOutput = new MotorOutputConfigs()
-                .withInverted(InvertedValue.Clockwise_Positive);
+        final MotorOutputConfigs motorOutput =
+                new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive);
 
         this.shooterMotor.getConfigurator().apply(pid);
 
@@ -65,22 +64,27 @@ public class Shooter extends SubsystemBase {
 
         final ShotData shot = ShotCache.get();
 
-        final double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
-                / (2.0 * Math.PI
-                        * (ShooterConstants.FLYWHEEL_RADIUS.in(Meters) + ShooterConstants.compression.in(Meters)))
-                * this.onTheGoSlider;
+        final double Velo =
+                shot.getExitVelocity().in(MetersPerSecond)
+                        * (2)
+                        / (2.0
+                                * Math.PI
+                                * (ShooterConstants.FLYWHEEL_RADIUS.in(Meters)
+                                        + ShooterConstants.compression.in(Meters)))
+                        * this.onTheGoSlider;
 
         // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
         // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that
 
         if (this.isShooting) {
-            this.shooterMotor
-                    .setControl(this.motionMagic.withVelocity((Velo * ShooterConstants.SHOOTING_TEST_ERROR_RATIO))); // 1.23
+            this.shooterMotor.setControl(
+                    this.motionMagic.withVelocity(
+                            (Velo * ShooterConstants.SHOOTING_TEST_ERROR_RATIO))); // 1.23
         } else {
-            this.shooterMotor
-                    .setControl(this.slowMotionMagic.withVelocity((Velo * ShooterConstants.SHOOTING_TEST_ERROR_RATIO))); // 1.23
+            this.shooterMotor.setControl(
+                    this.slowMotionMagic.withVelocity(
+                            (Velo * ShooterConstants.SHOOTING_TEST_ERROR_RATIO))); // 1.23
         }
-
     }
 
     public void setShooting(final boolean isShooting) {
@@ -88,7 +92,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shooterMinVelo() {
-        this.shooterMotor.setControl(this.motionMagic.withVelocity(ShooterConstants.MIN_SPEED.in(MetersPerSecond)));
+        this.shooterMotor.setControl(
+                this.motionMagic.withVelocity(ShooterConstants.MIN_SPEED.in(MetersPerSecond)));
     }
 
     public void setShooterOpenLoopVelo(final double velo) {

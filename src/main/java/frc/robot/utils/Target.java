@@ -18,17 +18,20 @@ public class Target {
             if (x < Constants.VisionConstants.BLUE_HUB.getX()) {
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot.getTranslation(); // blueDepot Convert Pose2d to
-                                                                             // Translation3d
+                return Constants.VisionConstants.blueDepot
+                        .getTranslation(); // blueDepot Convert Pose2d to
+                // Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
                 return Constants.VisionConstants.blueDepot.getTranslation(); // blueLeftBumpCorner.
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
-                return Constants.VisionConstants.BLUE_AIM_THRESHOLD.getTranslation(); // blueRIghtBumpCorner
+                return Constants.VisionConstants.BLUE_AIM_THRESHOLD
+                        .getTranslation(); // blueRIghtBumpCorner
             } else {
                 // Bottom zone - aim threshold
-                return Constants.VisionConstants.BLUE_AIM_THRESHOLD.getTranslation(); // blueAimThreshold
+                return Constants.VisionConstants.BLUE_AIM_THRESHOLD
+                        .getTranslation(); // blueAimThreshold
             }
         } else if (Field.isRed()) {
             if (x > Constants.VisionConstants.RED_HUB.getX()) {
@@ -36,10 +39,12 @@ public class Target {
                 // Past hub - match the Y zones from Turret.targetAngle()
             } else if (y >= 5.029) {
                 // Top zone - aim threshold
-                return Constants.VisionConstants.RED_AIM_THRESHOLD.getTranslation(); // redAimThreshold
+                return Constants.VisionConstants.RED_AIM_THRESHOLD
+                        .getTranslation(); // redAimThreshold
             } else if (y > 4.044) {
                 // Upper middle zone - right bump corner
-                return Constants.VisionConstants.RED_AIM_THRESHOLD.getTranslation(); // redRightBumpCorner
+                return Constants.VisionConstants.RED_AIM_THRESHOLD
+                        .getTranslation(); // redRightBumpCorner
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
                 return Constants.VisionConstants.redDepot.getTranslation(); // redLeftBumpCorner

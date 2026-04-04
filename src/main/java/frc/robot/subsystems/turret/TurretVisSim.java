@@ -4,10 +4,6 @@
 
 package frc.robot.subsystems.turret;
 
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -29,6 +25,8 @@ import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.utils.Field;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShotCache;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class TurretVisSim extends SubsystemBase {
@@ -50,7 +48,8 @@ public class TurretVisSim extends SubsystemBase {
         final double turretFieldRad = Math.toRadians(this.turret.getFieldAngle());
 
         // CRITICAL LOGGING - AdvantageKit
-        final double robotHeading = this.poseSupplier.get().getRotation().toRotation2d().getDegrees();
+        final double robotHeading =
+                this.poseSupplier.get().getRotation().toRotation2d().getDegrees();
         final double cumulativeAngle = this.turret.getCumulativeAngle();
 
         Logger.recordOutput("LaunchFuel/RobotHeading", robotHeading);
@@ -90,7 +89,9 @@ public class TurretVisSim extends SubsystemBase {
         final double dx = target.getX() - turretPos.getX();
         final double dz = target.getZ() - turretPos.getZ();
         final double g = 9.81;
-        final double speed = Math.sqrt(g * dx * dx / (2 * Math.cos(45) * Math.cos(45) * (dx * Math.tan(45) - dz)));
+        final double speed =
+                Math.sqrt(
+                        g * dx * dx / (2 * Math.cos(45) * Math.cos(45) * (dx * Math.tan(45) - dz)));
         // Wrap speed in LinearVelocity type
         return Units.MetersPerSecond.of(speed);
     }
@@ -108,8 +109,7 @@ public class TurretVisSim extends SubsystemBase {
     }
 
     public void launchFuel(final LinearVelocity vel, final Angle angle) {
-        if (this.fuelStored == 0)
-            return;
+        if (this.fuelStored == 0) return;
         this.fuelStored--;
 
         // FIXED: Launch from turret position, not robot center
@@ -122,9 +122,9 @@ public class TurretVisSim extends SubsystemBase {
         final Rotation2d robotHeading = robot.getRotation().toRotation2d();
 
         // Turret offset in robot coordinates (2D for horizontal, separate Z)
-        final Translation2d turretOffset2d = new Translation2d(
-                Constants.TurretConstants.OFFSET_X,
-                Constants.TurretConstants.OFFSET_Y);
+        final Translation2d turretOffset2d =
+                new Translation2d(
+                        Constants.TurretConstants.OFFSET_X, Constants.TurretConstants.OFFSET_Y);
 
         // Rotate by robot heading
         final Translation2d rotatedOffset2d = turretOffset2d.rotateBy(robotHeading);
@@ -137,7 +137,9 @@ public class TurretVisSim extends SubsystemBase {
     }
 
     public Command repeatedlyLaunchFuel(
-            final Supplier<LinearVelocity> velSupplier, final Supplier<Angle> angleSupplier, final Turret turret) {
+            final Supplier<LinearVelocity> velSupplier,
+            final Supplier<Angle> angleSupplier,
+            final Turret turret) {
         return turret.runOnce(() -> this.launchFuel(velSupplier.get(), angleSupplier.get()))
                 .andThen(Commands.waitSeconds(0.25))
                 .repeatedly();
@@ -165,7 +167,8 @@ public class TurretVisSim extends SubsystemBase {
     public void update3dPose(final Angle azimuthAngle) {
         // FIXED: Log actual turret pose in field coordinates
         final Translation3d turretPos = this.getTurretPosition();
-        Logger.recordOutput("Turret/TurretPose",
+        Logger.recordOutput(
+                "Turret/TurretPose",
                 new Pose3d(turretPos, new Rotation3d(0, 0, azimuthAngle.in(Units.Radians))));
     }
 
@@ -178,7 +181,8 @@ public class TurretVisSim extends SubsystemBase {
                 // empty
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot.getTranslation(); // Convert Pose2d to Translation3d
+                return Constants.VisionConstants.blueDepot
+                        .getTranslation(); // Convert Pose2d to Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
                 return Constants.VisionConstants.blueDepot.getTranslation();
@@ -211,8 +215,8 @@ public class TurretVisSim extends SubsystemBase {
         return Constants.VisionConstants.blueHubTranslation3d;
     }
 
-    public void updateFuelWithAzimuth(final LinearVelocity vel, final Angle elevationAngle,
-            final double azimuthRadians) {
+    public void updateFuelWithAzimuth(
+            final LinearVelocity vel, final Angle elevationAngle, final double azimuthRadians) {
         final double elevationRad = elevationAngle.in(Units.Radians);
 
         // Use the PASSED azimuth instead of turret's current angle
@@ -243,16 +247,13 @@ public class TurretVisSim extends SubsystemBase {
         ShotData calculatedShot;
 
         if (ShotCache.isPassingShot()) {
-            calculatedShot = TurretCalculator.calculatePass(
-                    this.poseSupplier.get().toPose2d(),
-                    target);
+            calculatedShot =
+                    TurretCalculator.calculatePass(this.poseSupplier.get().toPose2d(), target);
             Logger.recordOutput("Turret/ShotMode", "PASS");
         } else {
-            calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
-                    this.poseSupplier.get().toPose2d(),
-                    new ChassisSpeeds(),
-                    target,
-                    3);
+            calculatedShot =
+                    TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                            this.poseSupplier.get().toPose2d(), new ChassisSpeeds(), target, 3);
             Logger.recordOutput("Turret/ShotMode", "HUB");
         }
 
@@ -264,19 +265,20 @@ public class TurretVisSim extends SubsystemBase {
 
         // Wrap azimuth angle relative to ±360° of turret limits
         double azimuthDeg = Math.toDegrees(azimuthToTarget);
-        while (azimuthDeg > TurretConstants.MECHANISM_MAX_RANGE * 360.0)
-            azimuthDeg -= 360.0;
-        while (azimuthDeg < TurretConstants.MECHANISM_MIN_RANGE * 360.0)
-            azimuthDeg += 360.0;
+        while (azimuthDeg > TurretConstants.MECHANISM_MAX_RANGE * 360.0) azimuthDeg -= 360.0;
+        while (azimuthDeg < TurretConstants.MECHANISM_MIN_RANGE * 360.0) azimuthDeg += 360.0;
 
         // Clamp to physical limits
-        azimuthDeg = Math.max(TurretConstants.MECHANISM_MIN_RANGE * 360.0,
-                Math.min(TurretConstants.MECHANISM_MAX_RANGE * 360.0, azimuthDeg));
+        azimuthDeg =
+                Math.max(
+                        TurretConstants.MECHANISM_MIN_RANGE * 360.0,
+                        Math.min(TurretConstants.MECHANISM_MAX_RANGE * 360.0, azimuthDeg));
 
         azimuthToTarget = Math.toRadians(azimuthDeg);
 
         // Update trajectory using the CALCULATED direction to target
-        this.updateFuelWithAzimuth(calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle(), azimuthToTarget);
+        this.updateFuelWithAzimuth(
+                calculatedShot.getExitVelocity(), calculatedShot.getHoodAngle(), azimuthToTarget);
         this.update3dPose(Units.Degrees.of(this.turret.getFieldAngle()));
 
         Logger.recordOutput("Turret/Shot", calculatedShot);
@@ -284,5 +286,4 @@ public class TurretVisSim extends SubsystemBase {
         Logger.recordOutput("Turret/CalculatedAzimuth", Math.toDegrees(azimuthToTarget));
         Logger.recordOutput("Turret/Hood Angle", calculatedShot.getHoodAngle().in(Units.Degrees));
     }
-
 }

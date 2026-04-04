@@ -74,7 +74,8 @@ public class ShiftHelpers {
     }
 
     public static boolean didWeWinAuto() {
-        if ((ShiftHelpers.blueWonAuto() && Field.isBlue()) || (!ShiftHelpers.blueWonAuto() && Field.isRed())) {
+        if ((ShiftHelpers.blueWonAuto() && Field.isBlue())
+                || (!ShiftHelpers.blueWonAuto() && Field.isRed())) {
             return true;
         } else {
             return false;

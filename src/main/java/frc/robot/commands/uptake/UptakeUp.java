@@ -16,7 +16,11 @@ public class UptakeUp extends Command {
     SevenEleven sevenEleven;
     Shooter shooter;
 
-    public UptakeUp(final Uptake uptake, final Turret turret, final SevenEleven sevenEleven, final Shooter shooter) {
+    public UptakeUp(
+            final Uptake uptake,
+            final Turret turret,
+            final SevenEleven sevenEleven,
+            final Shooter shooter) {
         this.uptake = uptake;
         this.turret = turret;
         this.sevenEleven = sevenEleven;

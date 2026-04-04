@@ -29,18 +29,20 @@ public class DriveToClimb extends SequentialCommandGroup {
                             // Blue alliance logic
                             // If Y < 3.75 and left (right == 0), do nothing
                             // If Y >= 3.75 and right (right == 1), do nothing
-                            if ((right == 0 && currentY < 3.75) || (right == 1 && currentY >= 3.75)) {
+                            if ((right == 0 && currentY < 3.75)
+                                    || (right == 1 && currentY >= 3.75)) {
                                 blueCmd = new InstantCommand();
                             } else {
-                                blueCmd = new CloseDriveToPose(
-                                        swerve,
-                                        this.adjustTargetYawForAlliance(
-                                                this.addRobotCentricToFieldCentric(
-                                                        SwerveConstants.BLUE_CLIMB_POSE,
+                                blueCmd =
+                                        new CloseDriveToPose(
+                                                swerve,
+                                                this.adjustTargetYawForAlliance(
+                                                        this.addRobotCentricToFieldCentric(
+                                                                SwerveConstants.BLUE_CLIMB_POSE,
+                                                                right,
+                                                                false),
                                                         right,
-                                                        false),
-                                                right,
-                                                false));
+                                                        false));
                             }
 
                             // Red alliance logic (same conditions, mirrored Y)
@@ -50,15 +52,16 @@ public class DriveToClimb extends SequentialCommandGroup {
                             if ((right == 0 && mirrorY < 3.75) || (right == 1 && mirrorY >= 3.75)) {
                                 redCmd = new InstantCommand();
                             } else {
-                                redCmd = new CloseDriveToPose(
-                                        swerve,
-                                        this.adjustTargetYawForAlliance(
-                                                this.addRobotCentricToFieldCentric(
-                                                        SwerveConstants.RED_CLIMB_POSE,
+                                redCmd =
+                                        new CloseDriveToPose(
+                                                swerve,
+                                                this.adjustTargetYawForAlliance(
+                                                        this.addRobotCentricToFieldCentric(
+                                                                SwerveConstants.RED_CLIMB_POSE,
+                                                                right,
+                                                                true),
                                                         right,
-                                                        true),
-                                                right,
-                                                true));
+                                                        true));
                             }
 
                             return new ConditionalAllianceCommand(blueCmd, redCmd);
@@ -66,7 +69,8 @@ public class DriveToClimb extends SequentialCommandGroup {
                         this.getRequirements()));
     }
 
-    private Pose2d adjustTargetYawForAlliance(final Pose2d targetPose, final int right, final boolean isRedAlliance) {
+    private Pose2d adjustTargetYawForAlliance(
+            final Pose2d targetPose, final int right, final boolean isRedAlliance) {
         Rotation2d rotation = targetPose.getRotation();
 
         // TODO THIS ASSUMES THAT YOUR CLIMBER IS ON THE LEFT SIDE OF YOUR ROBOT
@@ -81,13 +85,11 @@ public class DriveToClimb extends SequentialCommandGroup {
             rotation = rotation.plus(Rotation2d.fromDegrees(180));
         }
 
-        return new Pose2d(
-                targetPose.getX(),
-                targetPose.getY(),
-                rotation);
+        return new Pose2d(targetPose.getX(), targetPose.getY(), rotation);
     }
 
-    public Pose2d addRobotCentricToFieldCentric(final Pose2d robotPose, final int right, final boolean isRedAlliance) {
+    public Pose2d addRobotCentricToFieldCentric(
+            final Pose2d robotPose, final int right, final boolean isRedAlliance) {
         double xOffset = Constants.SwerveConstants.getAdditions(right, 0);
         double yOffset = Constants.SwerveConstants.getAdditions(right, 1);
 
@@ -97,10 +99,14 @@ public class DriveToClimb extends SequentialCommandGroup {
             yOffset *= -1;
         }
 
-        final double newX = robotPose.getX() + (xOffset * Math.cos(robotPose.getRotation().getRadians())
-                - yOffset * Math.sin(robotPose.getRotation().getRadians()));
-        final double newY = robotPose.getY() + (xOffset * Math.sin(robotPose.getRotation().getRadians())
-                + yOffset * Math.cos(robotPose.getRotation().getRadians()));
+        final double newX =
+                robotPose.getX()
+                        + (xOffset * Math.cos(robotPose.getRotation().getRadians())
+                                - yOffset * Math.sin(robotPose.getRotation().getRadians()));
+        final double newY =
+                robotPose.getY()
+                        + (xOffset * Math.sin(robotPose.getRotation().getRadians())
+                                + yOffset * Math.cos(robotPose.getRotation().getRadians()));
         return new Pose2d(newX, newY, robotPose.getRotation());
     }
 }

@@ -13,7 +13,7 @@ public class IntakeRollerShimmy extends Command {
     public IntakeRollerShimmy(final IntakeRoller intakeRollers, final IntakeArm intakeArm) {
         this.intakeRollers = intakeRollers;
         this.intakeArm = intakeArm;
-    }// TODO MAKE CHECK THE STATE OF THE ARM BEFORE ROLLING
+    } // TODO MAKE CHECK THE STATE OF THE ARM BEFORE ROLLING
 
     @Override
     public void execute() {

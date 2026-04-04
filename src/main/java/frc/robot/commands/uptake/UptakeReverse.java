@@ -17,5 +17,4 @@ public class UptakeReverse extends Command {
     public void execute() {
         this.uptake.setUptakeVelo(UptakeConstants.REVERSE_VELO);
     }
-
 }
