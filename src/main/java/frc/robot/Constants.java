@@ -9,10 +9,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.CANdi;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -458,8 +461,11 @@ public class Constants {
             /* This utility class should not be instantiated */
         }
 
+        // TODO Littleton sets this to 30%. I think we should also bump our threshold down. 97% is
+        // realllly high. Can we test run with like .15?
         public static final double AMBIGUITY_THRESHOLD = 0.03; // 0.06
         public static final double TAG_AREA_THRESHOLD = 0.025;
+        public static final Distance MAX_Z_HEIGHT = Meters.of(.75);
 
         // FLO = Front_Left_Outside camera
         public static final double FLO_X = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
@@ -552,6 +558,9 @@ public class Constants {
         // Max acceptable roll and pitch to receive photon data
         public static final double MAX_ACCEPTABLE_PITCH = 5;
         public static final double MAX_ACCEPTABLE_ROLL = 5;
+
+        public static final AprilTagFieldLayout FIELD_LAYOUT =
+                AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
     }
 
     public static final class Sim {
@@ -601,5 +610,13 @@ public class Constants {
         // Inches.of(56.4));
         public static final Distance FUNNEL_RADIUS = Inches.of(24);
         public static final Distance FUNNEL_HEIGHT = Inches.of(72 - 56.4);
+        // Define area a robots pose is allowed to be in. Should check against a pose that is
+        // centered on the robot. Subtracting half the robot width/length + a small buffer
+        public static final Rectangle2d SAFE_ZONE =
+                new Rectangle2d(
+                        new Translation2d(0, 0),
+                        new Translation2d(
+                                FIELD_LENGTH.in(Meters) - Sim.FULL_LENGTH / 2 - 2,
+                                FIELD_WIDTH.in(Meters) - Sim.FULL_WIDTH / 2 - 2));
     }
 }
