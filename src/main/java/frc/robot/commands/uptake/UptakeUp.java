@@ -2,7 +2,6 @@ package frc.robot.commands.uptake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SevenElevenConstants;
-import frc.robot.Constants.UptakeConstants;
 import frc.robot.subsystems.SevenEleven;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Uptake;
@@ -35,7 +34,7 @@ public class UptakeUp extends Command {
             return;
         }
         this.shooter.setShooting(true);
-        this.uptake.setUptakeVelo(UptakeConstants.UPTAKE_VELO);
+        this.uptake.setUptakeVelo();
         this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.SEVEN_ELEVEN_HIGH_VELO);
     }
 

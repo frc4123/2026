@@ -25,7 +25,6 @@ public class Uptake extends SubsystemBase {
                     .withAcceleration(UptakeConstants.UPTAKE_ACCELERATION);
 
     public Uptake() {
-        // τηισ ισ ωερυ ιμπορταντ
         this.configureMotor();
     }
 
@@ -48,7 +47,7 @@ public class Uptake extends SubsystemBase {
         this.uptakeMotor.setControl(this.motionMagic.withVelocity(0));
     }
 
-    public void setUptakeVelo(final double velo) {
+    public void setUptakeVelo() {
         final ShotData shot = ShotCache.get();
 
         final double Velo =
