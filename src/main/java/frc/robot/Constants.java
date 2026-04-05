@@ -111,6 +111,8 @@ public class Constants {
 
         public static final double SHOOT_ON_THE_MOVE_ERROR = 1.1; // 1.675
 
+        public static final double SIM_LOOP_PERIOD = 0.004; // 4 ms
+
         public static final Pose2d BLUE_CLIMB_POSE =
                 new Pose2d(
                         0.0080772, 3.7457125999999996, new Rotation2d(0 * Math.PI / 180.0)); // id
