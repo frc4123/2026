@@ -452,7 +452,7 @@ public class Constants {
         // 25 code
         public static final double YAW = Math.toRadians(0);
 
-        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1.6, 1.6, 3.2);
+        public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(1, 1, 1);
         public static final double QUEST_UPDATE = 10.00; // 30
     }
 
@@ -463,7 +463,7 @@ public class Constants {
 
         // TODO Littleton sets this to 30%. I think we should also bump our threshold down. 97% is
         // realllly high. Can we test run with like .15?
-        public static final double AMBIGUITY_THRESHOLD = 0.03; // 0.06
+        public static final double AMBIGUITY_THRESHOLD = 0.2; // 0.06
         public static final double TAG_AREA_THRESHOLD = 0.025;
         public static final Distance MAX_Z_HEIGHT = Meters.of(.75);
 
