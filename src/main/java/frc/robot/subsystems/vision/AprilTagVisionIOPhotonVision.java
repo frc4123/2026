@@ -1,14 +1,6 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,10 +10,9 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** IO implementation for real PhotonVision hardware. */
-public class VisionIOPhotonVision implements VisionIO {
+public class AprilTagVisionIOPhotonVision implements AprilTagVisionIO {
     private final PhotonCamera camera;
     private final PhotonPoseEstimator estimator;
 
@@ -31,7 +22,7 @@ public class VisionIOPhotonVision implements VisionIO {
      * @param name The configured name of the camera.
      * @param robotToCamera The 3D position of the camera relative to the robot.
      */
-    public VisionIOPhotonVision(
+    public AprilTagVisionIOPhotonVision(
             final String name,
             final Transform3d robotToCamera,
             final AprilTagFieldLayout fieldLayout) {
@@ -45,18 +36,12 @@ public class VisionIOPhotonVision implements VisionIO {
         final List<PhotonPipelineResult> results = this.camera.getAllUnreadResults();
 
         final Set<Integer> tagIds = new HashSet<>();
-        final List<PoseObservation> poseObservations = new ArrayList<>();
-        inputs.latestTargetObservation = new TargetObservation(Rotation2d.kZero, Rotation2d.kZero);
+        final List<AprilTagPoseObservation> poseObservations = new ArrayList<>();
         for (final PhotonPipelineResult result : results) {
             final var estPoseOpt = this.estimator.estimateLowestAmbiguityPose(result);
             if (!result.hasTargets() || estPoseOpt.isEmpty()) {
                 continue;
             }
-            final PhotonTrackedTarget bestTarget = result.getBestTarget();
-            inputs.latestTargetObservation =
-                    new TargetObservation(
-                            Rotation2d.fromDegrees(bestTarget.getYaw()),
-                            Rotation2d.fromDegrees(bestTarget.getPitch()));
             final EstimatedRobotPose estPose = estPoseOpt.get();
             double totalTagDistance = 0.0;
             for (final var target : estPose.targetsUsed) {
@@ -69,7 +54,7 @@ public class VisionIOPhotonVision implements VisionIO {
                             : totalTagDistance / estPose.targetsUsed.size();
 
             poseObservations.add(
-                    new PoseObservation(
+                    new AprilTagPoseObservation(
                             estPose.timestampSeconds,
                             estPose.estimatedPose,
                             result.getBestTarget().getPoseAmbiguity(),
@@ -77,7 +62,7 @@ public class VisionIOPhotonVision implements VisionIO {
                             avgDistance));
         }
         // Convert our List to an array of type PoseObservation
-        inputs.poseObservations = poseObservations.toArray(new PoseObservation[0]);
+        inputs.poseObservations = poseObservations.toArray(new AprilTagPoseObservation[0]);
         // Unbox our Set
         inputs.tagIds = tagIds.stream().mapToInt(Integer::intValue).toArray();
     }

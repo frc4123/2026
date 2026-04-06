@@ -4,13 +4,12 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
-public interface VisionIO {
+public interface AprilTagVisionIO {
     @AutoLog
     public static class VisionIOInputs {
         public boolean connected = false; // NOSONAR
-        public TargetObservation latestTargetObservation = // NOSONAR
-                new TargetObservation(Rotation2d.kZero, Rotation2d.kZero);
-        public PoseObservation[] poseObservations = new PoseObservation[0]; // NOSONAR
+        public AprilTagPoseObservation[] poseObservations = // NOSONAR
+                new AprilTagPoseObservation[0];
         public int[] tagIds = new int[0]; // NOSONAR
     }
 
@@ -18,7 +17,7 @@ public interface VisionIO {
     public static record TargetObservation(Rotation2d tx, Rotation2d ty) {}
 
     /** Represents a robot pose sample used for pose estimation. */
-    public static record PoseObservation(
+    public static record AprilTagPoseObservation(
             double timestamp,
             Pose3d pose,
             double ambiguity,

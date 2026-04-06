@@ -17,44 +17,11 @@ import frc.robot.utils.Field;
 
 public class Vision extends SubsystemBase {
 
-    // public static PhotonPipelineResult getLatestResults(final PhotonCamera camera) {
-    // final List<PhotonPipelineResult> results = camera.getAllUnreadResults();
-
-    // if (results.isEmpty()) {
-    // return null;
-    // }
-
-    // final PhotonPipelineResult latest = results.get(results.size() - 1);
-
-    // if (!latest.hasTargets()) {
-    // return null;
-    // }
-
-    // return latest;
-    // }
-
-    // public static AprilTagFieldLayout loadAprilTagFieldLayout(final String resourceFile) {
-    // try (InputStream is = Vision.class.getResourceAsStream(resourceFile);
-    // InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-    // return new ObjectMapper().readValue(isr, AprilTagFieldLayout.class);
-    // } catch (final IOException e) {
-    // throw new UncheckedIOException(e);
-    // }
-    // }
-
-    // private final StructPublisher<Pose3d> CamPosePublisher;
-    // private final StructPublisher<Transform3d> CamTargetTransformPublisher;
-
-    // private final AprilTagFieldLayout aprilTagFieldLayout;
     // Standard deviations (tune these based on camera characteristics)
     // third parameter should be double the first 2
     private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.2, 0.2, 0.4);
     // the higher the number the less you trust your camera additions
-    // private int camProcessorCounter = 0;
-
-    // This is too much voodoo
-    // private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
     // private final Transform3d floRobotToCam;
     // private final Transform3d fliRobotToCam;
@@ -72,24 +39,41 @@ public class Vision extends SubsystemBase {
     // private final PhotonPoseEstimator froEstimator;
     private final VisionConsumer consumer;
 
-    private final VisionIO[] io;
+    private final AprilTagVisionIO[] aprilTagIo;
+    private final VisionIOInputsAutoLogged[] aprilTagInputs;
 
-    private final VisionIOInputsAutoLogged[] inputs;
+    private final LocalizerVisionIO[] localizerIo;
+    private final LocalizerIOInputsAutoLogged[] localizerInputs;
+
     private final Alert[] disconnectedAlerts;
 
     // Accept a 'mailbox' for us to put `mail` in based on data garnered from the provided cameras
-    public Vision(final VisionConsumer consumer, final VisionIO... io) {
+    public Vision(
+            final VisionConsumer consumer,
+            final AprilTagVisionIO[] aprilTagIo,
+            final LocalizerVisionIO[] localizerIo) {
         this.consumer = consumer;
-        this.io = io;
-        this.inputs = new VisionIOInputsAutoLogged[io.length];
-        for (int i = 0; i < this.inputs.length; i++) {
-            this.inputs[i] = new VisionIOInputsAutoLogged();
+        this.aprilTagIo = aprilTagIo;
+        this.localizerIo = localizerIo;
+        this.aprilTagInputs = new VisionIOInputsAutoLogged[this.aprilTagIo.length];
+        for (int i = 0; i < this.aprilTagInputs.length; i++) {
+            this.aprilTagInputs[i] = new VisionIOInputsAutoLogged();
+        }
+        this.localizerInputs = new LocalizerIOInputsAutoLogged[this.localizerIo.length];
+        for (int i = 0; i < this.localizerInputs.length; i++) {
+            this.localizerInputs[i] = new LocalizerIOInputsAutoLogged();
         }
 
         // Initialize disconnected alerts
-        this.disconnectedAlerts = new Alert[io.length];
-        for (int i = 0; i < this.inputs.length; i++) {
+        this.disconnectedAlerts = new Alert[this.aprilTagIo.length + this.localizerIo.length];
+        for (int i = 0; i < this.aprilTagInputs.length; i++) {
             this.disconnectedAlerts[i] =
+                    new Alert(
+                            "Vision camera " + Integer.toString(i) + " is disconnected.",
+                            AlertType.kWarning);
+        }
+        for (int i = 0; i < this.localizerInputs.length; i++) {
+            this.disconnectedAlerts[i + this.aprilTagInputs.length] =
                     new Alert(
                             "Vision camera " + Integer.toString(i) + " is disconnected.",
                             AlertType.kWarning);
@@ -169,17 +153,16 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic() {
+    private void aprilTagPeriodic() {
         // TODO Profile with VisualVM to see what is going on
-        for (int i = 0; i < this.io.length; i++) {
-            this.io[i].updateInputs(this.inputs[i]);
+        for (int i = 0; i < this.aprilTagIo.length; i++) {
+            this.aprilTagIo[i].updateInputs(this.aprilTagInputs[i]);
             // Logger.processInputs("Vision/Camera" + Integer.toString(i), this.inputs[i]);
         }
         // Loop over cameras
-        for (int cameraIndex = 0; cameraIndex < this.io.length; cameraIndex++) {
+        for (int cameraIndex = 0; cameraIndex < this.aprilTagIo.length; cameraIndex++) {
             // Update disconnected alert
-            this.disconnectedAlerts[cameraIndex].set(!this.inputs[cameraIndex].connected);
+            this.disconnectedAlerts[cameraIndex].set(!this.aprilTagInputs[cameraIndex].connected);
 
             // Initialize logging values
             // final List<Pose3d> tagPoses = new LinkedList<>();
@@ -196,17 +179,17 @@ public class Vision extends SubsystemBase {
             // }
 
             // Loop over pose observations
-            for (final var observation : this.inputs[cameraIndex].poseObservations) {
+            for (final var observation : this.aprilTagInputs[cameraIndex].poseObservations) {
                 // Check whether to reject pose
-                final var hasTag = observation.tagCount() == 0;
-                final var isAmbiguous =
+                final var missingTag = observation.tagCount() == 0;
+                final var tooAmbiguous =
                         observation.ambiguity() > VisionConstants.AMBIGUITY_THRESHOLD;
                 final var isPoseOffField = this.isPoseOffField(observation.pose());
                 final var isRobotOffTheGround =
                         Math.abs(observation.pose().getZ())
                                 > VisionConstants.MAX_Z_HEIGHT.magnitude();
                 final boolean rejectPose =
-                        !hasTag || !isAmbiguous || isPoseOffField || isRobotOffTheGround;
+                        missingTag || !tooAmbiguous || isPoseOffField || isRobotOffTheGround;
 
                 // Add pose to log
                 // robotPoses.add(observation.pose());
@@ -261,6 +244,19 @@ public class Vision extends SubsystemBase {
         // "Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[0]));
         // Logger.recordOutput(
         // "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
+    }
+
+    private void localizerPeriodic() {
+        for (int i = 0; i < this.localizerIo.length; i++) {
+            this.localizerIo[i].updateInputs(this.localizerInputs[i]);
+            // Logger.processInputs("Vision/Camera" + Integer.toString(i), this.inputs[i]);
+        }
+    }
+
+    @Override
+    public void periodic() {
+        this.aprilTagPeriodic();
+        this.localizerPeriodic();
     }
 
     @FunctionalInterface
