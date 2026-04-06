@@ -5,13 +5,13 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.Quest;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.Field;
 
@@ -66,16 +66,18 @@ public class Vision extends SubsystemBase {
 
         // Initialize disconnected alerts
         this.disconnectedAlerts = new Alert[this.aprilTagIo.length + this.localizerIo.length];
-        for (int i = 0; i < this.aprilTagInputs.length; i++) {
+        for (int i = 0; i < this.aprilTagIo.length; i++) {
             this.disconnectedAlerts[i] =
                     new Alert(
                             "Vision camera " + Integer.toString(i) + " is disconnected.",
                             AlertType.kWarning);
         }
-        for (int i = 0; i < this.localizerInputs.length; i++) {
-            this.disconnectedAlerts[i + this.aprilTagInputs.length] =
+        for (int i = 0; i < this.localizerIo.length; i++) {
+            this.disconnectedAlerts[i + this.aprilTagIo.length] =
                     new Alert(
-                            "Vision camera " + Integer.toString(i) + " is disconnected.",
+                            "Vision camera "
+                                    + Integer.toString(i + this.aprilTagIo.length)
+                                    + " is disconnected.",
                             AlertType.kWarning);
         }
 
@@ -128,7 +130,7 @@ public class Vision extends SubsystemBase {
     }
 
     public boolean isPoseOffField(final Pose3d pose) {
-        return !FieldConstants.SAFE_ZONE.contains(new Translation2d(pose.getX(), pose.getY()));
+        return !FieldConstants.SAFE_ZONE.contains(pose.toPose2d().getTranslation());
     }
 
     public boolean isTagOurHub(final int tagId) {
@@ -189,7 +191,7 @@ public class Vision extends SubsystemBase {
                         Math.abs(observation.pose().getZ())
                                 > VisionConstants.MAX_Z_HEIGHT.magnitude();
                 final boolean rejectPose =
-                        missingTag || !tooAmbiguous || isPoseOffField || isRobotOffTheGround;
+                        missingTag || tooAmbiguous || isPoseOffField || isRobotOffTheGround;
 
                 // Add pose to log
                 // robotPoses.add(observation.pose());
@@ -249,12 +251,34 @@ public class Vision extends SubsystemBase {
     private void localizerPeriodic() {
         for (int i = 0; i < this.localizerIo.length; i++) {
             this.localizerIo[i].updateInputs(this.localizerInputs[i]);
-            // Logger.processInputs("Vision/Camera" + Integer.toString(i), this.inputs[i]);
+            // Logger.processInputs("Vision/Camera" + Integer.toString(i + this.aprilTagIo.length),
+            // this.inputs[i]);
+        }
+
+        for (int cameraIndex = 0; cameraIndex < this.localizerIo.length; cameraIndex++) {
+            this.disconnectedAlerts[cameraIndex + this.aprilTagIo.length].set(
+                    !this.localizerInputs[cameraIndex].connected);
+            for (final var observation : this.localizerInputs[cameraIndex].poseObservations) {
+                final var isRobotOffTheGround =
+                        Math.abs(observation.pose().getZ())
+                                > VisionConstants.MAX_Z_HEIGHT.magnitude();
+                final var isPoseOffField = this.isPoseOffField(observation.pose());
+                final boolean rejectPose = isPoseOffField || isRobotOffTheGround;
+                if (rejectPose) {
+                    continue;
+                }
+                this.consumer.accept(
+                        observation.pose().toPose2d(),
+                        observation.timestamp(),
+                        Quest.QUESTNAV_STD_DEVS);
+            }
         }
     }
 
     @Override
     public void periodic() {
+        // Needs to be in this order due to how alerts are constructed and assumptions made with
+        // this inside of the periodic functions
         this.aprilTagPeriodic();
         this.localizerPeriodic();
     }
