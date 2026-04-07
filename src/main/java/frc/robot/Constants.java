@@ -207,10 +207,10 @@ public class Constants {
 
         public  static final double dragCoeff = 1.14123;
 
-        public static final double kP = 24.5; //20 //either p is too low
-        public static final double kI = 1.5; //or I is too  high
+        public static final double kP = 25; //24.5 
+        public static final double kI = 1.5; //
         public static final double kD = 20; // or D is too high? lower d and increase i first thing tmr
-        public static final double kS = 3;// 3
+        public static final double kS = 3.15;// 3
         public static final double kV = 6;//5.5, 6; //5.75 //check if turret velo is below what it is set in velocity 4 to see if kv is too low
         public static final double kA = 1;//1.4123;
 
