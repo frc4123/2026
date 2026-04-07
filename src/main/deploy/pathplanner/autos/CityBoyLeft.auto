@@ -89,6 +89,12 @@
                 "data": {
                   "pathName": "CityboyLeft3"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "UptakeStop"
+                }
               }
             ]
           }
