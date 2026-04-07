@@ -26,8 +26,6 @@ public class Telemetry {
         SmartDashboard.putData("Robot Field", m_field);
     }
 
-    
-
     public void telemeterize(SwerveDriveState state) {
         drivePose.set(CommandSwerveDrivetrain.getInstance().getState().Pose);
         m_field.setRobotPose(CommandSwerveDrivetrain.getInstance().getState().Pose);
