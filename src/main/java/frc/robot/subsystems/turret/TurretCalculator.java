@@ -213,7 +213,7 @@ public class TurretCalculator {
         }
         
         return new ShotData(InchesPerSecond.of(v0).in(MetersPerSecond), 
-                        calculatedAngle.in(Radians), target);
+                        HoodConstants.MIN_HOOD_ANGLE.in(Radians), target);
     }
 
     // use an iterative lookahead approach to determine shot parameters for a moving robot
