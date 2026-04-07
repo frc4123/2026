@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
+import org.littletonrobotics.junction.Logger;
+
 public class Telemetry {
 
     private final Field2d m_field = new Field2d();
@@ -24,8 +26,11 @@ public class Telemetry {
         SmartDashboard.putData("Robot Field", m_field);
     }
 
+    
+
     public void telemeterize(SwerveDriveState state) {
         drivePose.set(CommandSwerveDrivetrain.getInstance().getState().Pose);
         m_field.setRobotPose(CommandSwerveDrivetrain.getInstance().getState().Pose);
+        Logger.recordOutput("Drive/Pose", CommandSwerveDrivetrain.getInstance().getState().Pose);
     }
 }
