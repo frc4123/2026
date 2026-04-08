@@ -374,7 +374,7 @@ public class RobotContainer {
         m_buttonBoard.button(1).onFalse(uptakeStop);
 
         m_buttonBoard.button(2).onTrue(intakeReverse);
-        m_buttonBoard.button(2).onTrue(rollReverse);
+        m_buttonBoard.button(2).onTrue(uptakeUp);
         m_buttonBoard.button(2).onTrue(intakeArmOut);
         m_buttonBoard.button(2).onFalse(intakeRollersStop);
         m_buttonBoard.button(2).onFalse(uptakeStop);
