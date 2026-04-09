@@ -2,7 +2,9 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Target {
@@ -26,9 +28,11 @@ public class Target {
                 return Constants.VisionConstants.blueDepot.getTranslation(); //blueLeftBumpCorner.
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
+                if(DriverStation.isAutonomous()){return VisionConstants.blueAutoAimThreshold.getTranslation();}
                 return Constants.VisionConstants.blueAimThreshold.getTranslation(); //blueRIghtBumpCorner
             } else {
                 // Bottom zone - aim threshold
+                if(DriverStation.isAutonomous()){return VisionConstants.blueAutoAimThreshold.getTranslation();} //TODO make for red side and left side too same for all autos
                 return Constants.VisionConstants.blueAimThreshold.getTranslation(); //blueAimThreshold
             }
         }
@@ -38,9 +42,11 @@ public class Target {
             // Past hub - match the Y zones from Turret.targetAngle()
             } else if (y >= 5.029) {
                 // Top zone - aim threshold
+                if(DriverStation.isAutonomous()){return VisionConstants.redAutoAimThreshold.getTranslation();}
                 return Constants.VisionConstants.redAimThreshold.getTranslation(); // redAimThreshold
             } else if (y > 4.044) {
                 // Upper middle zone - right bump corner
+                if(DriverStation.isAutonomous()){return VisionConstants.redAutoAimThreshold.getTranslation();}
                 return Constants.VisionConstants.redAimThreshold.getTranslation(); // redRightBumpCorner
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner

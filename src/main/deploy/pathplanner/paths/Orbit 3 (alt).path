@@ -50,7 +50,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "UptakeStop",
+      "waypointRelativePos": 0.628516922757475,
+      "endWaypointRelativePos": 0.942314680232558,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "UptakeStop"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
