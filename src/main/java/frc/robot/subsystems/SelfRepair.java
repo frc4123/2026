@@ -14,9 +14,8 @@ public class SelfRepair {
         strategies.add("albert and einstein in the pit");
         strategies.add("zero tolerance confirmed");
         strategies.add("I wish we had a robot to work with 👉👈");
-        strategies.add("W programming and Electrical");
-        strategies.add("have you tried turning it on and off again?");
-        strategies.add("WAIT WAIT WAIT... is PID tuned?");
+        // strategies.add("W programming and Electrical");
+        // strategies.add("have you tried turning it on and off again?");
 
     }
 

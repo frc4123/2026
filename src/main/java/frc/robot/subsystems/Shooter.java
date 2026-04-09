@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase{
         ShotData shot = ShotCache.get();
 
         double Velo = shot.getExitVelocity().in(MetersPerSecond) * (2)
-            / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters))) * onTheGoSlider;
+            / (2.0 * Math.PI * (ShooterConstants.flywheelRadius.in(Meters) + ShooterConstants.compression.in(Meters))) * onTheGoSlider/* * 0.97 */;//TODO IS .96 THE BEST 
 
             // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
             // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that 
