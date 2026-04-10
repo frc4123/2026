@@ -109,7 +109,7 @@ public class Constants {
 
         public static final double DRIVER_DEADBAND = 0.05;
 
-        public static final double SHOOT_ON_THE_MOVE_ERROR = 1.1; // 1.675
+        public static final double SHOOT_ON_THE_MOVE_ERROR = 1.2; // 1.1
 
         public static final Pose2d BLUE_CLIMB_POSE =
                 new Pose2d(
@@ -119,9 +119,11 @@ public class Constants {
                 new Pose2d(16.53296166, 4.3235626, new Rotation2d(0 * Math.PI / 180.0)); // id 15
 
         private static final double[][] additions = {
-            {1.0549228, 1.0422874}, // LEFT ADDITION //
+            {1.0549228, 1.0422874}, // LEFT
+            // ADDITION //
             // {0.342, 0} //0.385
-            {1.0549228, -1.0297126} // RIGHT ADDITION // {0.342, 0.348} //0.385 was correct in
+            {1.0549228, -1.0297126} // RIGHT ADDITION // {0.342, 0.348} //0.385
+            // was correct in
             // odometry w
             // advantagescope
             // driver relative -> {+forward/back-, +left/right-}
@@ -181,7 +183,8 @@ public class Constants {
         public static final Distance DEPLOY_POS = Inches.of(10.875);
         public static final Voltage SPIN_VOLTAGE = Volts.of(3);
 
-        public static final double VEL_MULTIPLIER = 70.0; // multiplies goal velocity for targetting
+        public static final double VEL_MULTIPLIER = 70.0; // multiplies goal velocity for
+        // targetting
         public static final double VEL_POWER = 0.3; // raises goal velocity to power
         public static final LinearVelocity BASE_VEL = InchesPerSecond.of(50); // added to
         // final
@@ -250,14 +253,12 @@ public class Constants {
 
         public static final double DRAG_COEFF = 1.14123;
 
-        public static final double P = 20; // 20 //either p is too low
+        public static final double P = 25; // 24.5
         public static final double I = 1.5; // or I is too high
-        public static final double D = 20; // or D is too high? lower d and increase i first thing
-        // tmr
-        public static final double S = 3; // 3
-        // 6; 5.75 check if turret velo is below what it is set in velocity 4 to see if
-        // kv is too low
-        public static final double V = 5.5;
+        public static final double D = 20; // or D is too high? lower d and increase i first
+        // thing
+        public static final double S = 3.15; // 3
+        public static final double V = 6;
         public static final double A = 1; // 1.4123;
 
         // IN ROTATIONS //
@@ -302,8 +303,8 @@ public class Constants {
         public static final double ENCODER_1_OFFSET = 0; // -0.575684;
         public static final double ENCODER_2_OFFSET = 0;
 
-        public static final double ENCODER_1_CRT_OFFSET = -0.09668; // -0.575684;
-        public static final double ENCODER_2_CRT_OFFSET = -0.165283; // -0.481281;
+        public static final double ENCODER_1_CRT_OFFSET = -0.681641; // -0.575684;
+        public static final double ENCODER_2_CRT_OFFSET = -0.504395; // -0.481281;
         // TODO: if the wrap happens to be near the zero measurement (within hundredths
         // check yams for interval confirmation), then RESEAT CANCODERS
 
@@ -443,7 +444,8 @@ public class Constants {
         public static final double Z = Units.inchesToMeters(10); // 10// 7.02 //10
 
         public static final double ROLL = Math.toRadians(0);
-        public static final double PITCH = Math.toRadians(0); // negative pitch is up according to
+        public static final double PITCH = Math.toRadians(0); // negative pitch is up
+        // according to
         // 25 code
         public static final double YAW = Math.toRadians(0);
 
@@ -460,7 +462,8 @@ public class Constants {
         public static final double TAG_AREA_THRESHOLD = 0.025;
 
         // FLO = Front_Left_Outside camera
-        public static final double FLO_X = Units.inchesToMeters(9.069); // 7.495 7.176364 -7.176364
+        public static final double FLO_X = Units.inchesToMeters(9.069); // 7.495 7.176364
+        // -7.176364
         public static final double FLO_Y = Units.inchesToMeters(11.097);
         public static final double FLO_Z = Units.inchesToMeters(7.826); // 7.02
 
@@ -470,7 +473,8 @@ public class Constants {
         public static final double FLO_YAW = Math.toRadians(132.273);
 
         // FLI = Front_Left_Inside camera
-        public static final double FLI_X = Units.inchesToMeters(10.836); // 7.495 7.176364 -7.176364
+        public static final double FLI_X = Units.inchesToMeters(10.836); // 7.495 7.176364
+        // -7.176364
         public static final double FLI_Y = Units.inchesToMeters(9.396);
         public static final double FLI_Z = Units.inchesToMeters(7.979); // 7.02
 
@@ -480,7 +484,8 @@ public class Constants {
         public static final double FLI_YAW = Math.toRadians(30);
 
         // FRI = Front_Right_Inside camera
-        public static final double FRI_X = Units.inchesToMeters(10.229); // 7.495 7.176364 -7.176364
+        public static final double FRI_X = Units.inchesToMeters(10.229); // 7.495 7.176364
+        // -7.176364
         public static final double FRI_Y = Units.inchesToMeters(-10.140);
         public static final double FRI_Z = Units.inchesToMeters(7.825761); // 7.02
 
@@ -489,7 +494,8 @@ public class Constants {
         public static final double FRI_YAW = Math.toRadians(-131.987);
 
         // FRO = Front_Right_Outside camera
-        public static final double FRO_X = Units.inchesToMeters(9.411); // 7.495 7.176364 -7.176364
+        public static final double FRO_X = Units.inchesToMeters(9.411); // 7.495 7.176364
+        // -7.176364
         public static final double FRO_Y = Units.inchesToMeters(-10.998);
         public static final double FRO_Z = Units.inchesToMeters(13.929); // 7.02
 
@@ -506,7 +512,7 @@ public class Constants {
                 VisionConstants.BLUE_HUB.getTranslation();
 
         // blueDepot pose
-        public static final Pose3d blueDepot = new Pose3d(-1.5, 6.0, 0.2, new Rotation3d());
+        public static final Pose3d blueDepot = new Pose3d(2.5, 7, 0.2, new Rotation3d());
 
         // blueLeftBumpCorner pose
         // public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new
@@ -517,8 +523,9 @@ public class Constants {
         // Rotation3d()); //x4.03 and y was -1
 
         // redAimThreshold pose
-        public static final Pose3d BLUE_AIM_THRESHOLD =
-                new Pose3d(-1.5, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d BLUE_AIM_THRESHOLD = new Pose3d(2.5, 1, 0.2, new Rotation3d());
+        // redAimThreshold pose
+        public static final Pose3d blueAutoAimThreshold = new Pose3d(2.8, 1, 0.2, new Rotation3d());
 
         public static final Pose3d RED_HUB =
                 new Pose3d(11.920, 4.035, 1.4304264 /* 1.828 */, new Rotation3d());
@@ -527,14 +534,29 @@ public class Constants {
         public static final Translation3d redHubTranslation3d =
                 VisionConstants.RED_HUB.getTranslation();
 
-        public static final Pose3d RED_AIM_THRESHOLD = new Pose3d(18.5, 6.0, 0.2, new Rotation3d());
-        // 12.505 and y was + 1
-        public static final Pose3d redRightBumpCorner = new Pose3d(13.5, 7, 0.2, new Rotation3d());
-        // 12.505 and y was -1
-        public static final Pose3d redLeftBumpCorner = new Pose3d(13.5, 1, 0.2, new Rotation3d());
+        public static final Pose3d RED_AIM_THRESHOLD = new Pose3d(14.5, 7, 0.2, new Rotation3d());
+        // redAimThreshold pose
+        public static final Pose3d redAutoAimThreshold = new Pose3d(14.5, 7, 0.2, new Rotation3d());
+
+        // redRightBumpCorner pose
+        public static final Pose3d redRightBumpCorner =
+                new Pose3d(/* nottherightone */ 13.5, 7, 0.2, new Rotation3d()); // 12.505
+        // and
+        // y
+        // was
+        // +
+        // 1
+
+        // redRightBumpCorner pose
+        public static final Pose3d redLeftBumpCorner =
+                new Pose3d(/* nottherightone */ 13.5, 1, 0.2, new Rotation3d()); // 12.505
+        // and
+        // y
+        // was
+        // -1
 
         // blueDepot pose
-        public static final Pose3d redDepot = new Pose3d(18.5, 2.080, 0.2, new Rotation3d());
+        public static final Pose3d redDepot = new Pose3d(14.5, 1, 0.2, new Rotation3d());
 
         // threshold for how close we are to the blue bump/trench for auto rotation
         public static final double BLUE_LEFT_BUMP_OR_TRENCH_THRESHOLD = 2.5;

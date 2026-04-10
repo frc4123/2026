@@ -70,11 +70,9 @@ public class TurretCalculator {
 
         /*
          *
-         * try subbing this in for line 53
-         * double angle = Math.atan(
-         * ((vel * vel) - Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 *
-         * y_dist * vel * vel)))
-         * / (g * x_dist));
+         * try subbing this in for line 53 double angle = Math.atan( ((vel * vel) -
+         * Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 * y_dist * vel * vel))) / (g *
+         * x_dist));
          *
          */
 
@@ -247,7 +245,9 @@ public class TurretCalculator {
         }
 
         return new ShotData(
-                InchesPerSecond.of(v0).in(MetersPerSecond), calculatedAngle.in(Radians), target);
+                InchesPerSecond.of(v0).in(MetersPerSecond),
+                HoodConstants.MIN_HOOD_ANGLE.in(Radians),
+                target);
     }
 
     // use an iterative lookahead approach to determine shot parameters for a moving

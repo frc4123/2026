@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.893133101851852,
-        "y": 2.9352362557870366
+        "x": 8.585586660879631,
+        "y": 3.075445963541666
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.208057798032407,
-        "y": 3.499486834490741
+        "x": 6.900511357060187,
+        "y": 3.6396965422453706
       },
       "isLocked": false,
       "linkedName": "Orbit 1-2"
@@ -40,7 +40,19 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Uptake",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Uptake"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 0.9,
     "maxAcceleration": 3.0,
@@ -57,7 +69,7 @@
   "folder": "OrbitAuto (R)",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -90.0
+    "rotation": -56.85751254944881
   },
   "useDefaultConstraints": false
 }

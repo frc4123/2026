@@ -168,7 +168,7 @@ public class Oculus extends SubsystemBase {
     public void periodic() {
 
         this.publishQuestStatus();
-        trustQuest = SmartDashboard.getBoolean("Trust Quest", false);
+        trustQuest = SmartDashboard.getBoolean("Trust Quest", true);
         this.unreadFrames = this.quest.getAllUnreadPoseFrames();
         if (this.isQuestNavConnected()) {
             this.setRobotPose();

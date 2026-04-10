@@ -64,8 +64,8 @@ public class Vision extends SubsystemBase {
     private final AprilTagFieldLayout aprilTagFieldLayout;
     // Standard deviations (tune these based on camera characteristics)
     // third parameter should be double the first 2
-    private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.2, 0.2, 0.4);
+    private final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(0.8, 0.8, 1); // 0.5 0.5
+    private final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.5, 0.5, 0.4); // 0.2 0.2
     // the higher the number the less you trust your camera additions
     private int camProcessorCounter = 0;
 

@@ -48,33 +48,9 @@
   "eventMarkers": [
     {
       "name": "Stop Shooting",
-      "waypointRelativePos": 0.03097024204244033,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "race",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ArmOut"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeIn"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "UptakeStop"
-              }
-            }
-          ]
-        }
-      }
+      "waypointRelativePos": 0.03808918189368767,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {

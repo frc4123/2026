@@ -50,7 +50,6 @@ import frc.robot.commands.intakeroller.IntakeReverse;
 import frc.robot.commands.intakeroller.IntakeRollerIn;
 import frc.robot.commands.intakeroller.IntakeRollerShimmy;
 import frc.robot.commands.intakeroller.IntakeRollerStop;
-import frc.robot.commands.seveneleven.RollReverse;
 import frc.robot.commands.shooter.SetShooterVelocity;
 import frc.robot.commands.turret.Aim;
 import frc.robot.commands.uptake.UptakeStop;
@@ -186,8 +185,6 @@ public class RobotContainer {
     private final IntakeArmOut intakeArmOut = new IntakeArmOut(this.intakeArm);
 
     private final ForceIntakeArmMid forceIntakeArmMid = new ForceIntakeArmMid(this.intakeArm);
-
-    private final RollReverse rollReverse = new RollReverse(this.sevenEleven);
 
     private final HoodAim hoodAim = new HoodAim(this.hood);
 
@@ -535,7 +532,7 @@ public class RobotContainer {
         this.buttonBoard.button(1).onFalse(this.uptakeStop);
 
         this.buttonBoard.button(2).onTrue(this.intakeReverse);
-        this.buttonBoard.button(2).onTrue(this.rollReverse);
+        this.buttonBoard.button(2).onTrue(this.uptakeUp);
         this.buttonBoard.button(2).onTrue(this.intakeArmOut);
         this.buttonBoard.button(2).onFalse(this.intakeRollersStop);
         this.buttonBoard.button(2).onFalse(this.uptakeStop);

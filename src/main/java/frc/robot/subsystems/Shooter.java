@@ -71,7 +71,8 @@ public class Shooter extends SubsystemBase {
                                 * Math.PI
                                 * (ShooterConstants.FLYWHEEL_RADIUS.in(Meters)
                                         + ShooterConstants.compression.in(Meters)))
-                        * this.onTheGoSlider;
+                        * this.onTheGoSlider
+                        * .97;
 
         // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
         // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that

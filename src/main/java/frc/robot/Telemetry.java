@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import org.littletonrobotics.junction.Logger;
 
 public class Telemetry {
 
@@ -26,5 +27,6 @@ public class Telemetry {
     public void telemeterize(SwerveDriveState state) {
         drivePose.set(CommandSwerveDrivetrain.getInstance().getState().Pose);
         m_field.setRobotPose(CommandSwerveDrivetrain.getInstance().getState().Pose);
+        Logger.recordOutput("Drive/Pose", CommandSwerveDrivetrain.getInstance().getState().Pose);
     }
 }
