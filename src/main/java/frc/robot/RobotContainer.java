@@ -11,6 +11,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -29,9 +32,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.InputConstants;
+import frc.robot.Constants.Quest;
 import frc.robot.Constants.Sim;
 import frc.robot.Constants.Sim.Mode;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.autos.CityBoyLeft;
 import frc.robot.commands.autos.CityBoyRight;
 import frc.robot.commands.autos.MadTown;
@@ -60,7 +65,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeRoller;
-import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.SevenEleven;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Uptake;
@@ -68,6 +72,11 @@ import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.TurretCalculator;
 import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
+import frc.robot.subsystems.vision.AprilTagVisionIO;
+import frc.robot.subsystems.vision.AprilTagVisionIOPhotonVision;
+import frc.robot.subsystems.vision.LocalizerVisionIO;
+import frc.robot.subsystems.vision.LocalizerVisionIOQuestNav;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
 import frc.robot.utils.Target;
@@ -137,9 +146,67 @@ public class RobotContainer {
 
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final Oculus oculus = new Oculus();
-
-    // private final Vision vision = new Vision();
+    private final AprilTagVisionIO[] aprilTagCams =
+            new AprilTagVisionIO[] {
+                new AprilTagVisionIOPhotonVision(
+                        "Front_Left_Outside",
+                        new Transform3d(
+                                new Translation3d(
+                                        VisionConstants.FLO_X,
+                                        VisionConstants.FLO_Y,
+                                        VisionConstants.FLO_Z),
+                                new Rotation3d(
+                                        VisionConstants.FLO_ROLL,
+                                        VisionConstants.FLO_PITCH,
+                                        VisionConstants.FLO_YAW)),
+                        VisionConstants.FIELD_LAYOUT),
+                new AprilTagVisionIOPhotonVision(
+                        "Front_Left_Inside",
+                        new Transform3d(
+                                new Translation3d(
+                                        VisionConstants.FLI_X,
+                                        VisionConstants.FLI_Y,
+                                        VisionConstants.FLI_Z),
+                                new Rotation3d(
+                                        VisionConstants.FLI_ROLL,
+                                        VisionConstants.FLI_PITCH,
+                                        VisionConstants.FLI_YAW)),
+                        VisionConstants.FIELD_LAYOUT),
+                new AprilTagVisionIOPhotonVision(
+                        "Front_Right_Inside",
+                        new Transform3d(
+                                new Translation3d(
+                                        VisionConstants.FRI_X,
+                                        VisionConstants.FRI_Y,
+                                        VisionConstants.FRI_Z),
+                                new Rotation3d(
+                                        VisionConstants.FRI_ROLL,
+                                        VisionConstants.FRI_PITCH,
+                                        VisionConstants.FRI_YAW)),
+                        VisionConstants.FIELD_LAYOUT),
+                new AprilTagVisionIOPhotonVision(
+                        "Front_Right_Outside",
+                        new Transform3d(
+                                new Translation3d(
+                                        VisionConstants.FRO_X,
+                                        VisionConstants.FRO_Y,
+                                        VisionConstants.FRO_Z),
+                                new Rotation3d(
+                                        VisionConstants.FRO_ROLL,
+                                        VisionConstants.FRO_PITCH,
+                                        VisionConstants.FRO_YAW)),
+                        VisionConstants.FIELD_LAYOUT)
+            };
+    private final LocalizerVisionIO[] localizerCams =
+            new LocalizerVisionIO[] {
+                LocalizerVisionIOQuestNav.getInstance(
+                        new Transform3d(
+                                new Translation3d(Quest.X, Quest.Y, Quest.Z),
+                                new Rotation3d(Quest.ROLL, Quest.PITCH, Quest.YAW)))
+            };
+    private final Vision vision =
+            new Vision(
+                    this.drivetrain::addVisionMeasurement, this.aprilTagCams, this.localizerCams);
 
     private final Turret turret = new Turret(this.drivetrain);
 
@@ -209,13 +276,13 @@ public class RobotContainer {
     public RobotContainer() {
         this.configureBindings();
         this.candi.optimizeBusUtilization();
-
-        this.drivetrain.setOnPoseResetCallback(
-                pose -> {
-                    if (this.oculus.isQuestNavConnected()) {
-                        this.oculus.setRobotPose();
-                    }
-                });
+        // TODO
+        // this.drivetrain.setOnPoseResetCallback(
+        // pose -> {
+        // if (this.oculus.isQuestNavConnected()) {
+        // this.oculus.setRobotPose();
+        // }
+        // });
 
         this.faceAngle.HeadingController.setP(3.1); // 3.54123, 3.1, 3.4123
         this.faceAngle.HeadingController.setI(0);

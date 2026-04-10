@@ -28,11 +28,6 @@ public class Vision extends SubsystemBase {
     // private final Transform3d friRobotToCam;
     // private final Transform3d froRobotToCam;
 
-    // private final PhotonCamera floCamera = new PhotonCamera("Front_Left_Outside");
-    // private final PhotonCamera fliCamera = new PhotonCamera("Front_Left_Inside");
-    // private final PhotonCamera friCamera = new PhotonCamera("Front_Right_Inside");
-    // private final PhotonCamera froCamera = new PhotonCamera("Front_Right_Outside");
-
     // private final PhotonPoseEstimator floEstimator;
     // private final PhotonPoseEstimator fliEstimator;
     // private final PhotonPoseEstimator friEstimator;

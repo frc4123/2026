@@ -73,6 +73,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledExit() {}
 
+    // TODO init vision pose for localizers here?
     @Override
     public void autonomousInit() {
         this.autonomousCommand = this.robotContainer.getAutonomousCommand();
