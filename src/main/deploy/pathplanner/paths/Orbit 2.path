@@ -44,11 +44,22 @@
     {
       "name": "Uptake",
       "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": 0.05549210963455151,
       "command": {
         "type": "named",
         "data": {
           "name": "Uptake"
+        }
+      }
+    },
+    {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.10960859634551498,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "UptakeStop"
         }
       }
     }
