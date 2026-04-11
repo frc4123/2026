@@ -396,7 +396,7 @@ public class Constants {
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
         //blueDepot pose
-        public static final Pose3d blueDepotAim = new Pose3d (2.2, 7, 0.05, new Rotation3d());
+        public static final Pose3d blueDepotAim = new Pose3d (2.2, 6, 0.05, new Rotation3d());
 
         //blueLeftBumpCorner pose
         //public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new Rotation3d()); //x4.03 and y was +1
