@@ -396,7 +396,7 @@ public class Constants {
         public static final Translation3d blueHubTranslation3d = blueHub.getTranslation();
 
         //blueDepot pose
-        public static final Pose3d blueDepot = new Pose3d (2.5, 7, 0.2, new Rotation3d());
+        public static final Pose3d blueDepotAim = new Pose3d (2.2, 7, 0.05, new Rotation3d());
 
         //blueLeftBumpCorner pose
         //public static final Pose3d blueLeftBumpCorner = new Pose3d (3.5, 7, 0.2, new Rotation3d()); //x4.03 and y was +1
@@ -405,8 +405,8 @@ public class Constants {
        // public static final Pose3d blueRightBumpCorner = new Pose3d (3.5, 1, 0.2, new Rotation3d()); //x4.03 and y was -1
 
         //redAimThreshold pose
-        public static final Pose3d blueAimThreshold = new Pose3d (2.5, 1, 0.2, new Rotation3d()); 
-        public static final Pose3d blueAutoAimThreshold = new Pose3d (2.8, 1, 0.2, new Rotation3d()); 
+        public static final Pose3d blueAimThreshold = new Pose3d (2.2, 2, 0.05, new Rotation3d()); 
+        public static final Pose3d blueAutoAimThreshold = new Pose3d (2.8, 1.5, 0.05, new Rotation3d()); 
 
         //redHub translations
         public static final Pose3d redHub = new Pose3d(11.920, 4.035, 1.4304264/*1.828*/, new Rotation3d());
@@ -414,8 +414,8 @@ public class Constants {
         public static final Translation3d redHubTranslation3d = redHub.getTranslation();
 
         //redAimThreshold pose
-        public static final Pose3d redAutoAimThreshold = new Pose3d (14.5, 7, 0.2, new Rotation3d());
-        public static final Pose3d redAimThreshold = new Pose3d (14.5, 7, 0.2, new Rotation3d());
+        public static final Pose3d redAutoAimThreshold = new Pose3d (14.5, 6.5, 0.05, new Rotation3d());
+        public static final Pose3d redAimThreshold = new Pose3d (14.5, 6.3, 0.05, new Rotation3d());
 
         //redRightBumpCorner pose
         public static final Pose3d redRightBumpCorner = new Pose3d (/*nottherightone*/13.5, 7, 0.2, new Rotation3d()); //12.505 and y  was + 1
@@ -424,7 +424,7 @@ public class Constants {
         public static final Pose3d redLeftBumpCorner = new Pose3d (/*nottherightone*/13.5, 1, 0.2, new Rotation3d()); //12.505 and y was -1
 
         //blueDepot pose
-        public static final Pose3d redDepot = new Pose3d (14.5, 1, 0.2, new Rotation3d());
+        public static final Pose3d redDepotAim = new Pose3d (14.5,2.2, 0.1, new Rotation3d());
 
         // threshold for how close we are to the blue bump/trench for auto rotation
         public static final double blueLeftBumpOrTrenchThreshold = 2.5;
