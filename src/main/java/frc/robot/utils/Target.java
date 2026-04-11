@@ -22,10 +22,10 @@ public class Target {
             // Past hub - match the Y zones from Turret.targetAngle()
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot.getTranslation(); // blueDepot   Convert Pose2d to Translation3d
+                return Constants.VisionConstants.blueDepotAim.getTranslation(); // blueDepot   Convert Pose2d to Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
-                return Constants.VisionConstants.blueDepot.getTranslation(); //blueLeftBumpCorner.
+                return Constants.VisionConstants.blueDepotAim.getTranslation(); //blueLeftBumpCorner.
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
                 if(DriverStation.isAutonomous()){return VisionConstants.blueAutoAimThreshold.getTranslation();}
@@ -50,10 +50,10 @@ public class Target {
                 return Constants.VisionConstants.redAimThreshold.getTranslation(); // redRightBumpCorner
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
-                return Constants.VisionConstants.redDepot.getTranslation(); //redLeftBumpCorner
+                return Constants.VisionConstants.redDepotAim.getTranslation(); //redLeftBumpCorner
             } else {
                 // Bottom zone - depot
-                return Constants.VisionConstants.redDepot.getTranslation(); //redDepot
+                return Constants.VisionConstants.redDepotAim.getTranslation(); //redDepot
             }
         }
     
