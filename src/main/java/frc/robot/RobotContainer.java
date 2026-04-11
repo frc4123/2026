@@ -176,7 +176,7 @@ public class RobotContainer {
             }
         });
 
-        faceAngle.HeadingController.setP(3.1);//3.54123, 3.1, 3.4123
+        faceAngle.HeadingController.setP(3.4123);// 3.1, 3.4123
         faceAngle.HeadingController.setI(0);
         faceAngle.HeadingController.setD(0); 
         faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
