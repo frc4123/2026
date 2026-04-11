@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2663082320601866,
-        "y": 1.8598796296296287
+        "x": 2.030438368055556,
+        "y": 1.584184172453703
       },
       "isLocked": false,
       "linkedName": "MadTown 1-2 (2.0)"
@@ -20,8 +20,8 @@
         "y": 5.400683232060185
       },
       "prevControl": {
-        "x": 10.532579210069446,
-        "y": 6.387071976273148
+        "x": 10.888647569444444,
+        "y": 6.45333861400463
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,7 +44,14 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.13564161129568106,
+      "endWaypointRelativePos": 0.2486892649501661,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

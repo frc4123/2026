@@ -96,17 +96,6 @@
           "name": "IntakeIn"
         }
       }
-    },
-    {
-      "name": "Stop Shooting",
-      "waypointRelativePos": 0.935864825581395,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "UptakeStop"
-        }
-      }
     }
   ],
   "globalConstraints": {
