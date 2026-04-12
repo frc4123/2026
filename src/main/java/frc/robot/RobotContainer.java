@@ -492,14 +492,12 @@ public class RobotContainer {
 
     public void initializeAutoChooser() {
         autoChooser.setDefaultOption("super secret auto", 
-        new WaitCommand(3)
+        new WaitCommand(5)
         .andThen(new ParallelRaceGroup(
             new IntakeArmOut(intakeArm),
-            new IntakeRollerIn(intakeRollers, intakeArm),
-            new WaitCommand(2)
-
-        ))
-        .andThen(new UptakeUp(uptake, turret, sevenEleven, shooter)));
+            // new IntakeRollerIn(intakeRollers, intakeArm),
+            new WaitCommand(2)))
+        .andThen(uptakeUp));
 
         autoChooser.addOption("City Boy Left", new ParallelCommandGroup(
             new WaitCommand(0.01),
