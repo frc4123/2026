@@ -8,6 +8,9 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Target {
+    private Target() {
+        /* This utility class should not be instantiated */
+    }
 
     private static CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
@@ -20,12 +23,13 @@ public class Target {
             if (x < Constants.VisionConstants.BLUE_HUB.getX()) {
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot.getTranslation(); // blueDepot Convert
+                return Constants.VisionConstants.blueDepotAim.getTranslation(); // blueDepot Convert
                 // Pose2d to
                 // Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
-                return Constants.VisionConstants.blueDepot.getTranslation(); // blueLeftBumpCorner.
+                return Constants.VisionConstants.blueDepotAim
+                        .getTranslation(); // blueLeftBumpCorner.
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
                 if (DriverStation.isAutonomous()) {
@@ -62,10 +66,10 @@ public class Target {
                         .getTranslation(); // redRightBumpCorner
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
-                return Constants.VisionConstants.redDepot.getTranslation(); // redLeftBumpCorner
+                return Constants.VisionConstants.redDepotAim.getTranslation(); // redLeftBumpCorner
             } else {
                 // Bottom zone - depot
-                return Constants.VisionConstants.redDepot.getTranslation(); // redDepot
+                return Constants.VisionConstants.redDepotAim.getTranslation(); // redDepot
             }
         }
 

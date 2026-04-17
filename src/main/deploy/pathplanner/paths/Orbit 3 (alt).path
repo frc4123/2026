@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.287810329861111,
-        "y": 2.333718894675926
+        "x": 6.090680555555556,
+        "y": 1.9985146846064823
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.126736472800926,
-        "y": 1.2146000434027782
+        "x": 6.436579282407409,
+        "y": 1.3418844762731488
       },
       "isLocked": false,
       "linkedName": "Orbit 2-3"
@@ -50,19 +50,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "UptakeStop",
-      "waypointRelativePos": 0.628516922757475,
-      "endWaypointRelativePos": 0.942314680232558,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "UptakeStop"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

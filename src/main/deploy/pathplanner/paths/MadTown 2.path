@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.223285300925927,
-        "y": 5.1278090277777775
+        "x": 8.587030092592592,
+        "y": 5.180822337962963
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8550971498842594,
-        "y": 3.4749484953703713
+        "x": 2.030438368055556,
+        "y": 1.584184172453703
       },
       "isLocked": false,
       "linkedName": "MadTown 1-2 (2.0)"
@@ -20,8 +20,8 @@
         "y": 5.400683232060185
       },
       "prevControl": {
-        "x": 9.658384476273149,
-        "y": 6.04615964988426
+        "x": 10.888647569444444,
+        "y": 6.45333861400463
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,12 +30,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.08402549342105241,
+      "waypointRelativePos": 0.13623560855263164,
       "rotationDegrees": 11.856584698902141
-    },
-    {
-      "waypointRelativePos": 0.15686677631578952,
-      "rotationDegrees": -28.783406604770263
     },
     {
       "waypointRelativePos": 0.4307565789473683,
@@ -48,7 +44,14 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.13564161129568106,
+      "endWaypointRelativePos": 0.2486892649501661,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

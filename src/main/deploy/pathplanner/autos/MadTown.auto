@@ -27,12 +27,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Uptake"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 7.0

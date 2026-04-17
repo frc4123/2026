@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 7.287810329861111,
-        "y": 2.333718894675926
+        "x": 6.090680555555556,
+        "y": 1.9985146846064823
       },
       "prevControl": {
-        "x": 6.663985387731482,
-        "y": 3.0945386284722223
+        "x": 5.4659370659722235,
+        "y": 3.1241289785879633
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,11 +44,22 @@
     {
       "name": "Uptake",
       "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": 0.05549210963455151,
       "command": {
         "type": "named",
         "data": {
           "name": "Uptake"
+        }
+      }
+    },
+    {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.10960859634551498,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "UptakeStop"
         }
       }
     }
