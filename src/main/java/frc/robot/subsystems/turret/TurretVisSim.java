@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.utils.Field;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShotCache;
@@ -237,13 +237,13 @@ public class TurretVisSim extends SubsystemBase{
         ShotData calculatedShot;
         
         if (ShotCache.isPassingShot()) {
-            calculatedShot = TurretCalculator.calculatePass(
+            calculatedShot = TrajectoryCalculator.calculatePass(
                 poseSupplier.get().toPose2d(), 
                 target
             );
             Logger.recordOutput("Turret/ShotMode", "PASS");
         } else {
-            calculatedShot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+            calculatedShot = TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                 poseSupplier.get().toPose2d(), 
                 new ChassisSpeeds(), 
                 target, 

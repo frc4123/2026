@@ -34,7 +34,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
-public class TurretCalculator {
+public class TrajectoryCalculator {
 
     //private final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 

@@ -43,8 +43,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Uptake;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretCalculator;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
@@ -461,7 +461,7 @@ public class RobotContainer {
         if (RobotBase.isSimulation()) {
             turret.setDefaultCommand(turretVisSim.repeatedlyLaunchFuel(
                 () -> {
-                    ShotData shot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                    ShotData shot = TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                         drivetrain.getState().Pose,
                         new ChassisSpeeds(),
                         turretVisSim.getTurretTarget(),
@@ -470,7 +470,7 @@ public class RobotContainer {
                     return shot.getExitVelocity();
                 },
                 () -> {
-                    ShotData shot = TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                    ShotData shot = TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                         drivetrain.getState().Pose,
                         new ChassisSpeeds(),
                         turretVisSim.getTurretTarget(),

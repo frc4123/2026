@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.UptakeConstants;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
 import static edu.wpi.first.units.Units.Meters;
