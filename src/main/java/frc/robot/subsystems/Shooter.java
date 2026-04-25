@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
 public class Shooter extends SubsystemBase {

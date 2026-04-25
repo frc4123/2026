@@ -64,9 +64,9 @@ import frc.robot.subsystems.Oculus;
 import frc.robot.subsystems.SevenEleven;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Uptake;
+import frc.robot.subsystems.turret.TrajectoryCalculator;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretCalculator;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShiftHelpers;
@@ -576,7 +576,7 @@ public class RobotContainer {
                     this.turretVisSim.repeatedlyLaunchFuel(
                             () -> {
                                 final ShotData shot =
-                                        TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                                        TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                                                 this.drivetrain.getState().Pose,
                                                 new ChassisSpeeds(),
                                                 this.turretVisSim.getTurretTarget(),
@@ -585,7 +585,7 @@ public class RobotContainer {
                             },
                             () -> {
                                 final ShotData shot =
-                                        TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                                        TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                                                 this.drivetrain.getState().Pose,
                                                 new ChassisSpeeds(),
                                                 this.turretVisSim.getTurretTarget(),
