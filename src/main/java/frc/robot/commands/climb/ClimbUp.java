@@ -4,17 +4,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.Climb;
 
-public class ClimbUp extends Command{
+public class ClimbUp extends Command {
 
     Climb climb;
 
-    public ClimbUp(Climb climb) {
+    public ClimbUp(final Climb climb) {
         this.climb = climb;
-        addRequirements(climb);
+        this.addRequirements(climb);
     }
 
     @Override
     public void execute() {
-        climb.setClimbPosition(ClimbConstants.upPosition);
+        this.climb.setClimbPosition(ClimbConstants.UP_POSITION);
     }
 }
