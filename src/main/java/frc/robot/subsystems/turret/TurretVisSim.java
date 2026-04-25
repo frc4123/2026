@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.utils.Field;
 import frc.robot.utils.FuelSim;
 import frc.robot.utils.ShotCache;
@@ -181,11 +181,11 @@ public class TurretVisSim extends SubsystemBase {
                 // empty
             } else if (y >= 5.029) {
                 // Top zone - depot
-                return Constants.VisionConstants.blueDepot
-                        .getTranslation(); // Convert Pose2d to Translation3d
+                return Constants.VisionConstants.blueDepotAim.getTranslation(); // Convert Pose2d to
+                // Translation3d
             } else if (y > 4.044) {
                 // Upper middle zone - left bump corner
-                return Constants.VisionConstants.blueDepot.getTranslation();
+                return Constants.VisionConstants.blueDepotAim.getTranslation();
             } else if (y > 3.059) {
                 // Lower middle zone - right bump corner
                 return Constants.VisionConstants.BLUE_AIM_THRESHOLD.getTranslation();
@@ -205,10 +205,10 @@ public class TurretVisSim extends SubsystemBase {
                 return Constants.VisionConstants.RED_AIM_THRESHOLD.getTranslation();
             } else if (y > 3.059) {
                 // Lower middle zone - left bump corner
-                return Constants.VisionConstants.redDepot.getTranslation();
+                return Constants.VisionConstants.redDepotAim.getTranslation();
             } else {
                 // Bottom zone - depot
-                return Constants.VisionConstants.redDepot.getTranslation();
+                return Constants.VisionConstants.redDepotAim.getTranslation();
             }
         }
 
@@ -247,12 +247,13 @@ public class TurretVisSim extends SubsystemBase {
         ShotData calculatedShot;
 
         if (ShotCache.isPassingShot()) {
+
             calculatedShot =
-                    TurretCalculator.calculatePass(this.poseSupplier.get().toPose2d(), target);
+                    TrajectoryCalculator.calculatePass(this.poseSupplier.get().toPose2d(), target);
             Logger.recordOutput("Turret/ShotMode", "PASS");
         } else {
             calculatedShot =
-                    TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                    TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                             this.poseSupplier.get().toPose2d(), new ChassisSpeeds(), target, 3);
             Logger.recordOutput("Turret/ShotMode", "HUB");
         }

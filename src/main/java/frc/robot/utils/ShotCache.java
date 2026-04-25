@@ -3,8 +3,8 @@ package frc.robot.utils;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.turret.TurretCalculator;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 
 public class ShotCache {
 
@@ -26,15 +26,19 @@ public class ShotCache {
     public static void update() {
         if (!isPassingShot()) {
             cachedShot =
-                    TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                    TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                             swerve.getState().Pose,
                             swerve.getState().Speeds,
                             Target.getTarget(),
-                            13 // was 9, 8, 6, 7, 3
+                            13 // was
+                            // 9,
+                            // 8,
+                            // 6,
+                            // 7, 3
                             );
         } else {
             cachedShot =
-                    TurretCalculator.iterativeMovingPass(
+                    TrajectoryCalculator.iterativeMovingPass(
                             swerve.getState().Pose,
                             swerve.getState().Speeds,
                             Target.getTarget(),

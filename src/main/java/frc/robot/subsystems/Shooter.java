@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.utils.ShotCache;
 
 public class Shooter extends SubsystemBase {
@@ -71,7 +71,8 @@ public class Shooter extends SubsystemBase {
                                 * Math.PI
                                 * (ShooterConstants.FLYWHEEL_RADIUS.in(Meters)
                                         + ShooterConstants.compression.in(Meters)))
-                        * this.onTheGoSlider;
+                        * this.onTheGoSlider
+                        * .97;
 
         // THIS IS THE RATIO I DETERMIEND TO SHOOT FARTHER IF NEEDED IF IT MISSES SHOO
         // ShooterConstants.shootingTestErrorRatio; so multiply the final velo by that

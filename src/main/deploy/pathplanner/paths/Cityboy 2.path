@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.78789380787037,
-        "y": 3.9314665798611115
+        "x": 7.879289279513889,
+        "y": 3.5935067274305554
       },
       "isLocked": false,
       "linkedName": "Spear 1-2"
@@ -58,7 +58,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "UptakeStop",
+      "waypointRelativePos": 0.1208471760797342,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

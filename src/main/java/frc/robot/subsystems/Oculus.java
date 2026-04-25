@@ -30,8 +30,6 @@ public class Oculus extends SubsystemBase {
     QuestNav quest = new QuestNav();
 
     public Oculus() {
-        trustQuest = true;
-
         this.robotToQuest =
                 new Transform3d(
                         new Translation3d(Quest.X, Quest.Y, Quest.Z),
@@ -48,8 +46,7 @@ public class Oculus extends SubsystemBase {
             final Pose3d questPose = this.unreadFrames[this.unreadFrames.length - 1].questPose3d();
 
             // Transform by the mount pose to get your robot pose
-            final Pose3d robotPose = questPose.transformBy(this.robotToQuest.inverse());
-            return robotPose;
+            return questPose.transformBy(this.robotToQuest.inverse());
         }
 
         return null;
@@ -58,8 +55,7 @@ public class Oculus extends SubsystemBase {
     public Pose3d getQuestPose() {
         if (this.unreadFrames.length > 0) {
             // Get the most recent Quest pose
-            final Pose3d questPose = this.unreadFrames[this.unreadFrames.length - 1].questPose3d();
-            return questPose;
+            return this.unreadFrames[this.unreadFrames.length - 1].questPose3d();
         }
         return null;
     }
@@ -168,11 +164,11 @@ public class Oculus extends SubsystemBase {
     public void periodic() {
 
         this.publishQuestStatus();
-        trustQuest = SmartDashboard.getBoolean("Trust Quest", false);
+        trustQuest = SmartDashboard.getBoolean("Trust Quest", false); // NOSONAR
         this.unreadFrames = this.quest.getAllUnreadPoseFrames();
         if (this.isQuestNavConnected()) {
             this.setRobotPose();
-            if (trustQuest) {
+            if (trustQuest) { // NOSONAR
                 this.updateSwerve();
             }
         }

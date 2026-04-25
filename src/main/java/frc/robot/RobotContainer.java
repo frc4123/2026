@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -56,6 +55,7 @@ import frc.robot.commands.intakeroller.IntakeRollerIn;
 import frc.robot.commands.intakeroller.IntakeRollerShimmy;
 import frc.robot.commands.intakeroller.IntakeRollerStop;
 import frc.robot.commands.seveneleven.RollReverse;
+import frc.robot.commands.seveneleven.RollStop;
 import frc.robot.commands.shooter.SetShooterVelocity;
 import frc.robot.commands.turret.Aim;
 import frc.robot.commands.uptake.UptakeStop;
@@ -68,9 +68,9 @@ import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.SevenEleven;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Uptake;
+import frc.robot.subsystems.turret.TrajectoryCalculator;
+import frc.robot.subsystems.turret.TrajectoryCalculator.ShotData;
 import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.TurretCalculator;
-import frc.robot.subsystems.turret.TurretCalculator.ShotData;
 import frc.robot.subsystems.turret.TurretVisSim;
 import frc.robot.subsystems.vision.AprilTagVisionIO;
 import frc.robot.subsystems.vision.AprilTagVisionIOPhotonVision;
@@ -256,6 +256,8 @@ public class RobotContainer {
 
     private final RollReverse rollReverse = new RollReverse(this.sevenEleven);
 
+    private final RollStop rollStop = new RollStop(this.sevenEleven);
+
     private final HoodAim hoodAim = new HoodAim(this.hood);
 
     private final AvoidDecapitation avoidDecapitation = new AvoidDecapitation(this.hood);
@@ -284,7 +286,7 @@ public class RobotContainer {
         // }
         // });
 
-        this.faceAngle.HeadingController.setP(3.1); // 3.54123, 3.1, 3.4123
+        this.faceAngle.HeadingController.setP(3.4123); // 3.54123, 3.1, 3.4123
         this.faceAngle.HeadingController.setI(0);
         this.faceAngle.HeadingController.setD(0);
         this.faceAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -324,51 +326,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("HoodDown", this.avoidDecapitation);
         NamedCommands.registerCommand("UptakeStop", this.uptakeStop);
         this.initializeAutoChooser();
-    }
-
-    public void initializeAutoChooser() {
-        this.autoChooser.setDefaultOption(
-                "super secret auto",
-                new WaitCommand(3)
-                        .andThen(
-                                new ParallelRaceGroup(
-                                        new IntakeArmOut(this.intakeArm),
-                                        new IntakeRollerIn(this.intakeRollers, this.intakeArm),
-                                        new WaitCommand(2)))
-                        .andThen(
-                                new UptakeUp(
-                                        this.uptake, this.turret, this.sevenEleven, this.shooter)));
-
-        this.autoChooser.addOption(
-                "City Boy Left",
-                new ParallelCommandGroup(
-                        new WaitCommand(0.01),
-                        new SequentialCommandGroup(new CityBoyLeft().cityBoyLeft())));
-
-        this.autoChooser.addOption(
-                "City Boy Right",
-                new ParallelCommandGroup(
-                        new WaitCommand(0.01),
-                        new SequentialCommandGroup(new CityBoyRight().cityBoyRight())));
-
-        this.autoChooser.addOption(
-                "MadTown Left",
-                new ParallelCommandGroup(
-                        new WaitCommand(0.01),
-                        new SequentialCommandGroup(new MadTown().madTownLeft())));
-
-        this.autoChooser.addOption(
-                "Orbit Right",
-                new ParallelCommandGroup(
-                        new WaitCommand(0.01),
-                        new SequentialCommandGroup(new orbit().orbitRight())));
-        this.autoChooser.addOption(
-                "5m test",
-                new ParallelCommandGroup(
-                        new WaitCommand(0.01),
-                        new SequentialCommandGroup(new mtest().metertest())));
-
-        SmartDashboard.putData("Auto Selector", this.autoChooser);
     }
 
     public Command getAutonomousCommand() {
@@ -602,10 +559,9 @@ public class RobotContainer {
         this.buttonBoard.button(1).onFalse(this.uptakeStop);
 
         this.buttonBoard.button(2).onTrue(this.intakeReverse);
-        this.buttonBoard.button(2).onTrue(this.rollReverse);
         this.buttonBoard.button(2).onTrue(this.intakeArmOut);
-        this.buttonBoard.button(2).onFalse(this.intakeRollersStop);
-        this.buttonBoard.button(2).onFalse(this.uptakeStop);
+        this.buttonBoard.button(2).onTrue(this.rollReverse);
+        this.buttonBoard.button(2).onFalse(this.rollStop);
 
         this.buttonBoard.button(3).onTrue(this.uptakeUp);
         this.buttonBoard.button(3).onFalse(this.intakeArmOut);
@@ -624,7 +580,6 @@ public class RobotContainer {
                                 .andThen(new IntakeArmOut(this.intakeArm))
                                 .andThen(new WaitCommand(0.75))
                                 .andThen(new ForceIntakeArmMid(this.intakeArm)));
-
         final Trigger upcomingShiftWarning =
                 new Trigger(
                         () ->
@@ -688,7 +643,7 @@ public class RobotContainer {
                     this.turretVisSim.repeatedlyLaunchFuel(
                             () -> {
                                 final ShotData shot =
-                                        TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                                        TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                                                 this.drivetrain.getState().Pose,
                                                 new ChassisSpeeds(),
                                                 this.turretVisSim.getTurretTarget(),
@@ -697,7 +652,7 @@ public class RobotContainer {
                             },
                             () -> {
                                 final ShotData shot =
-                                        TurretCalculator.iterativeMovingShotFromFunnelClearance(
+                                        TrajectoryCalculator.iterativeMovingShotFromFunnelClearance(
                                                 this.drivetrain.getState().Pose,
                                                 new ChassisSpeeds(),
                                                 this.turretVisSim.getTurretTarget(),
@@ -715,5 +670,45 @@ public class RobotContainer {
                                 })
                         .withName("Reset Fuel")
                         .ignoringDisable(true));
+    }
+
+    public void initializeAutoChooser() {
+        this.autoChooser.setDefaultOption("super secret auto", new WaitCommand(5));
+
+        this.autoChooser.addOption(
+                "City Boy Left",
+                new ParallelCommandGroup(
+                        new WaitCommand(0.01),
+                        new SequentialCommandGroup(new CityBoyLeft().cityBoyLeft())));
+
+        this.autoChooser.addOption(
+                "City Boy Right",
+                new ParallelCommandGroup(
+                        new WaitCommand(0.01),
+                        new SequentialCommandGroup(new CityBoyRight().cityBoyRight())));
+
+        this.autoChooser.addOption(
+                "MadTown Left",
+                new ParallelCommandGroup(
+                        new WaitCommand(0.01),
+                        new SequentialCommandGroup(new MadTown().madTownLeft())));
+
+        this.autoChooser.addOption(
+                "Orbit Right",
+                new ParallelCommandGroup(
+                        new WaitCommand(0.01),
+                        new SequentialCommandGroup(new orbit().orbitRight())));
+
+        this.autoChooser.addOption(
+                "Orbit Right Delay",
+                new SequentialCommandGroup(new WaitCommand(4).andThen(new orbit().orbitRight())));
+
+        this.autoChooser.addOption(
+                "5m test",
+                new ParallelCommandGroup(
+                        new WaitCommand(0.01),
+                        new SequentialCommandGroup(new mtest().metertest())));
+
+        SmartDashboard.putData("Auto Selector", this.autoChooser);
     }
 }
