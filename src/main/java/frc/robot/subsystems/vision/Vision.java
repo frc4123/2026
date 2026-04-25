@@ -278,6 +278,12 @@ public class Vision extends SubsystemBase {
         this.localizerPeriodic();
     }
 
+    public void resetLocalizers(final Pose3d pose3d) {
+        for (final var localizer : this.localizerIo) {
+            localizer.setRobotPose(pose3d);
+        }
+    }
+
     @FunctionalInterface
     public interface VisionConsumer {
         void accept(

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -78,6 +80,9 @@ public class Robot extends LoggedRobot {
     public void autonomousInit() {
         this.autonomousCommand = this.robotContainer.getAutonomousCommand();
 
+        if (this.autonomousCommand instanceof final PathPlannerAuto auto) {
+            this.robotContainer.getVision().resetLocalizers(new Pose3d(auto.getStartingPose()));
+        }
         if (this.autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(this.autonomousCommand);
         }

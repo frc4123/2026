@@ -711,4 +711,8 @@ public class RobotContainer {
 
         SmartDashboard.putData("Auto Selector", this.autoChooser);
     }
+
+    public Vision getVision() {
+        return this.vision;
+    }
 }
