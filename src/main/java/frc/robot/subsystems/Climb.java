@@ -1,56 +1,51 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
-import frc.robot.Constants.ClimbConstants;
-
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.ClimbConstants;
 
+public class Climb extends SubsystemBase {
 
-public class Climb extends SubsystemBase{
-
-    private final TalonFX climbMotor = new TalonFX(
-        Constants.CanIdCanivore.Climb,
-        Constants.CanIdCanivore.canivore);
+    private final TalonFX climbMotor =
+            new TalonFX(Constants.CanIdCanivore.CLIMB, Constants.CanIdCanivore.CARNIVORE);
 
     // Motion Magic controller object
     private final DynamicMotionMagicTorqueCurrentFOC motionMagic =
-        new DynamicMotionMagicTorqueCurrentFOC(
-            ClimbConstants.downPosition,
-            ClimbConstants.velocity,
-            ClimbConstants.acceleration
-        );
+            new DynamicMotionMagicTorqueCurrentFOC(
+                    ClimbConstants.DOWN_POSITION,
+                    ClimbConstants.VELOCITY,
+                    ClimbConstants.ACCELERATION);
 
-    public Climb(){
+    public Climb() {
         // τηισ ισ ωερυ ιμπορταντ
-        configureMotor();
+        this.configureMotor();
     }
 
     private void configureMotor() {
-        climbMotor.setNeutralMode(NeutralModeValue.Brake);
+        this.climbMotor.setNeutralMode(NeutralModeValue.Brake);
 
-        Slot0Configs pid = new Slot0Configs()
-            .withKP(ClimbConstants.kP)
-            .withKI(ClimbConstants.kI)
-            .withKD(ClimbConstants.kD)
-            .withKS(ClimbConstants.kS)
-            .withKV(ClimbConstants.kV)
-            .withKA(ClimbConstants.kA)
-            .withKG(ClimbConstants.kG);
+        final Slot0Configs pid =
+                new Slot0Configs()
+                        .withKP(ClimbConstants.P)
+                        .withKI(ClimbConstants.I)
+                        .withKD(ClimbConstants.D)
+                        .withKS(ClimbConstants.S)
+                        .withKV(ClimbConstants.V)
+                        .withKA(ClimbConstants.A)
+                        .withKG(ClimbConstants.G);
 
-        climbMotor.getConfigurator().apply(pid);
+        this.climbMotor.getConfigurator().apply(pid);
     }
 
-    public void setClimbPosition(double pos){
-        climbMotor.setControl(  
-            motionMagic.withPosition(pos));
+    public void setClimbPosition(final double pos) {
+        this.climbMotor.setControl(this.motionMagic.withPosition(pos));
     }
 
     public double getClimbPosition() {
-        return climbMotor.getPosition().getValueAsDouble();
+        return this.climbMotor.getPosition().getValueAsDouble();
     }
 }

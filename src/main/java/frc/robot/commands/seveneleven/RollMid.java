@@ -1,19 +1,20 @@
 package frc.robot.commands.seveneleven;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.SevenElevenConstants;
 import frc.robot.subsystems.SevenEleven;
 
-public class RollStop extends Command {
+public class RollMid extends Command {
 
     SevenEleven sevenEleven;
 
-    public RollStop(final SevenEleven sevenEleven) {
+    public RollMid(final SevenEleven sevenEleven) {
         this.sevenEleven = sevenEleven;
         this.addRequirements((sevenEleven));
     }
 
     @Override
     public void execute() {
-        this.sevenEleven.setSevenElevenVelo(0);
+        this.sevenEleven.setSevenElevenVelo(SevenElevenConstants.SEVEN_ELEVEN_MID_VELO);
     }
 }

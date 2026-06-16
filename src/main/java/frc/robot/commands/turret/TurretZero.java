@@ -16,13 +16,11 @@ public class TurretZero extends Command {
 
     @Override
     public boolean isFinished() {
-        return false; 
+        return false;
     }
 
     @Override
     public void execute() {
-        turret.setFieldAngle(
-            turret.targetAngle(drivetrain.getState().Pose)
-        );
+        turret.setFieldAngle(turret.targetAngle(drivetrain.getState().Pose));
     }
 }

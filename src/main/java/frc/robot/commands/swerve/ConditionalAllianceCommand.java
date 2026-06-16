@@ -2,8 +2,8 @@ package frc.robot.commands.swerve;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class ConditionalAllianceCommand extends SequentialCommandGroup {
 
@@ -11,11 +11,12 @@ public class ConditionalAllianceCommand extends SequentialCommandGroup {
 
         // Add conditional logic to choose commands
         addCommands(
-            new ConditionalCommand(
-                blueCmd,
-                redCmd,
-                () -> DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)
-            )
-        );
+                new ConditionalCommand(
+                        blueCmd,
+                        redCmd,
+                        () ->
+                                DriverStation.getAlliance()
+                                        .get()
+                                        .equals(DriverStation.Alliance.Blue)));
     }
 }

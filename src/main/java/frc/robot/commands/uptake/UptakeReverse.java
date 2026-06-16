@@ -4,18 +4,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.subsystems.Uptake;
 
-public class UptakeReverse extends Command{
+public class UptakeReverse extends Command {
 
     Uptake uptake;
 
-    public UptakeReverse(Uptake uptake) {
+    public UptakeReverse(final Uptake uptake) {
         this.uptake = uptake;
-        addRequirements(uptake);
+        this.addRequirements(uptake);
     }
 
     @Override
     public void execute() {
-        uptake.setUptakeVelo(UptakeConstants.reverseVelo);
+        this.uptake.setUptakeVelo(UptakeConstants.REVERSE_VELO);
     }
-
 }

@@ -1,12 +1,13 @@
 package frc.robot.subsystems;
+
 import java.util.ArrayList;
 
 public class SelfRepair {
-    //mech fix the robot please
-    //apply mending enchant
-    public ArrayList <String> strategies = new ArrayList<>();
+    // mech fix the robot please
+    // apply mending enchant
+    public ArrayList<String> strategies = new ArrayList<>();
 
-    public SelfRepair(){
+    public SelfRepair() {
         strategies.add("Mech fix the robot pretty please");
         strategies.add("Apply mending enchant?");
         strategies.add("What if we tried getting a mending villager");
@@ -19,8 +20,8 @@ public class SelfRepair {
 
     }
 
-    public String getAdvice(){
-        int guess = (int)Math.random() * 10;
+    public String getAdvice() {
+        int guess = (int) Math.random() * 10;
         return strategies.get(guess);
     }
 }
